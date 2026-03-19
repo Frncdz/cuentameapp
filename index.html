@@ -671,32 +671,8 @@ function renderCal(byDay){
     cells+=`<div class="${cls}" data-date="${ds}">${inner2}</div>`;
   }
 
-  // Panel de detalle — se muestra siempre que hay un día seleccionado
-  let det="";
-  if(calSelDay){
-    const dr=byDay[calSelDay]||[];
-    const dt=dr.reduce((s,r)=>s+r.amount,0);
-    const dateLabel=fd(calSelDay);
-    const recordsHtml=dr.length
-      ? dr.map(r=>`<div class="cdr"><span class="cdr-desc">${esc(r.description)}</span><span class="cdr-amt">${sol(r.amount)}</span></div>`).join("")
-      : `<p style="font-size:12px;color:var(--t3);font-weight:600;padding:4px 0 2px">Sin registros este día</p>`;
-    const totalHtml=dr.length
-      ? `<span class="cdh-total">${sol(dt)}</span>`
-      : "";
-    det=`<div class="cal-detail on">
-      <div class="cdh">
-        <span class="cdh-date">${dateLabel}</span>
-        ${totalHtml}
-      </div>
-      ${recordsHtml}
-      <button class="cal-add-btn" data-date="${calSelDay}">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-        Agregar registro aquí
-      </button>
-    </div>`;
-  } else {
-    det=`<div class="cal-detail"></div>`;
-  }
+  // Sin panel de detalle — el calendario solo selecciona la fecha
+  let det=`<div class="cal-detail"></div>`;
 
   inner.innerHTML=`
     <div class="cal-nav">
@@ -719,19 +695,10 @@ function renderCal(byDay){
     cell.onclick=()=>{
       const d=cell.dataset.date;
       calSelDay=(calSelDay===d)?null:d;
-      if(calSelDay){ expandDay=calSelDay; renderHist(); }
-      else renderCal(byDay);
+      renderCal(byDay);
+      updateFabDateBadge();
     };
   });
-
-  // Botón "+ Agregar registro aquí"
-  const addBtn=inner.querySelector(".cal-add-btn");
-  if(addBtn){
-    addBtn.onclick=e=>{
-      e.stopPropagation();
-      openForm(addBtn.dataset.date);
-    };
-  }
 
   // Toggle cabecera
   document.getElementById("cal-head").onclick=()=>{
@@ -864,39 +831,73 @@ function updRegPrev(){
 }
 
 /* ═══════════════════════════════════════════
-   FAB — 1 click: form · 2 clicks rápidos: flash
+   FAB — fecha activa = calSelDay ?? hoy
+   1 click: form · 2 clicks rápidos: flash
 ═══════════════════════════════════════════ */
 let fabLast=0, fabHintT=null, toastT=null;
 const DBLMS=350;
+
+function activeFecha(){ return calSelDay||hoy(); }
 
 document.getElementById("fab-btn").addEventListener("click",e=>{
   e.preventDefault();
   const now=Date.now(), gap=now-fabLast;
   if(gap<DBLMS&&gap>0){
-    fabLast=0; clearTimeout(fabHintT); hideFabHint(); doFlash();
+    fabLast=0; clearTimeout(fabHintT); hideFabHint(); doFlash(activeFecha());
   } else {
     fabLast=now;
-    showFabHint("⚡ Doble click = flash");
     clearTimeout(fabHintT);
+    // Mostrar hint solo si hay fecha seleccionada (si no, esperar y abrir form)
+    if(calSelDay){
+      const label=fds(calSelDay);
+      showFabHint("⚡ 2× flash · 1× form — "+label);
+    } else {
+      showFabHint("⚡ Doble click = flash");
+    }
     fabHintT=setTimeout(()=>{
-      if(Date.now()-fabLast>=DBLMS-20){hideFabHint();openForm();}
+      if(Date.now()-fabLast>=DBLMS-20){ hideFabHint(); openForm(activeFecha()); }
     },DBLMS);
   }
 });
 
-function showFabHint(msg){document.getElementById("fab-hint").textContent=msg;document.getElementById("fab-hint").classList.add("on");}
-function hideFabHint(){document.getElementById("fab-hint").classList.remove("on");}
+function showFabHint(msg){
+  const h=document.getElementById("fab-hint");
+  h.textContent=msg; h.classList.add("on");
+}
+function hideFabHint(){ document.getElementById("fab-hint").classList.remove("on"); }
 
-function doFlash(){
+// Indicador de fecha activa sobre el FAB (persiste mientras hay día seleccionado)
+function updateFabDateBadge(){
+  let badge=document.getElementById("fab-date-badge");
+  if(!badge){
+    badge=document.createElement("div");
+    badge.id="fab-date-badge";
+    badge.style.cssText="position:fixed;bottom:148px;right:14px;z-index:701;background:var(--ac);color:#fff;padding:4px 11px;border-radius:100px;font-size:10px;font-weight:800;box-shadow:0 2px 10px rgba(79,70,229,.35);pointer-events:none;white-space:nowrap;transition:opacity .18s,transform .18s;";
+    document.body.appendChild(badge);
+  }
+  if(calSelDay && calSelDay!==hoy()){
+    badge.textContent="📅 "+fds(calSelDay);
+    badge.style.opacity="1"; badge.style.transform="translateY(0)";
+  } else {
+    badge.style.opacity="0"; badge.style.transform="translateY(4px)";
+  }
+}
+
+function doFlash(fecha){
   if(!menu.completo.enabled){showToast("⚠️ Activa el Menú Completo en Config");return;}
   const price=parseFloat(menu.completo.price);
-  records.push({id:uid(),date:hoy(),amount:price,description:"⚡ "+menu.completo.name,items:[{name:menu.completo.name,qty:1,sub:price}]});
+  const dia=fecha||hoy();
+  records.push({id:uid(),date:dia,amount:price,description:"⚡ "+menu.completo.name,items:[{name:menu.completo.name,qty:1,sub:price}]});
   sv("c_recs",records);
-  renderHist(); renderHeader();
-  const b=document.getElementById("fab-btn");
-  b.classList.add("flash");
-  setTimeout(()=>{b.classList.remove("flash");b.style.background="";},420);
-  showToast("⚡ "+sol(price)+" registrado");
+  // NO limpiar calSelDay — puede querer registrar otro flash en la misma fecha
+  renderHist(); renderHeader(); updateFabDateBadge();
+  if(!fecha||fecha===hoy()){
+    const b=document.getElementById("fab-btn");
+    b.classList.add("flash");
+    setTimeout(()=>{b.classList.remove("flash");b.style.background="";},420);
+  }
+  const label=dia===hoy()?"hoy":fds(dia);
+  showToast("⚡ "+sol(price)+" — "+label);
 }
 
 function openForm(fecha){
@@ -941,7 +942,7 @@ document.getElementById("btn-reg-ok").onclick=()=>{
   const desc=p.items.map(i=>`${i.qty>1?i.qty+"× ":""}${i.name}`).join(" · ");
   records.push({id:uid(),date:fecha,amount:p.total,description:desc,items:p.items});
   sv("c_recs",records);
-  closeMo("mo-reg"); renderHist(); renderHeader();
+  closeMo("mo-reg"); renderHist(); renderHeader(); updateFabDateBadge();
   showToast("✓ "+sol(p.total)+" registrado");
 };
 
