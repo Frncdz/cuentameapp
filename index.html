@@ -129,79 +129,49 @@ input:focus, select:focus { outline:none; }
 /* ══ FAB ══ */
 #fab-wrap {
   position:fixed; bottom:88px; right:20px; z-index:700;
-  display:flex; flex-direction:column; align-items:flex-end; gap:10px;
 }
-/* Menú FAB expandido */
-.fab-menu { display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
-.fab-menu-item {
-  display:flex; align-items:center; gap:10px;
-  opacity:0; transform:translateY(10px) scale(.95);
-  transition:all .2s cubic-bezier(.16,1,.3,1);
-  pointer-events:none;
-}
-.fab-menu-item.show { opacity:1; transform:none; pointer-events:all; }
-.fab-menu-item:nth-child(1) { transition-delay:.05s; }
-.fab-menu-item:nth-child(2) { transition-delay:.0s; }
-.fab-item-label {
-  background:var(--t1); color:#fff;
-  padding:6px 13px; border-radius:100px;
-  font-size:12px; font-weight:700;
-  box-shadow:0 2px 10px rgba(0,0,0,.2);
-  white-space:nowrap;
-}
-.fab-item-btn {
-  width:46px; height:46px; border-radius:14px;
-  background:var(--bg); border:1.5px solid var(--line);
-  display:flex; align-items:center; justify-content:center;
-  box-shadow:0 2px 10px rgba(0,0,0,.10);
-  font-size:20px;
-}
-/* Botón FAB principal */
 #fab-main {
-  width:58px; height:58px; border-radius:17px;
+  width:58px; height:58px; border-radius:18px;
   background:var(--t1);
   display:flex; align-items:center; justify-content:center;
-  box-shadow:0 4px 20px rgba(0,0,0,.25);
-  transition:transform .15s, box-shadow .15s;
-  position:relative; overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,0,0,.28);
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   user-select:none;
+  transition:transform .12s, background .18s;
+  border:none;
 }
-#fab-main:active { transform:scale(.94); box-shadow:0 2px 10px rgba(0,0,0,.2); }
-#fab-main svg { width:26px; height:26px; stroke:#fff; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; transition:transform .3s cubic-bezier(.16,1,.3,1); }
-#fab-main.open svg { transform:rotate(45deg); }
-/* Anillo de progreso hold */
-#fab-ring {
-  position:absolute; inset:0; pointer-events:none;
-  display:flex; align-items:center; justify-content:center;
-}
-#fab-ring svg { width:58px; height:58px; transform:rotate(-90deg); }
-#fab-ring circle {
-  cx:29; cy:29; r:26;
-  fill:none; stroke:rgba(255,255,255,.5); stroke-width:3;
-  stroke-dasharray:163; stroke-dashoffset:163;
-  transition:stroke-dashoffset .05s linear;
-}
-/* Overlay fondo cuando FAB abierto */
-#fab-overlay {
-  display:none; position:fixed; inset:0; z-index:650;
-  background:rgba(0,0,0,.08);
-}
-#fab-overlay.show { display:block; }
+#fab-main:active { transform:scale(.91); }
+#fab-main svg { width:26px; height:26px; stroke:#fff; fill:none; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; pointer-events:none; }
+#fab-main.flash-pulse { animation:fabFlash .35s cubic-bezier(.16,1,.3,1); background:var(--ac); }
 
-/* Tooltip flash */
-#flash-toast {
-  position:fixed; bottom:160px; left:50%; transform:translateX(-50%);
+/* Hint bubble encima del FAB */
+#fab-hint-bubble {
+  position:fixed; bottom:158px; right:16px; z-index:701;
   background:var(--t1); color:#fff;
-  padding:8px 18px; border-radius:100px;
+  padding:5px 13px; border-radius:100px;
+  font-size:11px; font-weight:700;
+  box-shadow:0 2px 12px rgba(0,0,0,.2);
+  opacity:0; pointer-events:none;
+  transition:opacity .18s, transform .18s;
+  transform:translateY(5px);
+  white-space:nowrap;
+}
+#fab-hint-bubble.show { opacity:1; transform:translateY(0); }
+
+/* Toast */
+#flash-toast {
+  position:fixed; bottom:162px; left:50%; transform:translateX(-50%);
+  background:var(--t1); color:#fff;
+  padding:9px 20px; border-radius:100px;
   font-size:12px; font-weight:700;
   box-shadow:0 4px 20px rgba(0,0,0,.2);
   opacity:0; pointer-events:none;
-  transition:opacity .2s;
+  transition:opacity .18s;
   white-space:nowrap; z-index:9999;
 }
 #flash-toast.show { opacity:1; }
+@keyframes fabFlash { 0%{transform:scale(1)} 30%{transform:scale(.88)} 65%{transform:scale(1.1)} 100%{transform:scale(1)} }
 
 /* ══ CARD ══ */
 .card { background:var(--bg); border:1px solid var(--line); border-radius:14px; }
@@ -491,29 +461,13 @@ input:focus, select:focus { outline:none; }
 </div><!-- /app -->
 
 <!-- ══ FAB ══ -->
-<div id="fab-overlay"></div>
+<!-- Hint flotante sobre el FAB -->
+<div id="fab-hint-bubble">
+  <span id="fab-hint-text"></span>
+</div>
 <div id="fab-wrap">
-  <div class="fab-menu" id="fab-menu">
-    <!-- Registro con formulario -->
-    <div class="fab-menu-item" id="fmi-form">
-      <span class="fab-item-label">Registro detallado</span>
-      <button class="fab-item-btn" id="btn-fmi-form" title="Formulario">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--t1)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      </button>
-    </div>
-    <!-- Registro flash -->
-    <div class="fab-menu-item" id="fmi-flash">
-      <span class="fab-item-label">Flash — <span id="fmi-flash-price"></span></span>
-      <button class="fab-item-btn" id="btn-fmi-flash" title="Flash">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--t1)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-      </button>
-    </div>
-  </div>
-  <button id="fab-main" title="Registrar comida">
+  <button id="fab-main" title="1 click: detallado · 2 clicks: flash">
     <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-    <div id="fab-ring">
-      <svg viewBox="0 0 58 58"><circle id="fab-ring-circle" cx="29" cy="29" r="26"/></svg>
-    </div>
   </button>
 </div>
 <div id="flash-toast"></div>
@@ -552,34 +506,7 @@ input:focus, select:focus { outline:none; }
   </div>
 </div>
 
-<!-- ══ MODAL FLASH CONFIRM ══ -->
-<div id="modal-flash" class="modal-overlay">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-head">
-      <h3>Registro rápido</h3>
-      <button class="modal-close" data-close="modal-flash">✕</button>
-    </div>
-    <div class="modal-body">
-      <p style="font-size:13px;color:var(--t3);margin-bottom:14px;font-weight:500">Un menú completo registrado al precio configurado.</p>
-      <div class="flex-c gap-6 mb-14">
-        <label class="slabel">Fecha</label>
-        <div class="date-row">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-          <input id="flash-date" type="date">
-        </div>
-      </div>
-      <div class="ci mb-14">
-        <span class="ci-name" id="flash-item-name"></span>
-        <span class="ci-amt"  id="flash-item-amt"></span>
-      </div>
-      <div class="flex-r gap-10">
-        <button class="btn btn-ghost btn-lg" style="flex:1" data-close="modal-flash">Cancelar</button>
-        <button id="btn-flash-ok" class="btn btn-dark btn-lg" style="flex:2">⚡ Confirmar</button>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- modal-flash eliminado: flash es ahora instantáneo -->
 
 <!-- ══ MODAL AGREGAR PLATO ══ -->
 <div id="modal-add" class="modal-overlay">
@@ -881,115 +808,75 @@ function updateRegPreview(){
   }
 }
 
-/* ══ FAB LOGIC ══ */
-let fabOpen=false;
-let holdTimer=null;
-let holdStart=0;
-let holdInterval=null;
-const HOLD_MS=800; // ms para activar flash directamente
+/* ══ FAB — 1 click: detallado · 2 clicks rápidos: flash ══ */
+const fabMain    = document.getElementById("fab-main");
+const fabHintBub = document.getElementById("fab-hint-bubble");
+const DOUBLE_MS  = 350; // ventana para doble click
 
-const fabMain=document.getElementById("fab-main");
-const fabMenu=document.getElementById("fab-menu");
-const fabOverlay=document.getElementById("fab-overlay");
-const fabRingCircle=document.getElementById("fab-ring-circle");
+let fabLastTap   = 0;
+let fabHintTimer = null;
+let toastTimer   = null;
 
-function openFabMenu(){
-  fabOpen=true;
-  fabMain.classList.add("open");
-  fabOverlay.classList.add("show");
-  document.querySelectorAll(".fab-menu-item").forEach(el=>el.classList.add("show"));
-  // Actualizar label flash
-  const flashPrice=menu.completo.enabled?sol(parseFloat(menu.completo.price)):"—";
-  document.getElementById("fmi-flash-price").textContent=flashPrice;
-}
-function closeFabMenu(){
-  fabOpen=false;
-  fabMain.classList.remove("open");
-  fabOverlay.classList.remove("show");
-  document.querySelectorAll(".fab-menu-item").forEach(el=>el.classList.remove("show"));
-}
-
-// Tap corto = abrir menú
-// Hold 800ms = flash directo
-fabMain.addEventListener("pointerdown", e=>{
+fabMain.addEventListener("click", e => {
   e.preventDefault();
-  holdStart=Date.now();
-  let progress=0;
-  holdInterval=setInterval(()=>{
-    progress=Math.min(1,(Date.now()-holdStart)/HOLD_MS);
-    // anillo de progreso
-    const offset=163*(1-progress);
-    fabRingCircle.style.strokeDashoffset=offset;
-    if(progress>=1){
-      clearInterval(holdInterval);
-      holdInterval=null;
-      fabRingCircle.style.strokeDashoffset=163;
-      // Disparar flash directamente
-      doFlashDirect();
-    }
-  },16);
-});
+  const now = Date.now();
+  const gap  = now - fabLastTap;
 
-function cancelHold(){
-  if(holdInterval){ clearInterval(holdInterval); holdInterval=null; }
-  fabRingCircle.style.strokeDashoffset=163;
-}
-
-fabMain.addEventListener("pointerup", e=>{
-  const held=Date.now()-holdStart;
-  cancelHold();
-  if(held<HOLD_MS){
-    // tap corto → toggle menú
-    if(fabOpen) closeFabMenu();
-    else openFabMenu();
+  if (gap < DOUBLE_MS && gap > 0) {
+    // ══ DOBLE CLICK → Flash instantáneo ══
+    fabLastTap = 0; // reset para no triple-disparo
+    doFlashDirect();
+  } else {
+    // ══ PRIMER CLICK → esperar posible segundo click ══
+    fabLastTap = now;
+    // Mostrar hint "2° click = flash"
+    showFabHint("⚡ Doble click = flash");
+    // Si no llega segundo click en DOUBLE_MS → abrir formulario
+    clearTimeout(fabHintTimer);
+    fabHintTimer = setTimeout(() => {
+      if (Date.now() - fabLastTap >= DOUBLE_MS - 20) {
+        hideFabHint();
+        openRegForm();
+      }
+    }, DOUBLE_MS);
   }
 });
-fabMain.addEventListener("pointerleave", ()=>{ cancelHold(); });
-fabMain.addEventListener("pointercancel",()=>{ cancelHold(); });
 
-fabOverlay.onclick=()=>closeFabMenu();
-
-// Flash directo (hold)
-function doFlashDirect(){
-  if(!menu.completo.enabled){ showToast("Activa el Menú Completo en Config"); return; }
-  const price=parseFloat(menu.completo.price);
-  const desc=menu.completo.emoji+" "+menu.completo.name;
-  records.push({id:uid(),date:today(),amount:price,description:desc,items:[{name:menu.completo.name,qty:1,sub:price}]});
-  save("c_recs",records);
-  closeFabMenu();
-  renderHistorial(); renderHeader();
-  showToast("⚡ "+sol(price)+" registrado");
+function showFabHint(msg) {
+  fabHintBub.querySelector("#fab-hint-text").textContent = msg;
+  fabHintBub.classList.add("show");
+  clearTimeout(fabHintTimer);
+}
+function hideFabHint() {
+  fabHintBub.classList.remove("show");
 }
 
-// Botón flash en menú → modal de confirmación con fecha
-document.getElementById("btn-fmi-flash").onclick=()=>{
-  if(!menu.completo.enabled){ showToast("Activa el Menú Completo en Config"); closeFabMenu(); return; }
-  document.getElementById("flash-date").value=today();
-  document.getElementById("flash-item-name").textContent=menu.completo.emoji+" "+menu.completo.name;
-  document.getElementById("flash-item-amt").textContent=sol(parseFloat(menu.completo.price));
-  closeFabMenu();
-  openModal("modal-flash");
-};
-
-document.getElementById("btn-flash-ok").onclick=()=>{
-  const fecha=document.getElementById("flash-date").value||today();
-  const price=parseFloat(menu.completo.price);
-  const desc=menu.completo.emoji+" "+menu.completo.name;
-  records.push({id:uid(),date:fecha,amount:price,description:desc,items:[{name:menu.completo.name,qty:1,sub:price}]});
-  save("c_recs",records);
-  closeModal("modal-flash");
+// Flash: registra menú completo sin confirmación
+function doFlashDirect() {
+  hideFabHint();
+  clearTimeout(fabHintTimer);
+  if (!menu.completo.enabled) {
+    showToast("⚠️ Activa el Menú Completo en Config");
+    return;
+  }
+  const price = parseFloat(menu.completo.price);
+  const desc  = menu.completo.name;
+  records.push({ id:uid(), date:today(), amount:price, description:"⚡ "+desc, items:[{name:desc,qty:1,sub:price}] });
+  save("c_recs", records);
   renderHistorial(); renderHeader();
-  showToast("⚡ "+sol(price)+" registrado");
-};
+  // Feedback visual en el botón
+  fabMain.classList.add("flash-pulse");
+  setTimeout(() => { fabMain.classList.remove("flash-pulse"); fabMain.style.background=""; }, 400);
+  showToast("⚡ " + sol(price) + " registrado");
+}
 
-// Botón registro detallado
-document.getElementById("btn-fmi-form").onclick=()=>{
-  document.getElementById("reg-date").value=today();
+// Formulario detallado
+function openRegForm() {
+  document.getElementById("reg-date").value = today();
   buildRegRows();
   updateRegPreview();
-  closeFabMenu();
   openModal("modal-reg");
-};
+}
 
 document.getElementById("btn-reg-confirm").onclick=()=>{
   const p=calcRegPreview();
@@ -1004,12 +891,11 @@ document.getElementById("btn-reg-confirm").onclick=()=>{
 };
 
 /* ══ TOAST ══ */
-let toastTimer=null;
 function showToast(msg){
   const t=document.getElementById("flash-toast");
   t.textContent=msg; t.classList.add("show");
-  if(toastTimer) clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>t.classList.remove("show"),2200);
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove("show"),2400);
 }
 
 /* ══ CONFIG EVENTOS ══ */
