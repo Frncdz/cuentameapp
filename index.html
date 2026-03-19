@@ -180,6 +180,15 @@ input:focus,select:focus{outline:none}
 .cdr{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-top:1px solid var(--ln);gap:8px}
 .cdr-desc{font-size:12px;color:var(--t2);flex:1;font-weight:600}
 .cdr-amt{font-size:12px;font-weight:900;flex-shrink:0}
+.cal-add-btn{
+  display:flex;align-items:center;gap:6px;margin-top:10px;
+  width:100%;padding:9px 12px;border-radius:9px;
+  background:var(--bg2);border:1.5px dashed var(--ln2);
+  font-size:12px;font-weight:700;color:var(--t3);
+  cursor:pointer;font-family:inherit;
+  transition:background .12s,border-color .12s,color .12s;
+}
+.cal-add-btn:active{background:var(--acl);border-color:var(--ac);color:var(--ac)}
 
 /* ── Lista de días compacta ── */
 .day-row{display:flex;align-items:center;justify-content:space-between;padding:10px 2px;border-bottom:1px solid var(--ln);gap:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .1s;border-radius:8px}
@@ -647,8 +656,8 @@ function renderCal(byDay){
     let cls="cal-day";
     if(isT)  cls+=" today";
     if(isSel)cls+=" sel";
+    cls+=" clickable"; // todos los días son clickeables
     if(has){
-      cls+=" clickable";
       const dt=dr.reduce((s,r)=>s+r.amount,0);
       const ratio=dt/maxA;
       if(ratio>0.66) cls+=" lv3"; else if(ratio>0.33) cls+=" lv2"; else cls+=" lv1";
@@ -662,13 +671,28 @@ function renderCal(byDay){
     cells+=`<div class="${cls}" data-date="${ds}">${inner2}</div>`;
   }
 
-  // Detalle del día seleccionado
+  // Panel de detalle — se muestra siempre que hay un día seleccionado
   let det="";
-  if(calSelDay && byDay[calSelDay]){
-    const dr=byDay[calSelDay], dt=dr.reduce((s,r)=>s+r.amount,0);
+  if(calSelDay){
+    const dr=byDay[calSelDay]||[];
+    const dt=dr.reduce((s,r)=>s+r.amount,0);
+    const dateLabel=fd(calSelDay);
+    const recordsHtml=dr.length
+      ? dr.map(r=>`<div class="cdr"><span class="cdr-desc">${esc(r.description)}</span><span class="cdr-amt">${sol(r.amount)}</span></div>`).join("")
+      : `<p style="font-size:12px;color:var(--t3);font-weight:600;padding:4px 0 2px">Sin registros este día</p>`;
+    const totalHtml=dr.length
+      ? `<span class="cdh-total">${sol(dt)}</span>`
+      : "";
     det=`<div class="cal-detail on">
-      <div class="cdh"><span class="cdh-date">${fd(calSelDay)}</span><span class="cdh-total">${sol(dt)}</span></div>
-      ${dr.map(r=>`<div class="cdr"><span class="cdr-desc">${esc(r.description)}</span><span class="cdr-amt">${sol(r.amount)}</span></div>`).join("")}
+      <div class="cdh">
+        <span class="cdh-date">${dateLabel}</span>
+        ${totalHtml}
+      </div>
+      ${recordsHtml}
+      <button class="cal-add-btn" data-date="${calSelDay}">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        Agregar registro aquí
+      </button>
     </div>`;
   } else {
     det=`<div class="cal-detail"></div>`;
@@ -693,11 +717,21 @@ function renderCal(byDay){
   };
   inner.querySelectorAll(".cal-day.clickable").forEach(cell=>{
     cell.onclick=()=>{
-      calSelDay=(calSelDay===cell.dataset.date)?null:cell.dataset.date;
-      if(calSelDay){expandDay=calSelDay; renderHist();}
+      const d=cell.dataset.date;
+      calSelDay=(calSelDay===d)?null:d;
+      if(calSelDay){ expandDay=calSelDay; renderHist(); }
       else renderCal(byDay);
     };
   });
+
+  // Botón "+ Agregar registro aquí"
+  const addBtn=inner.querySelector(".cal-add-btn");
+  if(addBtn){
+    addBtn.onclick=e=>{
+      e.stopPropagation();
+      openForm(addBtn.dataset.date);
+    };
+  }
 
   // Toggle cabecera
   document.getElementById("cal-head").onclick=()=>{
@@ -865,8 +899,8 @@ function doFlash(){
   showToast("⚡ "+sol(price)+" registrado");
 }
 
-function openForm(){
-  document.getElementById("reg-date").value=hoy();
+function openForm(fecha){
+  document.getElementById("reg-date").value=fecha||hoy();
   buildRegRows(); updRegPrev();
   openMo("mo-reg");
 }
