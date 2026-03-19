@@ -6,67 +6,61 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Cuéntame · Pensión</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231A1A1A'/%3E%3Cpath d='M20 18h4v28h-4zm20 0h4v28h-4zM20 30h24v4H20z' fill='white' opacity='.9'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231A1A1A'/%3E%3Cpath d='M20 18h4v28h-4zm20 0h4v28h-4zM20 30h24v4H20z' fill='white' opacity='.9'/%3E%3C/svg%3E">
 
-<!-- Favicon SVG inline via data URI -->
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23191919'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='38' font-family='serif'%3E🍽%3C/text%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23191919'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='38' font-family='serif'%3E🍽%3C/text%3E%3C/svg%3E">
-
+<!-- Google Sans via Google Fonts (más cercano disponible: Google Sans = Product Sans) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Display&display=swap" rel="stylesheet">
+<!-- Fallback con Nunito que tiene el mismo espíritu redondeado de Google Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* ══════════════════════════════════════════════
-   DESIGN TOKENS — Notion × iOS
-   Fondo: blanco / gris arena suavísimo
-   Texto: negro profundo / grises neutros
-   Acento: índigo (no verde, no azul eléctrico)
-   Bordes: líneas muy sutiles
-══════════════════════════════════════════════ */
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
 :root {
   --bg:    #FFFFFF;
-  --bg2:   #F7F7F5;
-  --bg3:   #F0F0ED;
-  --bg4:   #E8E7E3;
-  --line:  #EAEAE7;
-  --line2: #D8D8D5;
-  --t1:    #1A1A1A;
-  --t2:    #4B4B48;
-  --t3:    #8F8F8C;
-  --t4:    #B8B8B5;
+  --bg2:   #F8F8F6;
+  --bg3:   #F1F1EF;
+  --bg4:   #E6E6E3;
+  --line:  #EBEBEA;
+  --line2: #D5D5D3;
+  --t1:    #1C1C1C;
+  --t2:    #4A4A4A;
+  --t3:    #909090;
+  --t4:    #B8B8B8;
   --ac:    #4F46E5;
   --acl:   #EEEFFE;
-  --acm:   #6366F1;
-  --red:   #DC2626;
-  --redl:  #FEF2F2;
-  --amb:   #D97706;
-  --ambl:  #FFFBEB;
-  --grn:   #16A34A;
+  --red:   #E53935;
+  --redl:  #FFF0F0;
+  --amb:   #F59E0B;
+  --grn:   #22C55E;
   --grnl:  #F0FDF4;
 }
 
-html,body {
+html, body {
   height:100%;
-  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  /* Google Sans no está en GFonts como tal; usamos Nunito que es la alternativa más fiel */
+  font-family:'Nunito','Google Sans',sans-serif;
   background:var(--bg2);
   color:var(--t1);
   -webkit-font-smoothing:antialiased;
   -webkit-tap-highlight-color:transparent;
   overscroll-behavior:none;
 }
-.serif { font-family:'Instrument Serif',Georgia,serif; font-style:normal; }
 button { cursor:pointer; border:none; background:none; font-family:inherit; -webkit-tap-highlight-color:transparent; }
-input,select { font-family:inherit; }
-input:focus,select:focus { outline:none; }
+input, select { font-family:inherit; }
+input:focus, select:focus { outline:none; }
 ::-webkit-scrollbar { width:3px; height:3px; }
 ::-webkit-scrollbar-thumb { background:var(--line2); border-radius:4px; }
 
-/* ── Animaciones ── */
-@keyframes fadeUp  { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+@keyframes fadeUp  { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:none} }
 @keyframes slideUp { from{opacity:0;transform:translateY(100%)} to{opacity:1;transform:translateY(0)} }
 @keyframes bgIn    { from{opacity:0} to{opacity:1} }
-.afi { animation:fadeUp .3s cubic-bezier(.16,1,.3,1) both; }
+@keyframes fabPop  { 0%{transform:scale(1)} 30%{transform:scale(.92)} 60%{transform:scale(1.06)} 100%{transform:scale(1)} }
+@keyframes ripple  { from{transform:scale(0);opacity:.4} to{transform:scale(2.5);opacity:0} }
+@keyframes progress{ from{stroke-dashoffset:88} to{stroke-dashoffset:0} }
+.afi { animation:fadeUp .28s cubic-bezier(.16,1,.3,1) both; }
 
 /* ══ LAYOUT ══ */
 #app { min-height:100vh; }
@@ -74,545 +68,514 @@ input:focus,select:focus { outline:none; }
 /* ══ HEADER ══ */
 #header {
   position:sticky; top:0; z-index:500;
-  background:rgba(255,255,255,.9);
+  background:rgba(255,255,255,.92);
   backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(20px);
   border-bottom:1px solid var(--line);
-  padding:11px 18px;
+  padding:10px 18px;
   display:flex; justify-content:space-between; align-items:center;
 }
-.hb-logo { display:flex; align-items:center; gap:8px; }
-.hb-logo .logo-icon {
-  width:30px; height:30px; border-radius:8px;
+.logo { display:flex; align-items:center; gap:9px; }
+.logo-mark {
+  width:32px; height:32px; border-radius:9px;
   background:var(--t1);
-  display:flex; align-items:center; justify-content:center;
-  font-size:16px; line-height:1; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
 }
-.hb-logo .logo-text { display:flex; flex-direction:column; gap:0px; }
-.hb-logo .logo-name { font-family:'Instrument Serif',serif; font-size:18px; color:var(--t1); line-height:1.1; }
-.hb-logo .logo-sub  { font-size:9px; color:var(--t4); font-weight:600; letter-spacing:.07em; text-transform:uppercase; line-height:1; }
-.hb-right { display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; align-items:center; }
+.logo-mark svg { width:18px; height:18px; }
+.logo-words { display:flex; flex-direction:column; }
+.logo-name { font-size:16px; font-weight:800; color:var(--t1); line-height:1.1; letter-spacing:-.01em; }
+.logo-sub  { font-size:9px; font-weight:600; color:var(--t4); letter-spacing:.08em; text-transform:uppercase; }
+.hd-right  { display:flex; gap:6px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
 
 /* ══ PILL ══ */
 .pill {
-  display:inline-flex; align-items:center;
-  padding:3px 10px; border-radius:100px;
-  font-size:11px; font-weight:600;
+  display:inline-flex; align-items:center; padding:4px 11px;
+  border-radius:100px; font-size:11px; font-weight:700;
   background:var(--bg3); color:var(--t2);
-  white-space:nowrap; user-select:none;
-  transition:all .15s;
+  white-space:nowrap; user-select:none; transition:all .15s;
 }
-.pill.dark  { background:var(--t1); color:#fff; }
-.pill.indigo{ background:var(--acl); color:var(--ac); }
-.pill.click { cursor:pointer; }
+.pill.dark   { background:var(--t1); color:#fff; }
+.pill.indigo { background:var(--acl); color:var(--ac); }
+.pill.click  { cursor:pointer; }
 .pill.click:active { opacity:.7; }
 
 /* ══ VISTAS ══ */
-.view { display:none; max-width:480px; margin:0 auto; padding:0 16px 170px; width:100%; }
+.view { display:none; max-width:480px; margin:0 auto; padding:0 16px 180px; width:100%; }
 .view.active { display:block; }
 
 /* ══ TAB BAR ══ */
 #tabbar {
   position:fixed; bottom:0; left:0; right:0; z-index:800;
   background:rgba(255,255,255,.95);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
   border-top:1px solid var(--line);
   display:flex; justify-content:space-around;
-  padding:8px 4px 22px;
+  padding:7px 4px 22px;
 }
 .tab-btn {
-  display:flex; flex-direction:column; align-items:center; gap:4px;
-  padding:6px 14px; border-radius:12px;
-  background:transparent; transition:background .15s; min-width:60px;
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  padding:6px 12px; border-radius:12px;
+  background:transparent; transition:background .15s;
+  min-width:56px; position:relative;
 }
 .tab-btn.active { background:var(--bg3); }
-.tab-btn .tab-icon { font-size:19px; line-height:1; }
-.tab-btn .tab-label { font-size:10px; font-weight:500; color:var(--t3); letter-spacing:.02em; transition:all .15s; }
-.tab-btn.active .tab-label { font-weight:700; color:var(--t1); }
+/* SVG icons en tab */
+.tab-icon { width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
+.tab-icon svg { width:20px; height:20px; stroke:var(--t3); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; transition:stroke .15s; }
+.tab-btn.active .tab-icon svg { stroke:var(--t1); }
+.tab-lbl { font-size:10px; font-weight:600; color:var(--t3); transition:color .15s; }
+.tab-btn.active .tab-lbl { color:var(--t1); font-weight:700; }
+
+/* ══ FAB ══ */
+#fab-wrap {
+  position:fixed; bottom:88px; right:20px; z-index:700;
+  display:flex; flex-direction:column; align-items:flex-end; gap:10px;
+}
+/* Menú FAB expandido */
+.fab-menu { display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
+.fab-menu-item {
+  display:flex; align-items:center; gap:10px;
+  opacity:0; transform:translateY(10px) scale(.95);
+  transition:all .2s cubic-bezier(.16,1,.3,1);
+  pointer-events:none;
+}
+.fab-menu-item.show { opacity:1; transform:none; pointer-events:all; }
+.fab-menu-item:nth-child(1) { transition-delay:.05s; }
+.fab-menu-item:nth-child(2) { transition-delay:.0s; }
+.fab-item-label {
+  background:var(--t1); color:#fff;
+  padding:6px 13px; border-radius:100px;
+  font-size:12px; font-weight:700;
+  box-shadow:0 2px 10px rgba(0,0,0,.2);
+  white-space:nowrap;
+}
+.fab-item-btn {
+  width:46px; height:46px; border-radius:14px;
+  background:var(--bg); border:1.5px solid var(--line);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 2px 10px rgba(0,0,0,.10);
+  font-size:20px;
+}
+/* Botón FAB principal */
+#fab-main {
+  width:58px; height:58px; border-radius:17px;
+  background:var(--t1);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
+  transition:transform .15s, box-shadow .15s;
+  position:relative; overflow:hidden;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;
+}
+#fab-main:active { transform:scale(.94); box-shadow:0 2px 10px rgba(0,0,0,.2); }
+#fab-main svg { width:26px; height:26px; stroke:#fff; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; transition:transform .3s cubic-bezier(.16,1,.3,1); }
+#fab-main.open svg { transform:rotate(45deg); }
+/* Anillo de progreso hold */
+#fab-ring {
+  position:absolute; inset:0; pointer-events:none;
+  display:flex; align-items:center; justify-content:center;
+}
+#fab-ring svg { width:58px; height:58px; transform:rotate(-90deg); }
+#fab-ring circle {
+  cx:29; cy:29; r:26;
+  fill:none; stroke:rgba(255,255,255,.5); stroke-width:3;
+  stroke-dasharray:163; stroke-dashoffset:163;
+  transition:stroke-dashoffset .05s linear;
+}
+/* Overlay fondo cuando FAB abierto */
+#fab-overlay {
+  display:none; position:fixed; inset:0; z-index:650;
+  background:rgba(0,0,0,.08);
+}
+#fab-overlay.show { display:block; }
+
+/* Tooltip flash */
+#flash-toast {
+  position:fixed; bottom:160px; left:50%; transform:translateX(-50%);
+  background:var(--t1); color:#fff;
+  padding:8px 18px; border-radius:100px;
+  font-size:12px; font-weight:700;
+  box-shadow:0 4px 20px rgba(0,0,0,.2);
+  opacity:0; pointer-events:none;
+  transition:opacity .2s;
+  white-space:nowrap; z-index:9999;
+}
+#flash-toast.show { opacity:1; }
 
 /* ══ CARD ══ */
-.card {
-  background:var(--bg);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:18px;
-  box-shadow:var(--sh0, 0 1px 3px rgba(0,0,0,.04));
-}
-.card-flush { padding:0; overflow:hidden; }
+.card { background:var(--bg); border:1px solid var(--line); border-radius:14px; }
 
-/* ══ SECTION TITLE ══ */
-.slabel {
-  font-size:11px; font-weight:600; color:var(--t3);
-  letter-spacing:.07em; text-transform:uppercase;
-}
+/* ══ SECTION LABEL ══ */
+.slabel { font-size:10px; font-weight:700; color:var(--t3); letter-spacing:.08em; text-transform:uppercase; }
 
 /* ══ STEPPER ══ */
-.stepper {
-  display:flex; align-items:center;
-  background:var(--bg3); border-radius:100px;
-  overflow:hidden; flex-shrink:0;
-}
-.stepper button {
-  width:42px; height:42px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:20px; transition:background .1s;
-}
+.stepper { display:flex; align-items:center; background:var(--bg3); border-radius:100px; overflow:hidden; flex-shrink:0; }
+.stepper button { width:40px; height:40px; display:flex; align-items:center; justify-content:center; font-size:19px; transition:background .1s; }
 .stepper button:active { background:var(--bg4); }
 .stepper .dec { color:var(--t3); }
 .stepper .inc { color:var(--ac); font-weight:700; }
-.stepper .val { min-width:30px; text-align:center; font-size:16px; font-weight:700; color:var(--t1); }
+.stepper .val { min-width:28px; text-align:center; font-size:15px; font-weight:800; color:var(--t1); }
 
 /* ══ TOGGLE ══ */
-.toggle {
-  width:44px; height:26px; border-radius:13px;
-  position:relative; cursor:pointer;
-  background:var(--line2); transition:background .22s;
-  flex-shrink:0;
-}
+.toggle { width:44px; height:26px; border-radius:13px; position:relative; cursor:pointer; background:var(--line2); transition:background .22s; flex-shrink:0; }
 .toggle.on { background:var(--t1); }
-.toggle::after {
-  content:''; position:absolute; top:3px; left:3px;
-  width:20px; height:20px; border-radius:10px;
-  background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.22);
-  transition:left .22s cubic-bezier(.34,1.56,.64,1);
-}
+.toggle::after { content:''; position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:10px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.2); transition:left .22s cubic-bezier(.34,1.56,.64,1); }
 .toggle.on::after { left:21px; }
 
-/* ══ INPUT PRECIO ══ */
+/* ══ PRICE INPUT ══ */
 .price-wrap { display:flex; flex-direction:column; gap:5px; }
-.price-wrap > label {
-  font-size:11px; font-weight:600; color:var(--t3);
-  letter-spacing:.06em; text-transform:uppercase;
-}
-.price-field {
-  display:flex; align-items:center; gap:6px;
-  border:1.5px solid var(--line2);
-  border-radius:10px; padding:0 13px;
-  background:var(--bg2); transition:border-color .15s, box-shadow .15s;
-}
-.price-field.focused {
-  border-color:var(--ac);
-  box-shadow:0 0 0 3px rgba(79,70,229,.1);
-}
-.price-field .sol-lbl { font-size:13px; font-weight:700; color:var(--ac); flex-shrink:0; }
-.price-field input {
-  flex:1; padding:11px 0; font-size:15px; font-weight:500;
-  background:transparent; color:var(--t1); width:100%; border:none;
-}
+.price-wrap > label { font-size:10px; font-weight:700; color:var(--t3); letter-spacing:.07em; text-transform:uppercase; }
+.price-field { display:flex; align-items:center; gap:6px; border:1.5px solid var(--line2); border-radius:10px; padding:0 13px; background:var(--bg2); transition:border-color .15s, box-shadow .15s; }
+.price-field.focused { border-color:var(--ac); box-shadow:0 0 0 3px rgba(79,70,229,.1); }
+.price-field .sol-lbl { font-size:13px; font-weight:800; color:var(--ac); flex-shrink:0; }
+.price-field input { flex:1; padding:11px 0; font-size:15px; font-weight:600; background:transparent; color:var(--t1); width:100%; border:none; }
 
-/* ══ INPUT TEXTO ══ */
+/* ══ TEXT INPUT ══ */
 .text-wrap { display:flex; flex-direction:column; gap:5px; }
-.text-wrap > label {
-  font-size:11px; font-weight:600; color:var(--t3);
-  letter-spacing:.06em; text-transform:uppercase;
-}
-.text-f {
-  padding:11px 13px; border-radius:10px; font-size:14px;
-  border:1.5px solid var(--line2); background:var(--bg2);
-  color:var(--t1); width:100%;
-  transition:border-color .15s, box-shadow .15s;
-}
-.text-f:focus {
-  border-color:var(--ac);
-  box-shadow:0 0 0 3px rgba(79,70,229,.1);
-}
-.inline-name {
-  font-size:15px; font-weight:600; background:transparent;
-  border:none; outline:none; color:var(--t1); flex:1; min-width:0;
-}
+.text-wrap > label { font-size:10px; font-weight:700; color:var(--t3); letter-spacing:.07em; text-transform:uppercase; }
+.text-f { padding:11px 13px; border-radius:10px; font-size:14px; font-weight:500; border:1.5px solid var(--line2); background:var(--bg2); color:var(--t1); width:100%; transition:border-color .15s, box-shadow .15s; }
+.text-f:focus { border-color:var(--ac); box-shadow:0 0 0 3px rgba(79,70,229,.1); }
+.inline-name { font-size:14px; font-weight:700; background:transparent; border:none; outline:none; color:var(--t1); flex:1; min-width:0; }
 
-/* ══ INPUT FECHA ══ */
-.date-row {
-  display:flex; align-items:center; gap:10px;
-  padding:10px 14px; background:var(--bg2);
-  border:1.5px solid var(--line2); border-radius:10px;
-  transition:border-color .15s;
-}
-.date-row:focus-within {
-  border-color:var(--ac);
-  box-shadow:0 0 0 3px rgba(79,70,229,.1);
-}
-.date-row .cal-icon { font-size:16px; flex-shrink:0; }
-.date-row input[type=date] {
-  flex:1; border:none; background:transparent;
-  font-size:14px; font-weight:500; color:var(--t1);
-  -webkit-appearance:none;
-}
-.date-row input[type=date]::-webkit-calendar-picker-indicator {
-  opacity:.4; cursor:pointer;
-}
+/* ══ DATE ROW ══ */
+.date-row { display:flex; align-items:center; gap:9px; padding:10px 13px; background:var(--bg2); border:1.5px solid var(--line2); border-radius:10px; transition:border-color .15s; }
+.date-row:focus-within { border-color:var(--ac); box-shadow:0 0 0 3px rgba(79,70,229,.1); }
+.date-row input[type=date] { flex:1; border:none; background:transparent; font-size:14px; font-weight:600; color:var(--t1); font-family:inherit; -webkit-appearance:none; }
+.date-row input[type=date]::-webkit-calendar-picker-indicator { opacity:.4; cursor:pointer; }
 
-/* ══ BOTÓN ══ */
-.btn {
-  display:inline-flex; align-items:center; justify-content:center;
-  gap:6px; border-radius:10px; font-weight:600; font-size:14px;
-  font-family:inherit; letter-spacing:.01em;
-  transition:opacity .15s, transform .1s, box-shadow .15s;
-  cursor:pointer; border:none;
-}
-.btn:active { transform:scale(.975); opacity:.85; }
-.btn:disabled { opacity:.35; cursor:not-allowed; transform:none !important; }
+/* ══ BTN ══ */
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; border-radius:10px; font-weight:700; font-size:14px; font-family:inherit; transition:opacity .15s, transform .1s; cursor:pointer; border:none; }
+.btn:active { transform:scale(.97); opacity:.85; }
+.btn:disabled { opacity:.35; cursor:not-allowed; transform:none!important; }
 .btn-dark    { background:var(--t1); color:#fff; }
 .btn-outline { background:transparent; color:var(--t1); border:1.5px solid var(--line2); }
 .btn-ghost   { background:var(--bg3); color:var(--t2); }
 .btn-red     { background:var(--redl); color:var(--red); }
-.btn-indigo  { background:var(--acl); color:var(--ac); }
 .btn-sm  { padding:7px 14px; font-size:12px; border-radius:8px; }
 .btn-md  { padding:10px 18px; }
-.btn-lg  { padding:13px 24px; font-size:15px; border-radius:12px; }
-.btn-xl  { padding:16px 20px; font-size:15px; border-radius:12px; width:100%; }
+.btn-lg  { padding:13px 22px; font-size:15px; border-radius:12px; }
+.btn-xl  { padding:15px 20px; font-size:15px; border-radius:12px; width:100%; }
 
 /* ══ FOOD ROW ══ */
-.food-row {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:13px 16px; gap:12px;
-  border-bottom:1px solid var(--line);
-}
+.food-row { display:flex; align-items:center; justify-content:space-between; padding:13px 16px; gap:12px; border-bottom:1px solid var(--line); }
 .food-row:last-child { border-bottom:none; }
 .food-info { display:flex; align-items:center; gap:11px; flex:1; min-width:0; }
-.food-emoji { font-size:24px; flex-shrink:0; line-height:1; }
-.food-name  { font-size:14px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.food-price { font-size:12px; color:var(--t3); font-weight:500; margin-top:1px; }
-.food-price span { color:var(--ac); font-weight:600; }
+.food-icon { width:36px; height:36px; border-radius:10px; background:var(--bg3); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.food-icon svg { width:18px; height:18px; stroke:var(--t2); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.food-name  { font-size:14px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.food-price { font-size:12px; color:var(--t3); font-weight:600; margin-top:1px; }
+.food-price b { color:var(--ac); }
 
-/* ══ FAB ══ */
-.fab-wrap {
-  position:fixed; bottom:72px; left:0; right:0;
-  padding:10px 18px 14px;
-  background:linear-gradient(to top, var(--bg2) 60%, transparent);
-  z-index:100;
-}
-.fab-hint { text-align:center; font-size:12px; color:var(--t3); margin-bottom:7px; display:none; }
-
-/* ══ MODAL BOTTOM SHEET ══ */
-.modal-overlay {
-  position:fixed; inset:0; z-index:9000;
-  background:rgba(0,0,0,.3);
-  backdrop-filter:blur(4px);
-  -webkit-backdrop-filter:blur(4px);
-  display:none; align-items:flex-end; justify-content:center;
-  animation:bgIn .2s ease;
-}
+/* ══ MODAL ══ */
+.modal-overlay { position:fixed; inset:0; z-index:9000; background:rgba(0,0,0,.25); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); display:none; align-items:flex-end; justify-content:center; animation:bgIn .2s; }
 .modal-overlay.open { display:flex; }
-.modal-sheet {
-  background:var(--bg);
-  border-radius:20px 20px 0 0;
-  width:100%; max-width:500px;
-  max-height:92vh; overflow-y:auto;
-  box-shadow:0 -8px 40px rgba(0,0,0,.12);
-  animation:slideUp .28s cubic-bezier(.16,1,.3,1);
-  padding-bottom:env(safe-area-inset-bottom, 16px);
-}
-.modal-handle {
-  width:36px; height:4px; border-radius:2px;
-  background:var(--line2); margin:12px auto 0;
-}
-.modal-head {
-  padding:16px 20px 0;
-  display:flex; justify-content:space-between; align-items:center;
-}
-.modal-head h3 { font-family:'Instrument Serif',serif; font-size:20px; }
-.modal-close-btn {
-  width:28px; height:28px; border-radius:8px;
-  background:var(--bg3); color:var(--t2);
-  display:flex; align-items:center; justify-content:center;
-  font-size:13px; cursor:pointer;
-}
+.modal-sheet { background:var(--bg); border-radius:22px 22px 0 0; width:100%; max-width:500px; max-height:92vh; overflow-y:auto; box-shadow:0 -6px 40px rgba(0,0,0,.1); animation:slideUp .28s cubic-bezier(.16,1,.3,1); padding-bottom:env(safe-area-inset-bottom,16px); }
+.modal-handle { width:34px; height:4px; border-radius:2px; background:var(--line2); margin:12px auto 0; }
+.modal-head { padding:16px 20px 0; display:flex; justify-content:space-between; align-items:center; }
+.modal-head h3 { font-size:19px; font-weight:800; }
+.modal-close { width:28px; height:28px; border-radius:8px; background:var(--bg3); color:var(--t2); display:flex; align-items:center; justify-content:center; font-size:13px; cursor:pointer; }
 .modal-body { padding:16px 20px 20px; }
 
-/* ══ CONFIRM ITEMS ══ */
-.confirm-item {
-  display:flex; justify-content:space-between; align-items:center;
-  padding:10px 12px; background:var(--bg2); border-radius:9px;
-  margin-bottom:6px; gap:8px;
-}
-.confirm-item-name { font-size:14px; color:var(--t1); }
-.confirm-item-amt  { font-size:14px; font-weight:700; color:var(--ac); flex-shrink:0; }
-.confirm-total {
-  display:flex; justify-content:space-between; align-items:center;
-  padding:12px 2px 0; border-top:1px solid var(--line); margin-top:4px; margin-bottom:16px;
-}
-.confirm-total-label { font-weight:600; font-size:15px; }
-.confirm-total-val   { font-family:'Instrument Serif',serif; font-size:26px; color:var(--ac); }
-
-/* ══ RESUMEN HOY ══ */
-.today-banner {
-  background:var(--t1);
-  border-radius:14px; padding:16px 18px; margin-bottom:14px;
-  display:none;
-}
-.today-banner.visible { display:block; }
-.today-banner .tb-label { font-size:10px; font-weight:600; color:rgba(255,255,255,.55); letter-spacing:.08em; text-transform:uppercase; }
-.today-banner .tb-total { font-family:'Instrument Serif',serif; font-size:36px; color:#fff; margin-top:2px; }
-.today-banner .tb-list  { margin-top:10px; display:flex; flex-direction:column; gap:4px; }
-.today-banner .tb-row   { display:flex; justify-content:space-between; font-size:12px; color:rgba(255,255,255,.7); }
-.today-banner .tb-row span:last-child { font-weight:700; color:rgba(255,255,255,.9); flex-shrink:0; margin-left:8px; }
+/* ══ CONFIRM ══ */
+.ci { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:var(--bg2); border-radius:9px; margin-bottom:6px; gap:8px; }
+.ci-name { font-size:14px; font-weight:600; }
+.ci-amt  { font-size:14px; font-weight:800; color:var(--ac); flex-shrink:0; }
+.ci-total { display:flex; justify-content:space-between; align-items:baseline; padding:12px 2px 0; border-top:1px solid var(--line); margin:6px 0 16px; }
+.ci-total-lbl { font-size:15px; font-weight:700; }
+.ci-total-val { font-size:28px; font-weight:800; color:var(--ac); }
 
 /* ══ HISTORIAL ══ */
-.month-strip { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:18px; }
+.month-strip { display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:16px; }
 .month-strip::-webkit-scrollbar { height:0; }
-.day-card { background:var(--bg); border:1px solid var(--line); border-radius:14px; overflow:hidden; margin-bottom:10px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+.day-card { background:var(--bg); border:1px solid var(--line); border-radius:14px; overflow:hidden; margin-bottom:10px; }
 .day-head { display:flex; justify-content:space-between; align-items:center; padding:11px 14px; background:var(--bg2); border-bottom:1px solid var(--line); }
-.day-name  { font-size:13px; font-weight:600; color:var(--t2); text-transform:capitalize; }
-.day-total { font-family:'Instrument Serif',serif; font-size:18px; color:var(--t1); }
-.day-body  { padding:8px 14px 12px; }
-.rec-row   { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:5px 0; border-bottom:1px solid var(--line); }
+.day-name  { font-size:12px; font-weight:700; color:var(--t2); text-transform:capitalize; }
+.day-total { font-size:17px; font-weight:800; color:var(--t1); }
+.day-body  { padding:6px 14px 10px; }
+.rec-row   { display:flex; justify-content:space-between; align-items:center; gap:8px; padding:7px 0; border-bottom:1px solid var(--line); }
 .rec-row:last-child { border-bottom:none; }
-.rec-desc  { font-size:13px; color:var(--t2); flex:1; line-height:1.4; }
+.rec-desc  { font-size:13px; color:var(--t2); flex:1; line-height:1.4; font-weight:500; }
 .rec-right { display:flex; align-items:center; gap:7px; flex-shrink:0; }
-.rec-amt   { font-size:13px; font-weight:700; color:var(--t1); }
+.rec-amt   { font-size:13px; font-weight:800; color:var(--t1); }
 .rec-del   { width:24px; height:24px; border-radius:6px; background:var(--redl); color:var(--red); display:flex; align-items:center; justify-content:center; font-size:11px; cursor:pointer; border:none; }
 
-/* ══ RESUMEN STATS ══ */
-.hero-card {
-  background:var(--t1); border-radius:16px;
-  padding:22px 22px 18px; margin-bottom:14px; color:#fff;
-}
-.hero-label { font-size:10px; font-weight:600; opacity:.5; letter-spacing:.09em; text-transform:uppercase; }
-.hero-val   { font-family:'Instrument Serif',serif; font-size:48px; margin-top:4px; line-height:1; }
-.mini-grid  { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
-.mini-box   { background:rgba(255,255,255,.1); border-radius:10px; padding:10px 12px; }
-.mini-lbl   { font-size:10px; font-weight:600; opacity:.6; text-transform:uppercase; letter-spacing:.06em; }
-.mini-val   { font-family:'Instrument Serif',serif; font-size:20px; margin-top:2px; }
-.proj-card  { background:var(--bg); border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:14px; }
-.proj-top   { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; }
-.proj-lbl   { font-size:11px; font-weight:600; color:var(--t3); text-transform:uppercase; letter-spacing:.07em; }
-.proj-val   { font-family:'Instrument Serif',serif; font-size:26px; color:var(--amb); margin-top:3px; }
-.prog-track { height:6px; background:var(--bg3); border-radius:3px; overflow:hidden; }
-.prog-fill  { height:100%; background:var(--t1); border-radius:3px; transition:width .7s cubic-bezier(.16,1,.3,1); }
-.prog-lbls  { display:flex; justify-content:space-between; margin-top:6px; }
-.prog-lbls span { font-size:11px; color:var(--t4); }
-.last-recs  { display:flex; flex-direction:column; gap:7px; }
-.last-rec   { background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
-.lr-date    { font-size:11px; color:var(--t3); text-transform:capitalize; margin-bottom:2px; }
-.lr-desc    { font-size:13px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.lr-amt     { font-family:'Instrument Serif',serif; font-size:20px; color:var(--t1); flex-shrink:0; }
+/* ══ RESUMEN ══ */
+.hero-card { background:var(--t1); border-radius:16px; padding:20px 20px 18px; margin-bottom:12px; color:#fff; }
+.hero-lbl  { font-size:10px; font-weight:700; opacity:.5; letter-spacing:.09em; text-transform:uppercase; }
+.hero-val  { font-size:44px; font-weight:800; margin-top:4px; line-height:1; }
+.mini-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px; }
+.mini-box  { background:rgba(255,255,255,.1); border-radius:10px; padding:10px 11px; }
+.mini-lbl  { font-size:9px; font-weight:700; opacity:.6; text-transform:uppercase; letter-spacing:.07em; }
+.mini-val  { font-size:19px; font-weight:800; margin-top:2px; }
+.proj-card { background:var(--bg); border:1px solid var(--line); border-radius:14px; padding:15px; margin-bottom:12px; }
+.proj-top  { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+.proj-lbl  { font-size:10px; font-weight:700; color:var(--t3); text-transform:uppercase; letter-spacing:.07em; }
+.proj-val  { font-size:24px; font-weight:800; color:var(--amb); margin-top:2px; }
+.prog-track{ height:5px; background:var(--bg3); border-radius:3px; overflow:hidden; }
+.prog-fill { height:100%; background:var(--t1); border-radius:3px; transition:width .7s cubic-bezier(.16,1,.3,1); }
+.prog-lbls { display:flex; justify-content:space-between; margin-top:6px; }
+.prog-lbls span { font-size:10px; color:var(--t4); }
+.last-recs { display:flex; flex-direction:column; gap:6px; }
+.last-rec  { background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:11px 13px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+.lr-date   { font-size:10px; color:var(--t3); text-transform:capitalize; font-weight:600; }
+.lr-desc   { font-size:13px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.lr-amt    { font-size:19px; font-weight:800; color:var(--t1); flex-shrink:0; }
 
 /* ══ CONFIG ══ */
-.cfg-card {
-  background:var(--bg); border:1px solid var(--line);
-  border-radius:14px; padding:16px;
-  margin-bottom:10px; transition:opacity .2s;
-  box-shadow:0 1px 3px rgba(0,0,0,.04);
-}
-.cfg-card.off { opacity:.55; }
-.cfg-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+.cfg-card { background:var(--bg); border:1px solid var(--line); border-radius:14px; padding:15px; margin-bottom:9px; transition:opacity .2s; }
+.cfg-card.off { opacity:.5; }
+.cfg-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:13px; }
 .cfg-left { display:flex; align-items:center; gap:10px; flex:1; min-width:0; }
+.cfg-icon { width:34px; height:34px; border-radius:9px; background:var(--bg3); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.cfg-icon svg { width:17px; height:17px; stroke:var(--t2); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 .cfg-acts { display:flex; align-items:center; gap:8px; flex-shrink:0; }
 .del-btn  { width:26px; height:26px; border-radius:7px; background:var(--redl); color:var(--red); display:flex; align-items:center; justify-content:center; font-size:11px; cursor:pointer; border:none; }
-.emoji-grid { display:flex; gap:4px; flex-wrap:wrap; margin-top:8px; }
-.emo-btn    { font-size:18px; width:33px; height:33px; border-radius:7px; background:var(--bg2); border:1.5px solid transparent; transition:all .1s; cursor:pointer; }
-.emo-btn.sel{ background:var(--acl); border-color:var(--ac); }
-.emo-btn-lg { font-size:20px; width:38px; height:38px; border-radius:9px; }
-.save-bar {
-  position:fixed; bottom:68px; left:0; right:0;
-  padding:10px 18px 12px;
-  background:linear-gradient(to top, var(--bg2) 60%, transparent);
-  z-index:100;
-}
+.emoji-grid  { display:flex; gap:4px; flex-wrap:wrap; margin-top:8px; }
+.emo-btn     { font-size:17px; width:32px; height:32px; border-radius:7px; background:var(--bg2); border:1.5px solid transparent; transition:all .1s; cursor:pointer; }
+.emo-btn.sel { background:var(--acl); border-color:var(--ac); }
+.emo-btn-lg  { font-size:19px; width:37px; height:37px; border-radius:9px; }
+.save-bar { position:fixed; bottom:68px; left:0; right:0; padding:10px 18px 12px; background:linear-gradient(to top,var(--bg2) 55%,transparent); z-index:100; }
+
+/* ══ VISTA REGISTRO ══ */
+.reg-row { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border-bottom:1px solid var(--line); gap:12px; }
+.reg-row:last-child { border-bottom:none; }
+.reg-left { display:flex; align-items:center; gap:11px; flex:1; min-width:0; }
+.reg-icon { width:36px; height:36px; border-radius:10px; background:var(--bg3); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.reg-icon svg { width:17px; height:17px; stroke:var(--t2); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.reg-name  { font-size:14px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.reg-price { font-size:12px; color:var(--t3); font-weight:600; margin-top:1px; }
 
 /* ══ MISC ══ */
 .empty { text-align:center; padding:60px 20px; color:var(--t4); }
-.empty .ei { font-size:42px; margin-bottom:10px; }
-.empty p   { font-size:14px; }
-.divider-row { display:flex; justify-content:space-between; align-items:center; padding:12px 2px 0; border-top:1px solid var(--line); margin-top:6px; margin-bottom:18px; }
+.empty .ei { font-size:40px; margin-bottom:10px; }
+.empty p   { font-size:14px; font-weight:500; }
 .flex-r  { display:flex; align-items:center; }
 .flex-sb { display:flex; justify-content:space-between; align-items:center; }
 .flex-c  { display:flex; flex-direction:column; }
-.gap-4   { gap:4px; }  .gap-6  { gap:6px; }  .gap-8  { gap:8px; }
-.gap-10  { gap:10px; } .gap-12 { gap:12px; } .gap-14 { gap:14px; }
-.mt-8  { margin-top:8px; }   .mt-10 { margin-top:10px; }
-.mt-12 { margin-top:12px; }  .mt-14 { margin-top:14px; }
-.mt-16 { margin-top:16px; }  .mt-20 { margin-top:20px; }
-.mb-6  { margin-bottom:6px; } .mb-8  { margin-bottom:8px; }
-.mb-10 { margin-bottom:10px; }.mb-14 { margin-bottom:14px; }
-.mb-18 { margin-bottom:18px; }.mb-22 { margin-bottom:22px; }
-.w100  { width:100%; }
+.gap-6   { gap:6px; } .gap-8  { gap:8px; }  .gap-10 { gap:10px; }
+.gap-12  { gap:12px; }.gap-14 { gap:14px; }
+.mt-8   { margin-top:8px; }  .mt-10 { margin-top:10px; }
+.mt-12  { margin-top:12px; } .mt-14 { margin-top:14px; }
+.mt-16  { margin-top:16px; } .mt-20 { margin-top:20px; }
+.mb-6   { margin-bottom:6px; } .mb-8  { margin-bottom:8px; }
+.mb-10  { margin-bottom:10px; }.mb-12 { margin-bottom:12px; }
+.mb-16  { margin-bottom:16px; }.mb-20 { margin-bottom:20px; }
+.w100   { width:100%; }
 </style>
 </head>
 <body>
 <div id="app">
 
-  <!-- ══ HEADER ══ -->
-  <div id="header">
-    <div class="hb-logo">
-      <div class="logo-icon">🍽️</div>
-      <div class="logo-text">
-        <span class="logo-name">Cuéntame</span>
-        <span class="logo-sub">Pensión</span>
-      </div>
+<!-- ══ HEADER ══ -->
+<div id="header">
+  <div class="logo">
+    <div class="logo-mark">
+      <!-- Icono minimalista: tenedor y cuchillo -->
+      <svg viewBox="0 0 18 18" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 2v4c0 1.1.9 2 2 2v8"/>
+        <path d="M9 2v14"/>
+        <path d="M13 2v3a2 2 0 0 0 2 2v7"/>
+      </svg>
     </div>
-    <div class="hb-right">
-      <span id="badge-hoy" class="pill dark" style="display:none"></span>
-      <span id="badge-mes" class="pill"></span>
-    </div>
-  </div>
-
-  <!-- ══ VISTA HOY ══ -->
-  <div id="view-hoy" class="view active afi">
-    <div style="padding:24px 0 18px">
-      <p id="hoy-dayname" class="slabel" style="color:var(--ac)"></p>
-      <h1 id="hoy-date"   class="serif"  style="font-size:34px;line-height:1.1;margin-top:3px"></h1>
-    </div>
-
-    <!-- Banner de hoy -->
-    <div id="today-banner" class="today-banner mb-14">
-      <p class="tb-label">Gastado hoy</p>
-      <p id="tb-total" class="tb-total"></p>
-      <div id="tb-list" class="tb-list"></div>
-    </div>
-
-    <!-- Selector de comidas -->
-    <div class="card card-flush mb-14" style="padding:0">
-      <div style="padding:13px 16px;border-bottom:1px solid var(--line);background:var(--bg2);">
-        <p class="slabel">¿Qué comiste?</p>
-      </div>
-      <div id="food-rows"></div>
-    </div>
-
-    <!-- FAB -->
-    <div class="fab-wrap">
-      <p id="fab-hint" class="fab-hint"></p>
-      <button id="btn-registrar" class="btn btn-dark btn-xl" disabled>
-        Selecciona lo que comiste
-      </button>
+    <div class="logo-words">
+      <span class="logo-name">Cuéntame</span>
+      <span class="logo-sub">Pensión</span>
     </div>
   </div>
-
-  <!-- ══ VISTA HISTORIAL ══ -->
-  <div id="view-historial" class="view">
-    <div style="padding:24px 0 18px">
-      <h1 class="serif" style="font-size:32px">Historial</h1>
-      <p style="color:var(--t3);font-size:13px;margin-top:3px">Todos tus registros</p>
-    </div>
-    <div id="month-strip" class="month-strip"></div>
-    <div id="hist-summary" class="hero-card mb-18">
-      <p class="hero-label">Total del mes</p>
-      <p id="hist-total" class="hero-val"></p>
-      <div class="mini-grid" style="margin-top:12px">
-        <div class="mini-box"><p class="mini-lbl">Registros</p><p id="hist-recs" class="mini-val"></p></div>
-        <div class="mini-box"><p class="mini-lbl">Días</p><p id="hist-dias" class="mini-val"></p></div>
-      </div>
-    </div>
-    <div id="hist-days"></div>
-  </div>
-
-  <!-- ══ VISTA RESUMEN ══ -->
-  <div id="view-resumen" class="view">
-    <div style="padding:24px 0 18px">
-      <h1 class="serif" style="font-size:32px">Resumen</h1>
-      <p id="res-month" style="color:var(--t3);font-size:13px;margin-top:3px;text-transform:capitalize"></p>
-    </div>
-    <div class="hero-card">
-      <p class="hero-label">Total gastado</p>
-      <p id="res-total" class="hero-val"></p>
-      <div class="mini-grid">
-        <div class="mini-box"><p class="mini-lbl">Días con comida</p><p id="res-days" class="mini-val"></p></div>
-        <div class="mini-box"><p class="mini-lbl">Promedio / día</p><p id="res-avg"  class="mini-val"></p></div>
-      </div>
-    </div>
-    <div class="proj-card mt-14">
-      <div class="proj-top">
-        <div>
-          <p class="proj-lbl">Proyección fin de mes</p>
-          <p id="res-prj" class="proj-val"></p>
-        </div>
-        <span style="font-size:32px">🔮</span>
-      </div>
-      <div class="prog-track"><div id="res-bar" class="prog-fill" style="width:0%"></div></div>
-      <div class="prog-lbls">
-        <span>Día 1</span>
-        <span id="res-day-lbl" style="color:var(--t2);font-weight:600"></span>
-        <span id="res-dim-lbl"></span>
-      </div>
-    </div>
-    <div id="res-last-wrap" style="display:none;margin-top:20px">
-      <p class="slabel mb-10">Últimos registros</p>
-      <div id="res-last" class="last-recs"></div>
-    </div>
-  </div>
-
-  <!-- ══ VISTA CONFIG ══ -->
-  <div id="view-config" class="view">
-    <div style="padding:24px 0 18px">
-      <h1 class="serif" style="font-size:32px">Configuración</h1>
-      <p style="color:var(--t3);font-size:13px;margin-top:3px">Edita tu menú y precios en Soles</p>
-    </div>
-
-    <p class="slabel mb-8">Menú completo</p>
-    <div class="cfg-card mb-22" id="cfg-cmp-card">
-      <div class="cfg-head">
-        <div class="cfg-left">
-          <span id="cfg-cmp-emoji" style="font-size:24px"></span>
-          <span id="cfg-cmp-lbl"   style="font-weight:600;font-size:15px"></span>
-        </div>
-        <div id="cfg-cmp-toggle" class="toggle"></div>
-      </div>
-      <div class="flex-c gap-12">
-        <div class="text-wrap">
-          <label>Nombre</label>
-          <input id="cfg-cmp-name" type="text" class="text-f" placeholder="Ej: Menú Completo">
-        </div>
-        <div class="price-wrap">
-          <label>Precio (S/)</label>
-          <div class="price-field" id="cfg-cmp-pw">
-            <span class="sol-lbl">S/</span>
-            <input id="cfg-cmp-price" type="text" inputmode="decimal" placeholder="0.00">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="flex-sb mb-10">
-      <p class="slabel">Platos individuales</p>
-      <button class="btn btn-outline btn-sm" id="btn-add-item">+ Agregar</button>
-    </div>
-    <div id="config-items"></div>
-
-    <div class="save-bar">
-      <button id="btn-save" class="btn btn-dark btn-xl" style="box-shadow:0 4px 20px rgba(0,0,0,.18)">
-        Guardar cambios
-      </button>
-    </div>
-  </div>
-
-  <!-- ══ TAB BAR ══ -->
-  <div id="tabbar">
-    <button class="tab-btn active" data-tab="hoy">      <span class="tab-icon">🏠</span><span class="tab-label">Hoy</span></button>
-    <button class="tab-btn"        data-tab="historial"> <span class="tab-icon">📋</span><span class="tab-label">Historial</span></button>
-    <button class="tab-btn"        data-tab="resumen">   <span class="tab-icon">📊</span><span class="tab-label">Resumen</span></button>
-    <button class="tab-btn"        data-tab="config">    <span class="tab-icon">⚙️</span><span class="tab-label">Config</span></button>
+  <div class="hd-right">
+    <span id="badge-hoy"  class="pill dark"   style="display:none"></span>
+    <span id="badge-mes"  class="pill"></span>
   </div>
 </div>
 
-<!-- ══ MODAL CONFIRMAR ══ -->
-<div id="modal-confirm" class="modal-overlay">
+<!-- ══ VISTA HISTORIAL (pantalla principal) ══ -->
+<div id="view-historial" class="view active afi">
+  <div style="padding:22px 0 16px">
+    <h1 style="font-size:28px;font-weight:800;line-height:1.1">Registros</h1>
+    <p  style="font-size:13px;color:var(--t3);margin-top:3px;font-weight:500">Tus comidas en la pensión</p>
+  </div>
+  <div id="month-strip" class="month-strip"></div>
+  <div id="hist-summary" class="hero-card mb-12">
+    <p class="hero-lbl">Total del mes</p>
+    <p id="hist-total" class="hero-val"></p>
+    <div class="mini-grid">
+      <div class="mini-box"><p class="mini-lbl">Registros</p><p id="hist-recs" class="mini-val"></p></div>
+      <div class="mini-box"><p class="mini-lbl">Días</p>     <p id="hist-dias" class="mini-val"></p></div>
+    </div>
+  </div>
+  <div id="hist-days"></div>
+</div>
+
+<!-- ══ VISTA RESUMEN ══ -->
+<div id="view-resumen" class="view">
+  <div style="padding:22px 0 16px">
+    <h1 style="font-size:28px;font-weight:800">Resumen</h1>
+    <p id="res-month" style="font-size:13px;color:var(--t3);margin-top:3px;font-weight:500;text-transform:capitalize"></p>
+  </div>
+  <div class="hero-card">
+    <p class="hero-lbl">Total gastado</p>
+    <p id="res-total" class="hero-val"></p>
+    <div class="mini-grid">
+      <div class="mini-box"><p class="mini-lbl">Días con comida</p><p id="res-days" class="mini-val"></p></div>
+      <div class="mini-box"><p class="mini-lbl">Promedio / día</p> <p id="res-avg"  class="mini-val"></p></div>
+    </div>
+  </div>
+  <div class="proj-card mt-12">
+    <div class="proj-top">
+      <div><p class="proj-lbl">Proyección fin de mes</p><p id="res-prj" class="proj-val"></p></div>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--amb)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+    </div>
+    <div class="prog-track"><div id="res-bar" class="prog-fill" style="width:0%"></div></div>
+    <div class="prog-lbls"><span>Día 1</span><span id="res-day-lbl" style="color:var(--t2);font-weight:700"></span><span id="res-dim-lbl"></span></div>
+  </div>
+  <div id="res-last-wrap" style="display:none;margin-top:18px">
+    <p class="slabel mb-8">Últimos registros</p>
+    <div id="res-last" class="last-recs"></div>
+  </div>
+</div>
+
+<!-- ══ VISTA CONFIG ══ -->
+<div id="view-config" class="view">
+  <div style="padding:22px 0 16px">
+    <h1 style="font-size:28px;font-weight:800">Configuración</h1>
+    <p style="font-size:13px;color:var(--t3);margin-top:3px;font-weight:500">Menú y precios en Soles</p>
+  </div>
+
+  <p class="slabel mb-8">Menú completo</p>
+  <div class="cfg-card mb-20" id="cfg-cmp-card">
+    <div class="cfg-head">
+      <div class="cfg-left">
+        <div class="cfg-icon" id="cfg-cmp-icon-wrap">
+          <!-- icono bowl -->
+          <svg viewBox="0 0 24 24"><path d="M4 11h16a8 8 0 0 1-16 0z"/><path d="M12 3v2M8 4l1 2M16 4l-1 2"/><path d="M4 19h16"/></svg>
+        </div>
+        <span id="cfg-cmp-lbl" style="font-weight:700;font-size:14px"></span>
+      </div>
+      <div id="cfg-cmp-toggle" class="toggle"></div>
+    </div>
+    <div class="flex-c gap-12">
+      <div class="text-wrap"><label>Nombre</label><input id="cfg-cmp-name" type="text" class="text-f" placeholder="Ej: Menú Completo"></div>
+      <div class="price-wrap"><label>Precio (S/)</label>
+        <div class="price-field" id="cfg-cmp-pw"><span class="sol-lbl">S/</span><input id="cfg-cmp-price" type="text" inputmode="decimal" placeholder="0.00"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex-sb mb-10">
+    <p class="slabel">Platos individuales</p>
+    <button class="btn btn-outline btn-sm" id="btn-add-item">+ Agregar</button>
+  </div>
+  <div id="config-items"></div>
+
+  <div class="save-bar">
+    <button id="btn-save" class="btn btn-dark btn-xl" style="box-shadow:0 4px 20px rgba(0,0,0,.18)">Guardar cambios</button>
+  </div>
+</div>
+
+<!-- ══ TAB BAR ══ -->
+<div id="tabbar">
+  <button class="tab-btn active" data-tab="historial">
+    <div class="tab-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+    <span class="tab-lbl">Registros</span>
+  </button>
+  <button class="tab-btn" data-tab="resumen">
+    <div class="tab-icon"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
+    <span class="tab-lbl">Resumen</span>
+  </button>
+  <button class="tab-btn" data-tab="config">
+    <div class="tab-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg></div>
+    <span class="tab-lbl">Config</span>
+  </button>
+</div>
+</div><!-- /app -->
+
+<!-- ══ FAB ══ -->
+<div id="fab-overlay"></div>
+<div id="fab-wrap">
+  <div class="fab-menu" id="fab-menu">
+    <!-- Registro con formulario -->
+    <div class="fab-menu-item" id="fmi-form">
+      <span class="fab-item-label">Registro detallado</span>
+      <button class="fab-item-btn" id="btn-fmi-form" title="Formulario">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--t1)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
+    </div>
+    <!-- Registro flash -->
+    <div class="fab-menu-item" id="fmi-flash">
+      <span class="fab-item-label">Flash — <span id="fmi-flash-price"></span></span>
+      <button class="fab-item-btn" id="btn-fmi-flash" title="Flash">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--t1)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </button>
+    </div>
+  </div>
+  <button id="fab-main" title="Registrar comida">
+    <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+    <div id="fab-ring">
+      <svg viewBox="0 0 58 58"><circle id="fab-ring-circle" cx="29" cy="29" r="26"/></svg>
+    </div>
+  </button>
+</div>
+<div id="flash-toast"></div>
+
+<!-- ══ MODAL REGISTRO DETALLADO ══ -->
+<div id="modal-reg" class="modal-overlay">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-head">
-      <h3>Confirmar registro</h3>
-      <button class="modal-close-btn" data-close="modal-confirm">✕</button>
+      <h3>Registrar comida</h3>
+      <button class="modal-close" data-close="modal-reg">✕</button>
     </div>
     <div class="modal-body">
-      <!-- Selector de fecha -->
       <div class="flex-c gap-6 mb-14">
-        <label class="slabel">Fecha del registro</label>
+        <label class="slabel">Fecha</label>
         <div class="date-row">
-          <span class="cal-icon">📅</span>
-          <input id="confirm-date" type="date">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <input id="reg-date" type="date">
         </div>
-        <p style="font-size:11px;color:var(--t3)">Por defecto: hoy. Cámbiala si comiste otro día.</p>
       </div>
-      <!-- Items -->
-      <div id="confirm-items"></div>
-      <div class="divider-row">
-        <span class="confirm-total-label">Total</span>
-        <span id="confirm-total-val" class="confirm-total-val"></span>
+      <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
+        <div style="padding:11px 14px;background:var(--bg2);border-bottom:1px solid var(--line)">
+          <p class="slabel">Selecciona lo que comiste</p>
+        </div>
+        <div id="reg-food-rows"></div>
+      </div>
+      <div id="reg-preview-wrap" style="display:none;margin-bottom:14px">
+        <div id="reg-preview-items"></div>
+        <div class="ci-total">
+          <span class="ci-total-lbl">Total</span>
+          <span id="reg-preview-total" class="ci-total-val"></span>
+        </div>
+      </div>
+      <button id="btn-reg-confirm" class="btn btn-dark btn-xl" disabled>Selecciona lo que comiste</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL FLASH CONFIRM ══ -->
+<div id="modal-flash" class="modal-overlay">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-head">
+      <h3>Registro rápido</h3>
+      <button class="modal-close" data-close="modal-flash">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--t3);margin-bottom:14px;font-weight:500">Un menú completo registrado al precio configurado.</p>
+      <div class="flex-c gap-6 mb-14">
+        <label class="slabel">Fecha</label>
+        <div class="date-row">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <input id="flash-date" type="date">
+        </div>
+      </div>
+      <div class="ci mb-14">
+        <span class="ci-name" id="flash-item-name"></span>
+        <span class="ci-amt"  id="flash-item-amt"></span>
       </div>
       <div class="flex-r gap-10">
-        <button class="btn btn-ghost btn-lg" style="flex:1" data-close="modal-confirm">Cancelar</button>
-        <button id="btn-confirm-ok" class="btn btn-dark btn-lg" style="flex:2">✓ Confirmar</button>
+        <button class="btn btn-ghost btn-lg" style="flex:1" data-close="modal-flash">Cancelar</button>
+        <button id="btn-flash-ok" class="btn btn-dark btn-lg" style="flex:2">⚡ Confirmar</button>
       </div>
     </div>
   </div>
@@ -624,36 +587,35 @@ input:focus,select:focus { outline:none; }
     <div class="modal-handle"></div>
     <div class="modal-head">
       <h3>Nuevo plato</h3>
-      <button class="modal-close-btn" data-close="modal-add">✕</button>
+      <button class="modal-close" data-close="modal-add">✕</button>
     </div>
     <div class="modal-body">
       <div class="flex-c gap-14">
-        <div class="text-wrap">
-          <label>Nombre del plato</label>
-          <input id="add-name" type="text" class="text-f" placeholder="Ej: Ensalada, Refresco, Pan…">
+        <div class="text-wrap"><label>Nombre</label><input id="add-name" type="text" class="text-f" placeholder="Ej: Ensalada, Pan, Refresco…"></div>
+        <div class="price-wrap"><label>Precio (S/)</label>
+          <div class="price-field" id="add-pw"><span class="sol-lbl">S/</span><input id="add-price" type="text" inputmode="decimal" placeholder="0.00"></div>
         </div>
-        <div class="price-wrap">
-          <label>Precio (S/)</label>
-          <div class="price-field" id="add-pw">
-            <span class="sol-lbl">S/</span>
-            <input id="add-price" type="text" inputmode="decimal" placeholder="0.00">
-          </div>
-        </div>
-        <div>
-          <p class="slabel mb-8">Emoji</p>
-          <div id="add-emoji-grid" class="emoji-grid"></div>
-        </div>
+        <div><p class="slabel mb-8">Emoji</p><div id="add-emoji-grid" class="emoji-grid"></div></div>
         <button id="btn-add-confirm" class="btn btn-dark btn-lg w100" style="margin-top:2px">+ Agregar plato</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ JAVASCRIPT ══ -->
 <script>
-/* ────────────────────────────────────────────
-   CONSTANTES Y ESTADO
-──────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════
+   ICONOS SVG MINIMALISTAS por tipo de plato
+══════════════════════════════════════════════════ */
+const ITEM_ICONS = {
+  sopa:    `<svg viewBox="0 0 24 24"><path d="M4 11h16a8 8 0 0 1-16 0z"/><path d="M2 7h20M12 3v4"/></svg>`,
+  segundo: `<svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="7"/><path d="M12 6V3M8 4l1.5 2M16 4l-1.5 2"/></svg>`,
+  postre:  `<svg viewBox="0 0 24 24"><path d="M12 2c-4 0-7 3-7 7 0 3.5 2 6.5 5 8v3h4v-3c3-1.5 5-4.5 5-8 0-4-3-7-7-7z"/></svg>`,
+  bebida:  `<svg viewBox="0 0 24 24"><path d="M5 3h14l-2 9a5 5 0 0 1-10 0L5 3z"/><path d="M3 3h18"/></svg>`,
+  default: `<svg viewBox="0 0 24 24"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>`,
+};
+
+function getIcon(id) { return ITEM_ICONS[id] || ITEM_ICONS.default; }
+
 const EMOJIS = ["🍲","🍽️","🥗","🍮","🥤","🍰","🥩","🍝","🍞","🧃","🍵","🥛","🍦","🥑","🍛","🫕","🥘","🍜","🫙","🍱","🧆","🫔","🥙","🧇","🥞"];
 
 const DEFAULT_MENU = {
@@ -666,191 +628,88 @@ const DEFAULT_MENU = {
   completo:{name:"Menú Completo", emoji:"🍱", price:"9.00", enabled:true}
 };
 
-let menu     = load("c_menu", DEFAULT_MENU);
-let records  = load("c_recs", []);
-let qtys     = {};   // {id: number}
-let qtyC     = 0;
+let menu    = load("c_menu", DEFAULT_MENU);
+let records = load("c_recs", []);
 let selMonth = mkey(today());
 let addEmoji = "🍽️";
 
-/* ────────────────────────────────────────────
-   UTILIDADES
-──────────────────────────────────────────── */
+// cantidades en modal de registro detallado
+let regQtys = {};
+let regQtyC = 0;
+
+/* ══ UTILS ══ */
 function sol(n)    { return "S/ " + Number(n).toFixed(2); }
 function today()   { return new Date().toISOString().split("T")[0]; }
 function mkey(d)   { return d.slice(0,7); }
-function uid()     { return Date.now().toString(36) + Math.random().toString(36).slice(2,5); }
+function uid()     { return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
 function fdate(d)  { return new Date(d+"T12:00:00").toLocaleDateString("es-PE",{weekday:"long",day:"numeric",month:"long"}); }
+function fdateShort(d) { return new Date(d+"T12:00:00").toLocaleDateString("es-PE",{weekday:"short",day:"numeric",month:"short"}); }
 function fmonth(d) { return new Date(d+"-01").toLocaleDateString("es-PE",{month:"long",year:"numeric"}); }
-function load(k,fb){ try{ return JSON.parse(localStorage.getItem(k))||fb; }catch(e){ return fb; } }
-function save(k,v) { try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+function load(k,fb){ try{return JSON.parse(localStorage.getItem(k))||fb;}catch(e){return fb;} }
+function save(k,v) { try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} }
 function esc(s)    { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 function escA(s)   { return String(s).replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
 
-function preview() {
-  let total=0, items=[];
-  if(menu.completo.enabled && qtyC>0){
-    const sub=parseFloat(menu.completo.price)*qtyC;
-    total+=sub; items.push({name:menu.completo.name,emoji:menu.completo.emoji,qty:qtyC,sub});
-  }
-  menu.items.filter(i=>i.enabled).forEach(item=>{
-    const q=qtys[item.id]||0;
-    if(q>0){ const sub=parseFloat(item.price)*q; total+=sub; items.push({name:item.name,emoji:item.emoji,qty:q,sub}); }
-  });
-  return {total,items};
-}
-
-/* ────────────────────────────────────────────
-   PRICE INPUT HELPER
-──────────────────────────────────────────── */
-function bindPriceInput(inp, wrap, getVal, setVal) {
-  inp.addEventListener("focus", ()=> wrap.classList.add("focused"));
+function bindPrice(inp, wrap, setFn) {
+  inp.addEventListener("focus", ()=>wrap.classList.add("focused"));
   inp.addEventListener("blur",  ()=>{
     wrap.classList.remove("focused");
-    const n = parseFloat(inp.value.replace(",","."));
-    const c = isNaN(n)?"0.00":n.toFixed(2);
-    inp.value = c; setVal(c);
+    const n=parseFloat(inp.value.replace(",","."));
+    const c=isNaN(n)?"0.00":n.toFixed(2);
+    inp.value=c; if(setFn) setFn(c);
   });
   inp.addEventListener("input", e=>{
-    const v = e.target.value.replace(",",".");
+    const v=e.target.value.replace(",",".");
     if(!/^(\d*\.?\d{0,2})?$/.test(v)) e.target.value=e.target.value.slice(0,-1);
-    else setVal(e.target.value);
+    else if(setFn) setFn(e.target.value);
   });
 }
 
-/* ────────────────────────────────────────────
-   RENDER HEADER
-──────────────────────────────────────────── */
+/* ══ HEADER ══ */
 function renderHeader(){
   const todayRecs  = records.filter(r=>r.date===today());
   const todayTotal = todayRecs.reduce((s,r)=>s+r.amount,0);
   const monthTotal = records.filter(r=>mkey(r.date)===mkey(today())).reduce((s,r)=>s+r.amount,0);
-  const bHoy = document.getElementById("badge-hoy");
-  const bMes = document.getElementById("badge-mes");
-  if(todayTotal>0){ bHoy.textContent="Hoy "+sol(todayTotal); bHoy.style.display=""; }
-  else bHoy.style.display="none";
-  bMes.textContent = "Mes "+sol(monthTotal);
+  const bh=document.getElementById("badge-hoy"), bm=document.getElementById("badge-mes");
+  if(todayTotal>0){bh.textContent="Hoy "+sol(todayTotal); bh.style.display="";}
+  else bh.style.display="none";
+  bm.textContent="Mes "+sol(monthTotal);
 }
 
-/* ────────────────────────────────────────────
-   VISTA HOY
-──────────────────────────────────────────── */
-function renderHoy(){
-  const d = new Date();
-  document.getElementById("hoy-dayname").textContent = d.toLocaleDateString("es-PE",{weekday:"long"}).toUpperCase();
-  document.getElementById("hoy-date").textContent    = d.toLocaleDateString("es-PE",{day:"numeric",month:"long"});
-
-  // Banner de hoy
-  const todayRecs  = records.filter(r=>r.date===today());
-  const todayTotal = todayRecs.reduce((s,r)=>s+r.amount,0);
-  const banner = document.getElementById("today-banner");
-  if(todayRecs.length>0){
-    banner.classList.add("visible");
-    document.getElementById("tb-total").textContent = sol(todayTotal);
-    document.getElementById("tb-list").innerHTML = todayRecs.map(r=>`
-      <div class="tb-row"><span>${esc(r.description)}</span><span>${sol(r.amount)}</span></div>
-    `).join("");
-  } else banner.classList.remove("visible");
-
-  // Filas de comida
-  const cont = document.getElementById("food-rows");
-  cont.innerHTML = "";
-  if(menu.completo.enabled){
-    const enabled = menu.items.filter(i=>i.enabled);
-    cont.appendChild(makeFoodRow("__c", menu.completo.emoji, menu.completo.name, parseFloat(menu.completo.price), qtyC, enabled.length===0));
-  }
-  const en = menu.items.filter(i=>i.enabled);
-  en.forEach((item,idx)=>{
-    cont.appendChild(makeFoodRow(item.id, item.emoji, item.name, parseFloat(item.price), qtys[item.id]||0, idx===en.length-1));
-  });
-  renderFAB();
-}
-
-function makeFoodRow(id, emoji, name, price, qty, isLast){
-  const div = document.createElement("div");
-  div.className = "food-row";
-  if(isLast) div.style.borderBottom="none";
-  div.innerHTML = `
-    <div class="food-info">
-      <span class="food-emoji">${emoji}</span>
-      <div style="min-width:0">
-        <p class="food-name">${esc(name)}</p>
-        <p class="food-price"><span>${sol(price)}</span> c/u</p>
-      </div>
-    </div>
-    <div class="stepper">
-      <button class="dec">−</button>
-      <span class="val">${qty}</span>
-      <button class="inc">+</button>
-    </div>`;
-  div.querySelector(".dec").onclick = ()=>{
-    if(id==="__c") qtyC=Math.max(0,qtyC-1);
-    else qtys[id]=Math.max(0,(qtys[id]||0)-1);
-    renderHoy(); renderHeader();
-  };
-  div.querySelector(".inc").onclick = ()=>{
-    if(id==="__c") qtyC++;
-    else qtys[id]=(qtys[id]||0)+1;
-    renderHoy(); renderHeader();
-  };
-  return div;
-}
-
-function renderFAB(){
-  const p   = preview();
-  const btn = document.getElementById("btn-registrar");
-  const hint= document.getElementById("fab-hint");
-  if(p.total>0){
-    btn.disabled=false;
-    btn.textContent="✓ Registrar "+sol(p.total);
-    btn.style.boxShadow="0 4px 20px rgba(0,0,0,.25)";
-    hint.style.display="";
-    hint.innerHTML=`Listo para registrar: <strong style="color:var(--ac)">${sol(p.total)}</strong>`;
-  } else {
-    btn.disabled=true;
-    btn.textContent="Selecciona lo que comiste";
-    btn.style.boxShadow="none";
-    hint.style.display="none";
-  }
-}
-
-/* ────────────────────────────────────────────
-   VISTA HISTORIAL
-──────────────────────────────────────────── */
+/* ══ HISTORIAL ══ */
 function renderHistorial(){
-  const months = [...new Set(records.map(r=>mkey(r.date)))].sort((a,b)=>b.localeCompare(a));
+  const months=[...new Set(records.map(r=>mkey(r.date)))].sort((a,b)=>b.localeCompare(a));
   if(months.length && !months.includes(selMonth)) selMonth=months[0];
 
-  // Pills
-  const strip = document.getElementById("month-strip");
-  strip.innerHTML = "";
+  const strip=document.getElementById("month-strip");
+  strip.innerHTML="";
   if(!months.length){ strip.innerHTML=`<span class="pill">Sin registros aún</span>`; }
   else months.forEach(m=>{
-    const sp = document.createElement("span");
+    const sp=document.createElement("span");
     sp.className="pill click"+(m===selMonth?" dark":"");
     sp.textContent=fmonth(m);
-    sp.onclick=()=>{ selMonth=m; renderHistorial(); };
+    sp.onclick=()=>{selMonth=m; renderHistorial();};
     strip.appendChild(sp);
   });
 
-  const recs  = records.filter(r=>mkey(r.date)===selMonth);
-  const total = recs.reduce((s,r)=>s+r.amount,0);
-  const byDay = {};
-  recs.forEach(r=>{ if(!byDay[r.date]) byDay[r.date]=[]; byDay[r.date].push(r); });
-  const days = Object.keys(byDay).sort((a,b)=>b.localeCompare(a));
+  const recs=records.filter(r=>mkey(r.date)===selMonth);
+  const total=recs.reduce((s,r)=>s+r.amount,0);
+  const byDay={};
+  recs.forEach(r=>{if(!byDay[r.date])byDay[r.date]=[];byDay[r.date].push(r);});
+  const days=Object.keys(byDay).sort((a,b)=>b.localeCompare(a));
 
-  document.getElementById("hist-total").textContent = sol(total);
-  document.getElementById("hist-recs").textContent  = recs.length;
-  document.getElementById("hist-dias").textContent  = days.length;
+  document.getElementById("hist-total").textContent=sol(total);
+  document.getElementById("hist-recs").textContent=recs.length;
+  document.getElementById("hist-dias").textContent=days.length;
 
-  const daysEl = document.getElementById("hist-days");
-  daysEl.innerHTML="";
-  if(!days.length){ daysEl.innerHTML=`<div class="empty"><p class="ei">📅</p><p>Sin registros este mes</p></div>`; return; }
+  const dEl=document.getElementById("hist-days");
+  dEl.innerHTML="";
+  if(!days.length){ dEl.innerHTML=`<div class="empty"><p class="ei">📋</p><p>Sin registros este mes</p></div>`; return; }
 
   days.forEach(day=>{
-    const dr = byDay[day];
-    const dt = dr.reduce((s,r)=>s+r.amount,0);
-    const card = document.createElement("div");
+    const dr=byDay[day];
+    const dt=dr.reduce((s,r)=>s+r.amount,0);
+    const card=document.createElement("div");
     card.className="day-card";
     card.innerHTML=`
       <div class="day-head">
@@ -875,121 +734,304 @@ function renderHistorial(){
         renderHistorial(); renderHeader();
       };
     });
-    daysEl.appendChild(card);
+    dEl.appendChild(card);
   });
 }
 
-/* ────────────────────────────────────────────
-   VISTA RESUMEN
-──────────────────────────────────────────── */
+/* ══ RESUMEN ══ */
 function renderResumen(){
-  const mr  = records.filter(r=>mkey(r.date)===mkey(today()));
-  const tot = mr.reduce((s,r)=>s+r.amount,0);
-  const dwd = [...new Set(mr.map(r=>r.date))];
-  const avg = dwd.length?tot/dwd.length:0;
-  const dim = new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate();
-  const cur = new Date().getDate();
-  const prj = cur?(tot/cur)*dim:0;
-
-  document.getElementById("res-month").textContent  = fmonth(mkey(today()));
-  document.getElementById("res-total").textContent  = sol(tot);
-  document.getElementById("res-days").textContent   = dwd.length+" días";
-  document.getElementById("res-avg").textContent    = sol(avg);
-  document.getElementById("res-prj").textContent    = sol(prj);
-  document.getElementById("res-bar").style.width    = Math.min(100,(cur/dim)*100)+"%";
-  document.getElementById("res-day-lbl").textContent= "Día "+cur+" / "+dim;
-  document.getElementById("res-dim-lbl").textContent= "Día "+dim;
-
-  const lw = document.getElementById("res-last-wrap");
-  const ll = document.getElementById("res-last");
+  const mr=records.filter(r=>mkey(r.date)===mkey(today()));
+  const tot=mr.reduce((s,r)=>s+r.amount,0);
+  const dwd=[...new Set(mr.map(r=>r.date))];
+  const avg=dwd.length?tot/dwd.length:0;
+  const dim=new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate();
+  const cur=new Date().getDate();
+  const prj=cur?(tot/cur)*dim:0;
+  document.getElementById("res-month").textContent=fmonth(mkey(today()));
+  document.getElementById("res-total").textContent=sol(tot);
+  document.getElementById("res-days").textContent=dwd.length+" días";
+  document.getElementById("res-avg").textContent=sol(avg);
+  document.getElementById("res-prj").textContent=sol(prj);
+  document.getElementById("res-bar").style.width=Math.min(100,(cur/dim)*100)+"%";
+  document.getElementById("res-day-lbl").textContent="Día "+cur+" / "+dim;
+  document.getElementById("res-dim-lbl").textContent="Día "+dim;
+  const lw=document.getElementById("res-last-wrap"), ll=document.getElementById("res-last");
   if(mr.length){
     lw.style.display="";
     ll.innerHTML=[...mr].reverse().slice(0,5).map(r=>`
       <div class="last-rec">
-        <div style="flex:1;min-width:0">
-          <p class="lr-date">${fdate(r.date)}</p>
-          <p class="lr-desc">${esc(r.description)}</p>
-        </div>
+        <div style="flex:1;min-width:0"><p class="lr-date">${fdateShort(r.date)}</p><p class="lr-desc">${esc(r.description)}</p></div>
         <span class="lr-amt">${sol(r.amount)}</span>
       </div>`).join("");
   } else lw.style.display="none";
 }
 
-/* ────────────────────────────────────────────
-   VISTA CONFIG
-──────────────────────────────────────────── */
+/* ══ CONFIG ══ */
 function renderConfig(){
   const cmp=menu.completo;
-  document.getElementById("cfg-cmp-emoji").textContent = cmp.emoji;
-  document.getElementById("cfg-cmp-lbl").textContent   = cmp.name||"Menú Completo";
-  document.getElementById("cfg-cmp-name").value        = cmp.name;
-  document.getElementById("cfg-cmp-price").value       = cmp.price;
-  document.getElementById("cfg-cmp-toggle").className  = "toggle"+(cmp.enabled?" on":"");
-  document.getElementById("config-items").innerHTML    = "";
-  menu.items.forEach(item=> document.getElementById("config-items").appendChild(makeCfgCard(item)));
+  document.getElementById("cfg-cmp-lbl").textContent=cmp.name||"Menú Completo";
+  document.getElementById("cfg-cmp-name").value=cmp.name;
+  document.getElementById("cfg-cmp-price").value=cmp.price;
+  document.getElementById("cfg-cmp-toggle").className="toggle"+(cmp.enabled?" on":"");
+  document.getElementById("config-items").innerHTML="";
+  menu.items.forEach(item=>document.getElementById("config-items").appendChild(makeCfgCard(item)));
 }
 
 function makeCfgCard(item){
   const card=document.createElement("div");
   card.className="cfg-card"+(item.enabled?"":" off");
-  card.dataset.id=item.id;
+  const svgIcon=getIcon(item.id);
   card.innerHTML=`
     <div class="cfg-head">
       <div class="cfg-left">
-        <span style="font-size:24px;flex-shrink:0">${item.emoji}</span>
+        <div class="cfg-icon">${svgIcon}</div>
         <input type="text" class="inline-name cfg-iname" value="${escA(item.name)}" placeholder="Nombre">
       </div>
       <div class="cfg-acts">
         <div class="toggle${item.enabled?" on":""} cfg-itoggle"></div>
-        <button class="del-btn cfg-idel">✕</button>
+        <button class="del-btn">✕</button>
       </div>
     </div>
     <div class="price-wrap">
       <label>Precio (S/)</label>
-      <div class="price-field cfg-ipw">
-        <span class="sol-lbl">S/</span>
-        <input type="text" inputmode="decimal" class="cfg-iprice" value="${escA(item.price)}" placeholder="0.00">
-      </div>
+      <div class="price-field cfg-ipw"><span class="sol-lbl">S/</span><input type="text" inputmode="decimal" class="cfg-iprice" value="${escA(item.price)}" placeholder="0.00"></div>
     </div>
-    <div class="mt-12">
-      <p class="slabel mb-8">Emoji</p>
-      <div class="emoji-grid cfg-emogrid">
-        ${EMOJIS.map(e=>`<button class="emo-btn${e===item.emoji?" sel":""}" data-e="${e}">${e}</button>`).join("")}
-      </div>
+    <div class="mt-12"><p class="slabel mb-8">Emoji</p>
+      <div class="emoji-grid cfg-egrid">${EMOJIS.map(e=>`<button class="emo-btn${e===item.emoji?" sel":""}" data-e="${e}">${e}</button>`).join("")}</div>
     </div>`;
-
-  // Nombre
-  card.querySelector(".cfg-iname").oninput=e=>{ item.name=e.target.value; };
-
-  // Precio
-  const pi=card.querySelector(".cfg-iprice"), pw=card.querySelector(".cfg-ipw");
-  bindPriceInput(pi,pw, ()=>item.price, v=>item.price=v);
-
-  // Toggle
-  card.querySelector(".cfg-itoggle").onclick=function(){
-    item.enabled=!item.enabled;
-    this.classList.toggle("on",item.enabled);
-    card.classList.toggle("off",!item.enabled);
-  };
-
-  // Borrar
-  card.querySelector(".cfg-idel").onclick=()=>{
-    menu.items=menu.items.filter(i=>i.id!==item.id);
-    card.remove();
-  };
-
-  // Emoji
-  card.querySelectorAll(".cfg-emogrid .emo-btn").forEach(btn=>{
-    btn.onclick=()=>{
-      card.querySelectorAll(".cfg-emogrid .emo-btn").forEach(b=>b.classList.remove("sel"));
-      btn.classList.add("sel");
-      item.emoji=btn.dataset.e;
-      card.querySelector(".cfg-left span").textContent=btn.dataset.e;
-    };
+  card.querySelector(".cfg-iname").oninput=e=>item.name=e.target.value;
+  bindPrice(card.querySelector(".cfg-iprice"), card.querySelector(".cfg-ipw"), v=>item.price=v);
+  card.querySelector(".cfg-itoggle").onclick=function(){ item.enabled=!item.enabled; this.classList.toggle("on",item.enabled); card.classList.toggle("off",!item.enabled); };
+  card.querySelector(".del-btn").onclick=()=>{ menu.items=menu.items.filter(i=>i.id!==item.id); card.remove(); };
+  card.querySelectorAll(".cfg-egrid .emo-btn").forEach(btn=>{
+    btn.onclick=()=>{ card.querySelectorAll(".cfg-egrid .emo-btn").forEach(b=>b.classList.remove("sel")); btn.classList.add("sel"); item.emoji=btn.dataset.e; };
   });
   return card;
 }
 
+/* ══ REGISTRO DETALLADO ══ */
+function buildRegRows(){
+  regQtys={}; regQtyC=0;
+  const cont=document.getElementById("reg-food-rows");
+  cont.innerHTML="";
+  const rows=[];
+  if(menu.completo.enabled) rows.push({id:"__c", name:menu.completo.name, price:parseFloat(menu.completo.price), icon:getIcon("sopa")});
+  menu.items.filter(i=>i.enabled).forEach(i=>rows.push({id:i.id, name:i.name, price:parseFloat(i.price), icon:getIcon(i.id)}));
+
+  rows.forEach((r,idx)=>{
+    const div=document.createElement("div");
+    div.className="reg-row";
+    if(idx===rows.length-1) div.style.borderBottom="none";
+    div.innerHTML=`
+      <div class="reg-left">
+        <div class="reg-icon">${r.icon}</div>
+        <div style="min-width:0">
+          <p class="reg-name">${esc(r.name)}</p>
+          <p class="reg-price"><b style="color:var(--ac)">${sol(r.price)}</b> c/u</p>
+        </div>
+      </div>
+      <div class="stepper">
+        <button class="dec">−</button><span class="val">0</span><button class="inc">+</button>
+      </div>`;
+    const valEl=div.querySelector(".val");
+    div.querySelector(".dec").onclick=()=>{
+      if(r.id==="__c") regQtyC=Math.max(0,regQtyC-1);
+      else regQtys[r.id]=Math.max(0,(regQtys[r.id]||0)-1);
+      valEl.textContent=r.id==="__c"?regQtyC:(regQtys[r.id]||0);
+      updateRegPreview();
+    };
+    div.querySelector(".inc").onclick=()=>{
+      if(r.id==="__c") regQtyC++;
+      else regQtys[r.id]=(regQtys[r.id]||0)+1;
+      valEl.textContent=r.id==="__c"?regQtyC:(regQtys[r.id]||0);
+      updateRegPreview();
+    };
+    cont.appendChild(div);
+  });
+}
+
+function calcRegPreview(){
+  let total=0, items=[];
+  if(menu.completo.enabled && regQtyC>0){
+    const sub=parseFloat(menu.completo.price)*regQtyC;
+    total+=sub; items.push({name:menu.completo.name,qty:regQtyC,sub});
+  }
+  menu.items.filter(i=>i.enabled).forEach(item=>{
+    const q=regQtys[item.id]||0;
+    if(q>0){const sub=parseFloat(item.price)*q; total+=sub; items.push({name:item.name,qty:q,sub});}
+  });
+  return {total,items};
+}
+
+function updateRegPreview(){
+  const p=calcRegPreview();
+  const wrap=document.getElementById("reg-preview-wrap");
+  const btn=document.getElementById("btn-reg-confirm");
+  if(p.total>0){
+    wrap.style.display="";
+    document.getElementById("reg-preview-items").innerHTML=p.items.map(it=>`
+      <div class="ci"><span class="ci-name">${it.qty>1?it.qty+"× ":""}${esc(it.name)}</span><span class="ci-amt">${sol(it.sub)}</span></div>`).join("");
+    document.getElementById("reg-preview-total").textContent=sol(p.total);
+    btn.disabled=false;
+    btn.textContent="Registrar "+sol(p.total);
+  } else {
+    wrap.style.display="none";
+    btn.disabled=true;
+    btn.textContent="Selecciona lo que comiste";
+  }
+}
+
+/* ══ FAB LOGIC ══ */
+let fabOpen=false;
+let holdTimer=null;
+let holdStart=0;
+let holdInterval=null;
+const HOLD_MS=800; // ms para activar flash directamente
+
+const fabMain=document.getElementById("fab-main");
+const fabMenu=document.getElementById("fab-menu");
+const fabOverlay=document.getElementById("fab-overlay");
+const fabRingCircle=document.getElementById("fab-ring-circle");
+
+function openFabMenu(){
+  fabOpen=true;
+  fabMain.classList.add("open");
+  fabOverlay.classList.add("show");
+  document.querySelectorAll(".fab-menu-item").forEach(el=>el.classList.add("show"));
+  // Actualizar label flash
+  const flashPrice=menu.completo.enabled?sol(parseFloat(menu.completo.price)):"—";
+  document.getElementById("fmi-flash-price").textContent=flashPrice;
+}
+function closeFabMenu(){
+  fabOpen=false;
+  fabMain.classList.remove("open");
+  fabOverlay.classList.remove("show");
+  document.querySelectorAll(".fab-menu-item").forEach(el=>el.classList.remove("show"));
+}
+
+// Tap corto = abrir menú
+// Hold 800ms = flash directo
+fabMain.addEventListener("pointerdown", e=>{
+  e.preventDefault();
+  holdStart=Date.now();
+  let progress=0;
+  holdInterval=setInterval(()=>{
+    progress=Math.min(1,(Date.now()-holdStart)/HOLD_MS);
+    // anillo de progreso
+    const offset=163*(1-progress);
+    fabRingCircle.style.strokeDashoffset=offset;
+    if(progress>=1){
+      clearInterval(holdInterval);
+      holdInterval=null;
+      fabRingCircle.style.strokeDashoffset=163;
+      // Disparar flash directamente
+      doFlashDirect();
+    }
+  },16);
+});
+
+function cancelHold(){
+  if(holdInterval){ clearInterval(holdInterval); holdInterval=null; }
+  fabRingCircle.style.strokeDashoffset=163;
+}
+
+fabMain.addEventListener("pointerup", e=>{
+  const held=Date.now()-holdStart;
+  cancelHold();
+  if(held<HOLD_MS){
+    // tap corto → toggle menú
+    if(fabOpen) closeFabMenu();
+    else openFabMenu();
+  }
+});
+fabMain.addEventListener("pointerleave", ()=>{ cancelHold(); });
+fabMain.addEventListener("pointercancel",()=>{ cancelHold(); });
+
+fabOverlay.onclick=()=>closeFabMenu();
+
+// Flash directo (hold)
+function doFlashDirect(){
+  if(!menu.completo.enabled){ showToast("Activa el Menú Completo en Config"); return; }
+  const price=parseFloat(menu.completo.price);
+  const desc=menu.completo.emoji+" "+menu.completo.name;
+  records.push({id:uid(),date:today(),amount:price,description:desc,items:[{name:menu.completo.name,qty:1,sub:price}]});
+  save("c_recs",records);
+  closeFabMenu();
+  renderHistorial(); renderHeader();
+  showToast("⚡ "+sol(price)+" registrado");
+}
+
+// Botón flash en menú → modal de confirmación con fecha
+document.getElementById("btn-fmi-flash").onclick=()=>{
+  if(!menu.completo.enabled){ showToast("Activa el Menú Completo en Config"); closeFabMenu(); return; }
+  document.getElementById("flash-date").value=today();
+  document.getElementById("flash-item-name").textContent=menu.completo.emoji+" "+menu.completo.name;
+  document.getElementById("flash-item-amt").textContent=sol(parseFloat(menu.completo.price));
+  closeFabMenu();
+  openModal("modal-flash");
+};
+
+document.getElementById("btn-flash-ok").onclick=()=>{
+  const fecha=document.getElementById("flash-date").value||today();
+  const price=parseFloat(menu.completo.price);
+  const desc=menu.completo.emoji+" "+menu.completo.name;
+  records.push({id:uid(),date:fecha,amount:price,description:desc,items:[{name:menu.completo.name,qty:1,sub:price}]});
+  save("c_recs",records);
+  closeModal("modal-flash");
+  renderHistorial(); renderHeader();
+  showToast("⚡ "+sol(price)+" registrado");
+};
+
+// Botón registro detallado
+document.getElementById("btn-fmi-form").onclick=()=>{
+  document.getElementById("reg-date").value=today();
+  buildRegRows();
+  updateRegPreview();
+  closeFabMenu();
+  openModal("modal-reg");
+};
+
+document.getElementById("btn-reg-confirm").onclick=()=>{
+  const p=calcRegPreview();
+  if(!p.total) return;
+  const fecha=document.getElementById("reg-date").value||today();
+  const desc=p.items.map(i=>`${i.qty>1?i.qty+"× ":""}${i.name}`).join(" · ");
+  records.push({id:uid(),date:fecha,amount:p.total,description:desc,items:p.items});
+  save("c_recs",records);
+  closeModal("modal-reg");
+  renderHistorial(); renderHeader();
+  showToast("✓ "+sol(p.total)+" registrado");
+};
+
+/* ══ TOAST ══ */
+let toastTimer=null;
+function showToast(msg){
+  const t=document.getElementById("flash-toast");
+  t.textContent=msg; t.classList.add("show");
+  if(toastTimer) clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove("show"),2200);
+}
+
+/* ══ CONFIG EVENTOS ══ */
+document.getElementById("cfg-cmp-name").oninput=e=>{
+  menu.completo.name=e.target.value;
+  document.getElementById("cfg-cmp-lbl").textContent=e.target.value||"Menú Completo";
+};
+bindPrice(document.getElementById("cfg-cmp-price"), document.getElementById("cfg-cmp-pw"), v=>menu.completo.price=v);
+document.getElementById("cfg-cmp-toggle").onclick=function(){ menu.completo.enabled=!menu.completo.enabled; this.classList.toggle("on",menu.completo.enabled); };
+
+document.getElementById("btn-save").onclick=()=>{
+  menu.completo.name=document.getElementById("cfg-cmp-name").value;
+  const pv=document.getElementById("cfg-cmp-price").value.replace(",",".");
+  menu.completo.price=isNaN(parseFloat(pv))?"0.00":parseFloat(pv).toFixed(2);
+  save("c_menu",menu);
+  renderHeader();
+  const btn=document.getElementById("btn-save");
+  btn.textContent="✓ ¡Guardado!"; btn.style.background="var(--grn)";
+  setTimeout(()=>{btn.textContent="Guardar cambios"; btn.style.background="";},2000);
+};
+
+/* ══ MODAL AGREGAR PLATO ══ */
 function renderAddEmojiGrid(){
   const g=document.getElementById("add-emoji-grid");
   g.innerHTML=EMOJIS.map(e=>`<button class="emo-btn emo-btn-lg${e===addEmoji?" sel":""}" data-e="${e}">${e}</button>`).join("");
@@ -997,135 +1039,41 @@ function renderAddEmojiGrid(){
     btn.onclick=()=>{ addEmoji=btn.dataset.e; g.querySelectorAll(".emo-btn").forEach(b=>b.classList.remove("sel")); btn.classList.add("sel"); };
   });
 }
+document.getElementById("btn-add-item").onclick=()=>{ document.getElementById("add-name").value=""; document.getElementById("add-price").value="0.00"; addEmoji="🍽️"; renderAddEmojiGrid(); openModal("modal-add"); };
+document.getElementById("btn-add-confirm").onclick=()=>{
+  const name=document.getElementById("add-name").value.trim();
+  if(!name){ document.getElementById("add-name").focus(); return; }
+  const raw=document.getElementById("add-price").value.replace(",",".");
+  const price=isNaN(parseFloat(raw))?"0.00":parseFloat(raw).toFixed(2);
+  const item={id:uid(),name,emoji:addEmoji,price,enabled:true};
+  menu.items.push(item);
+  document.getElementById("config-items").appendChild(makeCfgCard(item));
+  closeModal("modal-add");
+};
+bindPrice(document.getElementById("add-price"), document.getElementById("add-pw"), null);
 
-/* ────────────────────────────────────────────
-   NAVEGACIÓN
-──────────────────────────────────────────── */
+/* ══ NAVEGACIÓN ══ */
 function switchTab(tab){
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
   document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
   document.getElementById("view-"+tab).classList.add("active");
   document.querySelector(`[data-tab="${tab}"]`).classList.add("active");
   window.scrollTo(0,0);
-  if(tab==="hoy")       renderHoy();
   if(tab==="historial") renderHistorial();
   if(tab==="resumen")   renderResumen();
   if(tab==="config")    renderConfig();
 }
+document.querySelectorAll(".tab-btn").forEach(btn=>btn.onclick=()=>switchTab(btn.dataset.tab));
 
-/* ────────────────────────────────────────────
-   MODALES
-──────────────────────────────────────────── */
+/* ══ MODALES ══ */
 function openModal(id){  document.getElementById(id).classList.add("open");  document.body.style.overflow="hidden"; }
 function closeModal(id){ document.getElementById(id).classList.remove("open"); document.body.style.overflow=""; }
+document.querySelectorAll(".modal-overlay").forEach(o=>{ o.onclick=e=>{ if(e.target===o) closeModal(o.id); }; });
+document.querySelectorAll("[data-close]").forEach(btn=>btn.onclick=()=>closeModal(btn.dataset.close));
 
-document.querySelectorAll(".modal-overlay").forEach(o=>{
-  o.onclick=e=>{ if(e.target===o) closeModal(o.id); };
-});
-document.querySelectorAll("[data-close]").forEach(btn=>{
-  btn.onclick=()=>closeModal(btn.dataset.close);
-});
-
-/* ────────────────────────────────────────────
-   EVENTOS
-──────────────────────────────────────────── */
-
-// Tabs
-document.querySelectorAll(".tab-btn").forEach(btn=>{
-  btn.onclick=()=>switchTab(btn.dataset.tab);
-});
-
-// REGISTRAR → abrir modal confirmación
-document.getElementById("btn-registrar").onclick=()=>{
-  const p=preview();
-  if(!p.total) return;
-  // Poner fecha de hoy por defecto
-  document.getElementById("confirm-date").value=today();
-  // Items
-  document.getElementById("confirm-items").innerHTML=p.items.map(it=>`
-    <div class="confirm-item">
-      <span class="confirm-item-name">${it.emoji} ${it.qty>1?it.qty+"× ":""}${esc(it.name)}</span>
-      <span class="confirm-item-amt">${sol(it.sub)}</span>
-    </div>`).join("");
-  document.getElementById("confirm-total-val").textContent=sol(p.total);
-  openModal("modal-confirm");
-};
-
-// CONFIRMAR registro
-document.getElementById("btn-confirm-ok").onclick=()=>{
-  const p=preview();
-  if(!p.total) return;
-  const fechaEl = document.getElementById("confirm-date");
-  const fecha   = fechaEl.value || today();
-  const desc    = p.items.map(i=>`${i.emoji} ${i.qty>1?i.qty+"× ":""}${i.name}`).join(" · ");
-  records.push({id:uid(), date:fecha, amount:p.total, description:desc, items:p.items});
-  save("c_recs",records);
-  qtys={}; qtyC=0;
-  closeModal("modal-confirm");
-  renderHoy(); renderHeader();
-};
-
-// AGREGAR plato
-document.getElementById("btn-add-item").onclick=()=>{
-  document.getElementById("add-name").value="";
-  document.getElementById("add-price").value="0.00";
-  addEmoji="🍽️";
-  renderAddEmojiGrid();
-  openModal("modal-add");
-};
-
-document.getElementById("btn-add-confirm").onclick=()=>{
-  const name=document.getElementById("add-name").value.trim();
-  if(!name){ document.getElementById("add-name").focus(); return; }
-  const raw=document.getElementById("add-price").value.replace(",",".");
-  const price=isNaN(parseFloat(raw))?"0.00":parseFloat(raw).toFixed(2);
-  const newItem={id:uid(),name,emoji:addEmoji,price,enabled:true};
-  menu.items.push(newItem);
-  document.getElementById("config-items").appendChild(makeCfgCard(newItem));
-  closeModal("modal-add");
-};
-
-// Price input — agregar plato
-bindPriceInput(
-  document.getElementById("add-price"),
-  document.getElementById("add-pw"),
-  ()=>{}, ()=>{}
-);
-
-// Config — menú completo
-document.getElementById("cfg-cmp-name").oninput=e=>{
-  menu.completo.name=e.target.value;
-  document.getElementById("cfg-cmp-lbl").textContent=e.target.value||"Menú Completo";
-};
-bindPriceInput(
-  document.getElementById("cfg-cmp-price"),
-  document.getElementById("cfg-cmp-pw"),
-  ()=>menu.completo.price,
-  v=>menu.completo.price=v
-);
-document.getElementById("cfg-cmp-toggle").onclick=function(){
-  menu.completo.enabled=!menu.completo.enabled;
-  this.classList.toggle("on",menu.completo.enabled);
-};
-
-// GUARDAR config
-document.getElementById("btn-save").onclick=()=>{
-  menu.completo.name  = document.getElementById("cfg-cmp-name").value;
-  const pv=document.getElementById("cfg-cmp-price").value.replace(",",".");
-  menu.completo.price = isNaN(parseFloat(pv))?"0.00":parseFloat(pv).toFixed(2);
-  save("c_menu",menu);
-  renderHeader();
-  const btn=document.getElementById("btn-save");
-  btn.textContent="✓ ¡Guardado!";
-  btn.style.background="var(--grn)";
-  setTimeout(()=>{ btn.textContent="Guardar cambios"; btn.style.background=""; },2000);
-};
-
-/* ────────────────────────────────────────────
-   INIT
-──────────────────────────────────────────── */
+/* ══ INIT ══ */
 renderHeader();
-renderHoy();
+renderHistorial();
 </script>
 </body>
 </html>
