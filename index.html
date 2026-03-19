@@ -205,13 +205,19 @@ input:focus,select:focus{outline:none}
 .day-arr.op{transform:rotate(180deg)}
 /* Detalle expandible */
 .day-det{overflow:hidden;max-height:0;transition:max-height .25s cubic-bezier(.16,1,.3,1)}
-.day-det.op{max-height:300px}
-.day-det-in{padding:6px 0 8px 44px}
-.ddr{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-top:1px solid var(--ln);gap:8px}
+.day-det.op{max-height:400px}
+.day-det-in{padding:4px 0 6px 44px}
+
+/* Swipe-to-delete iOS style */
+.swipe-wrap{position:relative;overflow:hidden;border-top:1px solid var(--ln)}
+.swipe-wrap:first-child{border-top:none}
+.swipe-inner{display:flex;align-items:center;justify-content:space-between;padding:7px 0;gap:8px;background:var(--bg);transform:translateX(0);transition:transform .2s cubic-bezier(.16,1,.3,1);will-change:transform;position:relative;z-index:1}
+.swipe-inner.swiped{transform:translateX(-72px)}
+.swipe-del-bg{position:absolute;right:0;top:0;bottom:0;width:72px;background:var(--red);display:flex;align-items:center;justify-content:center;z-index:0;border-radius:0 8px 8px 0}
+.swipe-del-bg svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .ddr-d{font-size:12px;color:var(--t2);flex:1;font-weight:500}
 .ddr-r{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .ddr-a{font-size:12px;font-weight:800}
-.ddr-x{width:22px;height:22px;border-radius:6px;background:var(--redl);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;border:none}
 
 /* ── Registro modal ── */
 .rr{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--ln);gap:10px}
@@ -610,23 +616,90 @@ function renderHist(){
       </div>
       <div class="day-det${isOp?" op":""}">
         <div class="day-det-in">
-          ${dr.map(r=>`<div class="ddr" data-id="${r.id}">
-            <span class="ddr-d">${esc(r.description)}</span>
-            <div class="ddr-r"><span class="ddr-a">${sol(r.amount)}</span><button class="ddr-x">✕</button></div>
-          </div>`).join("")}
+          ${dr.map(r=>`
+            <div class="swipe-wrap" data-id="${r.id}">
+              <div class="swipe-del-bg"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></div>
+              <div class="swipe-inner">
+                <span class="ddr-d">${esc(r.description)}</span>
+                <div class="ddr-r"><span class="ddr-a">${sol(r.amount)}</span></div>
+              </div>
+            </div>`).join("")}
         </div>
       </div>`;
+
     w.querySelector(".day-row").onclick=()=>{expandDay=isOp?null:day;renderHist();};
-    w.querySelectorAll(".ddr-x").forEach(btn=>{
-      btn.onclick=e=>{
-        e.stopPropagation();
-        const id=btn.closest(".ddr").dataset.id;
-        records=records.filter(r=>r.id!==id);
-        sv("c_recs",records);
-        if(byDay[day].length===1) expandDay=null;
-        renderHist(); renderHeader();
-      };
+
+    // Swipe-to-delete en cada registro
+    w.querySelectorAll(".swipe-wrap").forEach(wrap=>{
+      const inner=wrap.querySelector(".swipe-inner");
+      const delBg=wrap.querySelector(".swipe-del-bg");
+      let startX=0, startY=0, dx=0, dragging=false, committed=false;
+      const THRESHOLD=52, DELETE_AT=120;
+
+      function resetSwipe(){ inner.style.transition="transform .2s cubic-bezier(.16,1,.3,1)"; inner.style.transform="translateX(0)"; committed=false; }
+      function commitSwipe(){ inner.style.transition="transform .2s cubic-bezier(.16,1,.3,1)"; inner.style.transform="translateX(-72px)"; committed=true; }
+
+      // Tap en el fondo rojo → borrar
+      delBg.addEventListener("click",()=>deleteRec(wrap));
+
+      function deleteRec(wrap){
+        const id=wrap.dataset.id;
+        // Animar salida
+        wrap.style.transition="max-height .25s ease, opacity .2s ease";
+        wrap.style.overflow="hidden";
+        wrap.style.opacity="0";
+        wrap.style.maxHeight=wrap.offsetHeight+"px";
+        requestAnimationFrame(()=>{ wrap.style.maxHeight="0"; });
+        setTimeout(()=>{
+          records=records.filter(r=>r.id!==id);
+          sv("c_recs",records);
+          if(byDay[day].length===1) expandDay=null;
+          renderHist(); renderHeader();
+        },220);
+      }
+
+      inner.addEventListener("pointerdown",e=>{
+        // Solo iniciar si no hay otro swipe abierto en otro elemento
+        startX=e.clientX; startY=e.clientY; dx=0; dragging=false;
+        inner.style.transition="none";
+        inner.setPointerCapture(e.pointerId);
+      });
+
+      inner.addEventListener("pointermove",e=>{
+        const cx=e.clientX, cy=e.clientY;
+        const ddx=cx-startX, ddy=cy-startY;
+        if(!dragging){
+          if(Math.abs(ddx)<6 && Math.abs(ddy)<6) return;
+          // Si el gesto es más vertical que horizontal → no swipe
+          if(Math.abs(ddy)>Math.abs(ddx)){ inner.style.transition="transform .2s"; return; }
+          dragging=true;
+          // Cerrar otros swipes abiertos
+          document.querySelectorAll(".swipe-inner.swiped").forEach(o=>{ if(o!==inner){ o.style.transition="transform .2s cubic-bezier(.16,1,.3,1)"; o.style.transform="translateX(0)"; o.classList.remove("swiped"); } });
+        }
+        dx=Math.min(0, committed ? ddx-72 : ddx);  // solo hacia la izquierda
+        inner.style.transform=`translateX(${Math.max(-DELETE_AT, dx)}px)`;
+      });
+
+      inner.addEventListener("pointerup",e=>{
+        if(!dragging){
+          // Es un tap — si estaba committed (abierto), cerrarlo
+          if(committed){ resetSwipe(); return; }
+          return;
+        }
+        dragging=false;
+        if(dx < -DELETE_AT+10){
+          // Deslizó suficiente → borrar directo
+          deleteRec(wrap);
+        } else if(dx < -THRESHOLD){
+          commitSwipe(); inner.classList.add("swiped");
+        } else {
+          resetSwipe(); inner.classList.remove("swiped");
+        }
+      });
+
+      inner.addEventListener("pointercancel",()=>{ if(committed) commitSwipe(); else resetSwipe(); dragging=false; });
     });
+
     listEl.appendChild(w);
   });
 }
