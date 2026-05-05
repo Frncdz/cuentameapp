@@ -26,8 +26,10 @@
   .mbtn{background:rgba(0,0,0,0.06);border:none;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--tp)}
   .mbtn:active{background:rgba(0,0,0,0.12)}
   .mlbl{font-size:14px;font-weight:500;color:var(--ts);min-width:72px;text-align:center}
-  .ca{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-bottom:12px}
-  .pg{display:none} .pg.active{display:block}
+  .ca{flex:1;overflow:hidden;display:flex;flex-direction:column}
+  .pg{display:none}
+  .pg.active{display:flex;flex-direction:column;height:100%;overflow:hidden}
+  .pg.active.pg-scroll{overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-bottom:16px}
 
   /* ===== HERO CARD (inicio) ===== */
   .hero{margin:14px 16px 0;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%);border-radius:var(--r);padding:20px;color:white;box-shadow:0 6px 24px rgba(15,52,96,0.35);position:relative;overflow:hidden}
@@ -235,46 +237,49 @@
   <div class="ca">
     <!-- ===== INICIO ===== -->
     <div id="page-inicio" class="pg active">
-      <!-- Hero card -->
-      <div class="hero">
-        <div class="hero-label" id="hero-month">Mayo 2025</div>
-        <div class="hero-amount" id="hero-neto">S/ 0.00</div>
-        <div class="hero-sub">Saldo del mes</div>
-        <div class="hero-row">
-          <div class="hero-pill">
-            <div class="hero-pill-label">Ingresos</div>
-            <div class="hero-pill-val ing" id="hero-ing">S/ 0</div>
-          </div>
-          <div class="hero-pill">
-            <div class="hero-pill-label">Gastos</div>
-            <div class="hero-pill-val gas" id="hero-gas">S/ 0</div>
-          </div>
-          <div class="hero-pill" id="hero-pend-pill" style="display:none">
-            <div class="hero-pill-label">Pendiente</div>
-            <div class="hero-pill-val pend" id="hero-pend">S/ 0</div>
+      <!-- Zona estática: hero + banner -->
+      <div style="flex-shrink:0">
+        <div class="hero">
+          <div class="hero-label" id="hero-month">Mayo 2025</div>
+          <div class="hero-amount" id="hero-neto">S/ 0.00</div>
+          <div class="hero-sub">Saldo del mes</div>
+          <div class="hero-row">
+            <div class="hero-pill">
+              <div class="hero-pill-label">Ingresos</div>
+              <div class="hero-pill-val ing" id="hero-ing">S/ 0</div>
+            </div>
+            <div class="hero-pill">
+              <div class="hero-pill-label">Gastos</div>
+              <div class="hero-pill-val gas" id="hero-gas">S/ 0</div>
+            </div>
+            <div class="hero-pill" id="hero-pend-pill" style="display:none">
+              <div class="hero-pill-label">Pendiente</div>
+              <div class="hero-pill-val pend" id="hero-pend">S/ 0</div>
+            </div>
           </div>
         </div>
-      </div>
-
-      <!-- Banner pendiente -->
-      <div id="pend-banner" class="pend-banner" style="display:none" onclick="openPayModal()">
-        <span style="font-size:14px;flex-shrink:0">⏳</span>
-        <div class="pend-banner-info">
-          <span class="pend-banner-lbl">Pago pendiente</span>
-          <span class="pend-banner-amt" id="pend-amt">S/ 0.00</span>
-          <span class="pend-banner-sub" id="pend-sub"></span>
+        <!-- Banner pendiente -->
+        <div id="pend-banner" class="pend-banner" style="display:none" onclick="openPayModal()">
+          <span style="font-size:14px;flex-shrink:0">⏳</span>
+          <div class="pend-banner-info">
+            <span class="pend-banner-lbl">Pago pendiente</span>
+            <span class="pend-banner-amt" id="pend-amt">S/ 0.00</span>
+            <span class="pend-banner-sub" id="pend-sub"></span>
+          </div>
+          <span class="pb-arr" style="font-size:13px;color:var(--orange);flex-shrink:0">›</span>
         </div>
-        <span class="pb-arr" style="font-size:13px;color:var(--orange);flex-shrink:0">›</span>
       </div>
-
-      <div class="sec-hdr"><span class="sec-title">Movimientos</span></div>
-      <div class="entries-list" id="entries-list">
-        <div class="empty-state"><div class="empty-icon">💸</div><div class="empty-text">Sin movimientos este mes.<br>Toca + para agregar uno.</div></div>
+      <!-- Zona scrollable: solo movimientos -->
+      <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-bottom:16px">
+        <div class="sec-hdr"><span class="sec-title">Movimientos</span></div>
+        <div class="entries-list" id="entries-list">
+          <div class="empty-state"><div class="empty-icon">💸</div><div class="empty-text">Sin movimientos este mes.<br>Toca + para agregar uno.</div></div>
+        </div>
       </div>
     </div>
 
     <!-- ===== BILLETERAS ===== -->
-    <div id="page-wallets" class="pg">
+    <div id="page-wallets" class="pg pg-scroll">
       <div class="wtotal">
         <div class="wtlbl">Total en todas las billeteras</div>
         <div class="wtamt" id="wgt">S/ 0.00</div>
@@ -285,7 +290,7 @@
     </div>
 
     <!-- ===== STATS + REPORTES ===== -->
-    <div id="page-stats" class="pg">
+    <div id="page-stats" class="pg pg-scroll">
       <div class="stabs">
         <button class="stab active" onclick="switchStatTab('mes',this)">Este mes</button>
         <button class="stab" onclick="switchStatTab('cats',this)">Categorías</button>
@@ -324,7 +329,7 @@
     </div>
 
     <!-- ===== AJUSTES ===== -->
-    <div id="page-settings" class="pg">
+    <div id="page-settings" class="pg pg-scroll">
       <div style="height:14px"></div>
       <div class="sform" id="sform-cats">
         <div class="ssec">Categorías <span style="color:var(--tt);font-size:11px;font-weight:400;text-transform:none;letter-spacing:0">— toca para editar</span></div>
@@ -992,7 +997,7 @@ function switchTab(name,btn){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   btn.classList.add('active');
-  document.querySelector('.ca').scrollTop=0;
+  const activePg=document.getElementById('page-'+name);if(activePg)activePg.scrollTop=0;
   const titles={inicio:'Mis Gastos',wallets:'Billeteras',stats:'Reportes',settings:'Ajustes'};
   document.getElementById('page-title').textContent=titles[name];
   document.getElementById('mnav').style.display=(name==='inicio'||name==='stats')?'':'none';
