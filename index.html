@@ -18,7 +18,7 @@
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html{height:100%;overflow:hidden}
   body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--tp);height:100%;overflow:hidden;position:fixed;width:100%;top:0;left:0}
-  #app{display:flex;flex-direction:column;height:100%;max-width:430px;margin:0 auto;background:var(--bg)}
+  #app{display:flex;flex-direction:column;height:100%;width:100%;max-width:480px;margin:0 auto;background:var(--bg)}
   .hdr{background:rgba(249,249,251,0.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);padding:12px 20px 10px;padding-top:max(12px,env(safe-area-inset-top));border-bottom:1px solid rgba(0,0,0,0.06);flex-shrink:0}
   .hdr-row{display:flex;align-items:center;justify-content:space-between}
   .hdr h1{font-size:22px;font-weight:700;letter-spacing:-0.3px;color:var(--tp)}
@@ -96,7 +96,7 @@
   .mover{position:fixed;inset:0;background:rgba(0,0,0,0.38);backdrop-filter:blur(4px);z-index:500;display:none;align-items:flex-end;justify-content:center}
   .mover.open{display:flex;animation:fi .18s ease}
   @keyframes fi{from{opacity:0}to{opacity:1}}
-  .modal{background:var(--bg);border-radius:24px 24px 0 0;width:100%;max-width:430px;padding-bottom:max(24px,env(safe-area-inset-bottom));animation:su .32s cubic-bezier(.32,.72,0,1);max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  .modal{background:var(--bg);border-radius:24px 24px 0 0;width:100%;max-width:480px;padding-bottom:max(24px,env(safe-area-inset-bottom));animation:su .32s cubic-bezier(.32,.72,0,1);max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
   @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
   .mhandle{width:36px;height:4px;background:#d1d1d6;border-radius:2px;margin:10px auto 14px}
   .mtitle{font-size:19px;font-weight:700;padding:0 20px 14px;display:flex;align-items:center;justify-content:space-between}
@@ -372,20 +372,40 @@
     </div>
 
     <!-- ===== AJUSTES ===== -->
-    <div id="page-settings" class="pg pg-scroll">
-      <div style="height:14px"></div>
-      <div class="sform" id="sform-cats">
-        <div class="ssec">Categorías <span style="color:var(--tt);font-size:11px;font-weight:400;text-transform:none;letter-spacing:0">— toca para editar</span></div>
-      </div>
-      <div style="height:12px"></div>
-      <div class="sform">
-        <div class="ssec">Datos</div>
-        <div class="trow">
-          <div><div style="font-size:15px;font-weight:500">Borrar todos los datos</div><div style="font-size:12px;color:var(--tt);margin-top:2px">Elimina movimientos y billeteras</div></div>
-          <button onclick="clearAll()" style="background:var(--red);color:white;border:none;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Borrar</button>
+    <div id="page-settings" class="pg" style="display:none;flex-direction:column;height:100%;overflow:hidden">
+      <!-- HEADER CATEGORÍAS — estático -->
+      <div style="flex-shrink:0;padding:14px 16px 0">
+        <div class="sform" style="overflow:hidden">
+          <div class="ssec" style="display:flex;align-items:center;justify-content:space-between;border-bottom:none">
+            <span>Categorías</span>
+            <button onclick="openNewCat()" style="background:rgba(0,122,255,0.1);color:var(--blue);border:none;border-radius:8px;padding:5px 12px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">+ Nueva</button>
+          </div>
         </div>
       </div>
-      <div style="padding:0 20px;font-size:12px;color:var(--tt);line-height:1.5">Los datos se guardan localmente en este navegador.</div>
+      <!-- LISTA CATEGORÍAS — scrollable -->
+      <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:0 16px 8px">
+        <div class="sform" id="sform-cats" style="margin-top:0"></div>
+      </div>
+      <!-- FONDO FIJO: Datos + Cerrar sesión -->
+      <div style="flex-shrink:0;padding:0 16px 16px;padding-bottom:max(16px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px">
+        <div class="sform">
+          <div class="ssec">Datos</div>
+          <div class="trow">
+            <div><div style="font-size:15px;font-weight:500">Borrar todos los datos</div><div style="font-size:12px;color:var(--tt);margin-top:2px">Elimina movimientos y billeteras</div></div>
+            <button onclick="clearAll()" style="background:var(--red);color:white;border:none;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Borrar</button>
+          </div>
+        </div>
+        <div class="sform">
+          <div class="ssec">Cuenta</div>
+          <div class="trow" style="border-bottom:none">
+            <div>
+              <div style="font-size:15px;font-weight:500">Cerrar sesión</div>
+              <div style="font-size:12px;color:var(--tt);margin-top:2px" id="settings-code-lbl">Código activo</div>
+            </div>
+            <button onclick="logout()" style="background:rgba(255,59,48,0.1);color:var(--red);border:none;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Salir</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -989,7 +1009,7 @@ function selCat(id){sCat=id;renderCatChips()}
 // ======= SETTINGS CATS =======
 function renderSettingsCats(){
   const form=document.getElementById('sform-cats');
-  const hdr=form.querySelector('.ssec');form.innerHTML='';form.appendChild(hdr);
+  form.innerHTML='';
   CATS.forEach((cat,idx)=>{
     const r=document.createElement('div');r.className='srow';
     r.dataset.idx=idx;
@@ -1003,10 +1023,7 @@ function renderSettingsCats(){
     r.appendChild(handle);r.appendChild(editArea);
     form.appendChild(r);
   });
-  const add=document.createElement('div');add.className='srow';add.onclick=openNewCat;
-  add.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer';
-  add.innerHTML=`<div class="sicon" style="background:rgba(0,122,255,0.1);color:var(--blue);font-size:22px;display:flex;align-items:center;justify-content:center">+</div><div class="sname" style="color:var(--blue)">Nueva categoría</div>`;
-  form.appendChild(add);
+  // botón "+" movido al header de la tarjeta
   initCatDrag(form);
 }
 function moveCat(fromIdx,toIdx){
@@ -1015,51 +1032,64 @@ function moveCat(fromIdx,toIdx){
   CATS.splice(toIdx,0,item);
   saveC();renderSettingsCats();renderCatChips();
 }
+// Referencias globales para poder limpiar listeners entre renders
+let _dragCleanup=null;
+
 function initCatDrag(form){
-  let dragIdx=null,dragEl=null;
+  // Limpiar listeners anteriores antes de agregar nuevos
+  if(_dragCleanup){_dragCleanup();_dragCleanup=null;}
+
+  let dragIdx=null;
   const rows=()=>[...form.querySelectorAll('.srow[data-idx]')];
 
-  function getDragY(e){return e.touches?e.touches[0].clientY:e.clientY}
+  function getY(e){return e.touches?e.touches[0].clientY:e.clientY}
 
-  function onDragStart(e,idx,el){
-    dragIdx=idx;dragEl=el;el.classList.add('dragging');
-    e.stopPropagation();
-  }
-  function onDragMove(e){
+  function onMove(e){
     if(dragIdx===null)return;
     e.preventDefault();
-    const y=getDragY(e);
+    const y=getY(e);
     rows().forEach(r=>{
       r.classList.remove('drag-over');
-      const rect=r.getBoundingClientRect();
-      if(y>rect.top&&y<rect.bottom&&parseInt(r.dataset.idx)!==dragIdx){
+      const rc=r.getBoundingClientRect();
+      if(y>=rc.top&&y<=rc.bottom&&parseInt(r.dataset.idx)!==dragIdx)
         r.classList.add('drag-over');
-      }
     });
   }
-  function onDragEnd(e){
+
+  function onEnd(){
     if(dragIdx===null)return;
     let toIdx=dragIdx;
     rows().forEach(r=>{
       if(r.classList.contains('drag-over'))toIdx=parseInt(r.dataset.idx);
       r.classList.remove('drag-over','dragging');
     });
-    if(toIdx!==dragIdx)moveCat(dragIdx,toIdx);
-    else{dragIdx=null;dragEl=null;}
+    const from=dragIdx;dragIdx=null;
+    if(toIdx!==from)moveCat(from,toIdx);
   }
 
   rows().forEach((r,i)=>{
     const h=r.querySelector('.drag-handle');
     if(!h)return;
-    // Touch
-    h.addEventListener('touchstart',e=>{onDragStart(e,i,r)},{passive:true});
-    // Mouse
-    h.addEventListener('mousedown',e=>{onDragStart(e,i,r)});
+    h.addEventListener('touchstart',e=>{
+      dragIdx=i;r.classList.add('dragging');e.stopPropagation();
+    },{passive:true});
+    h.addEventListener('mousedown',e=>{
+      dragIdx=i;r.classList.add('dragging');e.stopPropagation();e.preventDefault();
+    });
   });
-  document.addEventListener('touchmove',onDragMove,{passive:false});
-  document.addEventListener('touchend',onDragEnd);
-  document.addEventListener('mousemove',onDragMove);
-  document.addEventListener('mouseup',onDragEnd);
+
+  document.addEventListener('touchmove',onMove,{passive:false});
+  document.addEventListener('touchend',onEnd,{passive:true});
+  document.addEventListener('mousemove',onMove);
+  document.addEventListener('mouseup',onEnd);
+
+  // Guardar función de limpieza
+  _dragCleanup=()=>{
+    document.removeEventListener('touchmove',onMove);
+    document.removeEventListener('touchend',onEnd);
+    document.removeEventListener('mousemove',onMove);
+    document.removeEventListener('mouseup',onEnd);
+  };
 }
 function openNewCat(){ecId='__new__';ecCol=PAL[0];ecIco='📦';document.getElementById('cat-inp-name').value='';document.getElementById('cat-edit-title').textContent='Nueva categoría';document.getElementById('cat-del-btn').style.display='none';updCatPrev();buildCatUI();openM('m-cat')}
 function openCatEdit(id){const cat=gc(id);ecId=id;ecCol=PAL.find(p=>p.color===cat.color)||PAL[0];ecIco=cat.icon;document.getElementById('cat-inp-name').value=cat.name;document.getElementById('cat-edit-title').textContent='Editar categoría';document.getElementById('cat-del-btn').style.display='';updCatPrev();buildCatUI();openM('m-cat')}
@@ -1088,12 +1118,16 @@ function switchTab(name,btn){
   document.getElementById('page-title').textContent=titles[name];
   document.getElementById('mnav').style.display=(name==='inicio'||name==='stats')?'':'none';
   if(name==='stats')renderStatsPage();
-  if(name==='settings')renderSettingsCats();
+  if(name==='settings'){
+    const ps=document.getElementById('page-settings');
+    ps.style.display='flex';
+    renderSettingsCats();
+  }
 }
 
 // ====================== ACTIVACIÓN ======================
 // ⚠️ REEMPLAZA esta URL con la de tu Google Apps Script desplegado
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyhqcwoONCFLLd9iEIcGfza15J5LDBDZqviIdBiM1v7vOw655ZEDVIPEfXGimjCLl-g/exec';
+const SCRIPT_URL = 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT';
 
 function getDeviceId(){
   let id=localStorage.getItem('_did');
@@ -1161,18 +1195,26 @@ function enterApp(){
   document.getElementById('activation-screen').classList.add('hidden');
 }
 
+function logout(){
+  if(!confirm('¿Cerrar sesión? Necesitarás tu código para volver a entrar.'))return;
+  localStorage.removeItem('_act_code');
+  localStorage.removeItem('_act_device');
+  document.getElementById('activation-screen').classList.remove('hidden');
+  document.getElementById('act-input').value='';
+  document.getElementById('act-error').textContent='';
+  document.getElementById('act-success').textContent='';
+  document.getElementById('act-btn').disabled=true;
+}
+
 function checkActivation(){
   const savedCode=localStorage.getItem('_act_code');
   const deviceId=getDeviceId();
-  // Mostrar device ID en footer (útil para soporte)
   const didEl=document.getElementById('act-device-id');
   if(didEl)didEl.textContent='ID: '+deviceId;
-
-  if(savedCode){
-    // Ya activado en este dispositivo — entrar directo
-    enterApp();
-  }
-  // Si no hay código guardado, la pantalla de activación se queda visible
+  // Mostrar código activo en ajustes
+  const codeLbl=document.getElementById('settings-code-lbl');
+  if(codeLbl&&savedCode)codeLbl.textContent='Código: '+savedCode;
+  if(savedCode)enterApp();
 }
 
 checkActivation();
