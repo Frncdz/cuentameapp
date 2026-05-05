@@ -373,39 +373,44 @@
 
     <!-- ===== AJUSTES ===== -->
     <div id="page-settings" class="pg" style="display:none;flex-direction:column;height:100%;overflow:hidden">
+
       <!-- HEADER CATEGORÍAS — estático -->
-      <div style="flex-shrink:0;padding:14px 16px 0">
-        <div class="sform" style="overflow:hidden">
-          <div class="ssec" style="display:flex;align-items:center;justify-content:space-between;border-bottom:none">
-            <span>Categorías</span>
-            <button onclick="openNewCat()" style="background:rgba(0,122,255,0.1);color:var(--blue);border:none;border-radius:8px;padding:5px 12px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">+ Nueva</button>
-          </div>
+      <div style="flex-shrink:0;padding:14px 16px 6px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:13px;font-weight:700;color:var(--ts);text-transform:uppercase;letter-spacing:.5px">Categorías</span>
+          <button onclick="openNewCat()" style="background:rgba(0,122,255,0.1);color:var(--blue);border:none;border-radius:20px;padding:5px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">+ Nueva</button>
         </div>
       </div>
-      <!-- LISTA CATEGORÍAS — scrollable -->
+
+      <!-- LISTA CATEGORÍAS — scrollable, dentro de card -->
       <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:0 16px 8px">
-        <div class="sform" id="sform-cats" style="margin-top:0"></div>
+        <div class="sform" id="sform-cats"></div>
       </div>
-      <!-- FONDO FIJO: Datos + Cerrar sesión -->
-      <div style="flex-shrink:0;padding:0 16px 16px;padding-bottom:max(16px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px">
+
+      <!-- FONDO FIJO: Datos + Cuenta -->
+      <div style="flex-shrink:0;padding:8px 16px;padding-bottom:max(12px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px">
         <div class="sform">
           <div class="ssec">Datos</div>
-          <div class="trow">
-            <div><div style="font-size:15px;font-weight:500">Borrar todos los datos</div><div style="font-size:12px;color:var(--tt);margin-top:2px">Elimina movimientos y billeteras</div></div>
-            <button onclick="clearAll()" style="background:var(--red);color:white;border:none;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Borrar</button>
+          <div class="trow" style="border-bottom:none">
+            <div>
+              <div style="font-size:15px;font-weight:500">Borrar todos los datos</div>
+              <div style="font-size:12px;color:var(--tt);margin-top:2px">Elimina movimientos y billeteras</div>
+            </div>
+            <button onclick="clearAll()" style="background:var(--red);color:white;border:none;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0">Borrar</button>
           </div>
         </div>
         <div class="sform">
           <div class="ssec">Cuenta</div>
           <div class="trow" style="border-bottom:none">
-            <div>
+            <div style="min-width:0">
               <div style="font-size:15px;font-weight:500">Cerrar sesión</div>
-              <div style="font-size:12px;color:var(--tt);margin-top:2px" id="settings-code-lbl">Código activo</div>
+              <div style="font-size:12px;color:var(--tt);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="settings-code-lbl">—</div>
             </div>
-            <button onclick="logout()" style="background:rgba(255,59,48,0.1);color:var(--red);border:none;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">Salir</button>
+            <button onclick="logout()" style="background:rgba(255,59,48,0.1);color:var(--red);border:none;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0">Salir</button>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -1013,7 +1018,7 @@ function renderSettingsCats(){
   CATS.forEach((cat,idx)=>{
     const r=document.createElement('div');r.className='srow';
     r.dataset.idx=idx;
-    r.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--sep)';
+    r.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--sep);background:var(--card)';
     const handle=document.createElement('span');handle.className='drag-handle';handle.textContent='⠿';
     handle.title='Arrastra para reordenar';
     const editArea=document.createElement('div');
@@ -1024,6 +1029,9 @@ function renderSettingsCats(){
     form.appendChild(r);
   });
   // botón "+" movido al header de la tarjeta
+  // Quitar borde del último item
+  const allRows=form.querySelectorAll('.srow');
+  if(allRows.length>0)allRows[allRows.length-1].style.borderBottom='none';
   initCatDrag(form);
 }
 function moveCat(fromIdx,toIdx){
@@ -1196,7 +1204,13 @@ function enterApp(){
 }
 
 function logout(){
-  if(!confirm('¿Cerrar sesión? Necesitarás tu código para volver a entrar.'))return;
+  if(!confirm('¿Cerrar sesión? Podrás usar tu código en otro dispositivo.'))return;
+  const code=localStorage.getItem('_act_code');
+  const deviceId=getDeviceId();
+  // Limpiar deviceId en el Sheet para liberar el dispositivo
+  if(code&&SCRIPT_URL!=='PEGA_AQUI_TU_URL_DE_APPS_SCRIPT'){
+    fetch(SCRIPT_URL+'?action=logout&code='+encodeURIComponent(code)+'&deviceId='+encodeURIComponent(deviceId)).catch(()=>{});
+  }
   localStorage.removeItem('_act_code');
   localStorage.removeItem('_act_device');
   document.getElementById('activation-screen').classList.remove('hidden');
