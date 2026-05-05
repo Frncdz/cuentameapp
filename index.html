@@ -182,9 +182,10 @@
   .sicon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
   .sname{flex:1;font-size:15px;font-weight:500}
   .schev{color:var(--tt);font-size:14px}
-  .sort-btn{background:none;border:none;color:var(--ts);font-size:16px;cursor:pointer;padding:2px 6px;border-radius:6px;line-height:1}
-  .sort-btn:active{background:var(--sep)}
-  .sort-btn:disabled{opacity:.2;cursor:default}
+  .drag-handle{color:var(--tt);font-size:18px;cursor:grab;padding:4px 8px;flex-shrink:0;user-select:none;touch-action:none}
+  .drag-handle:active{cursor:grabbing}
+  .srow.dragging{opacity:0.4;background:var(--sep)}
+  .srow.drag-over{border-top:2px solid var(--blue)}
 
   /* ===== BILLETERAS ===== */
   .wtotal{margin:14px 16px 0;background:linear-gradient(135deg,#007aff,#5ac8fa);border-radius:var(--r);padding:20px;color:white;box-shadow:0 4px 20px rgba(0,122,255,.3)}
@@ -219,9 +220,50 @@
   .pay-total-row{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-top:1px solid var(--sep);margin-top:4px}
   .pay-total-lbl{font-size:14px;color:var(--ts);font-weight:500}
   .pay-total-amt{font-size:20px;font-weight:700;color:var(--tp)}
+
+  /* ===== PANTALLA ACTIVACIÓN ===== */
+  #activation-screen{position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#0f0f23 0%,#1a1a3e 50%,#0f2060 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 28px;padding-top:max(32px,env(safe-area-inset-top))}
+  #activation-screen.hidden{display:none}
+  .act-logo{font-size:52px;margin-bottom:16px;filter:drop-shadow(0 4px 16px rgba(0,122,255,0.5))}
+  .act-title{font-size:26px;font-weight:700;color:white;letter-spacing:-0.5px;margin-bottom:6px;text-align:center}
+  .act-sub{font-size:14px;color:rgba(255,255,255,0.5);text-align:center;margin-bottom:40px;line-height:1.5}
+  .act-card{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:24px;width:100%;max-width:340px;backdrop-filter:blur(12px)}
+  .act-label{font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:10px}
+  .act-input{width:100%;background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.15);border-radius:12px;padding:14px 16px;font-size:17px;color:white;font-family:inherit;outline:none;letter-spacing:2px;text-align:center;text-transform:uppercase;caret-color:var(--blue)}
+  .act-input::placeholder{color:rgba(255,255,255,0.25);letter-spacing:1px;text-transform:none}
+  .act-input:focus{border-color:rgba(0,122,255,0.7);background:rgba(0,122,255,0.1)}
+  .act-btn{width:100%;margin-top:14px;background:var(--blue);color:white;border:none;border-radius:12px;padding:15px;font-size:16px;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity .15s,transform .1s}
+  .act-btn:active{opacity:.85;transform:scale(.98)}
+  .act-btn:disabled{opacity:.4;cursor:not-allowed}
+  .act-error{color:#ff6b6b;font-size:13px;text-align:center;margin-top:12px;min-height:18px;font-weight:500}
+  .act-success{color:#4ade80;font-size:13px;text-align:center;margin-top:12px;min-height:18px;font-weight:500}
+  .act-footer{margin-top:32px;font-size:11px;color:rgba(255,255,255,0.25);text-align:center;line-height:1.6}
+  .act-loading{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+  @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
+
+<!-- ===== PANTALLA ACTIVACIÓN ===== -->
+<div id="activation-screen">
+  <div class="act-logo">💰</div>
+  <div class="act-title">Mis Gastos</div>
+  <div class="act-sub">Ingresa tu código de activación<br>para acceder a tu cuenta</div>
+  <div class="act-card">
+    <div class="act-label">Código de activación</div>
+    <input class="act-input" id="act-input" type="text" placeholder="XXXX-XXXX" maxlength="9"
+      autocomplete="off" autocorrect="off" spellcheck="false"
+      oninput="onActInput(this)" onkeydown="if(event.key==='Enter')submitCode()">
+    <button class="act-btn" id="act-btn" onclick="submitCode()" disabled>Activar</button>
+    <div class="act-error" id="act-error"></div>
+    <div class="act-success" id="act-success"></div>
+  </div>
+  <div class="act-footer">
+    ¿No tienes un código? Contáctanos para obtener acceso.<br>
+    <span id="act-device-id" style="opacity:0.4;font-size:10px"></span>
+  </div>
+</div>
+
 <div id="app">
   <div class="hdr">
     <div class="hdr-row">
@@ -269,9 +311,10 @@
           <span class="pb-arr" style="font-size:13px;color:var(--orange);flex-shrink:0">›</span>
         </div>
       </div>
-      <!-- Zona scrollable: solo movimientos -->
+      <!-- Título estático -->
+      <div class="sec-hdr" style="flex-shrink:0"><span class="sec-title">Movimientos</span></div>
+      <!-- Zona scrollable: solo fechas y registros -->
       <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-bottom:16px">
-        <div class="sec-hdr"><span class="sec-title">Movimientos</span></div>
         <div class="entries-list" id="entries-list">
           <div class="empty-state"><div class="empty-icon">💸</div><div class="empty-text">Sin movimientos este mes.<br>Toca + para agregar uno.</div></div>
         </div>
@@ -949,31 +992,74 @@ function renderSettingsCats(){
   const hdr=form.querySelector('.ssec');form.innerHTML='';form.appendChild(hdr);
   CATS.forEach((cat,idx)=>{
     const r=document.createElement('div');r.className='srow';
+    r.dataset.idx=idx;
     r.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--sep)';
+    const handle=document.createElement('span');handle.className='drag-handle';handle.textContent='⠿';
+    handle.title='Arrastra para reordenar';
     const editArea=document.createElement('div');
-    editArea.style.cssText='display:flex;align-items:center;gap:10px;flex:1;cursor:pointer';
+    editArea.style.cssText='display:flex;align-items:center;gap:10px;flex:1;cursor:pointer;min-width:0';
     editArea.onclick=()=>openCatEdit(cat.id);
     editArea.innerHTML=`<div class="sicon" style="background:${cat.bg}">${cat.icon}</div><div class="sname">${cat.name}</div>`;
-    const btnWrap=document.createElement('div');
-    btnWrap.style.cssText='display:flex;flex-direction:column;gap:0;flex-shrink:0';
-    const up=document.createElement('button');up.className='sort-btn';up.textContent='↑';up.title='Subir';
-    up.disabled=(idx===0);
-    up.onclick=(e)=>{e.stopPropagation();moveCat(idx,-1)};
-    const dn=document.createElement('button');dn.className='sort-btn';dn.textContent='↓';dn.title='Bajar';
-    dn.disabled=(idx===CATS.length-1);
-    dn.onclick=(e)=>{e.stopPropagation();moveCat(idx,1)};
-    btnWrap.appendChild(up);btnWrap.appendChild(dn);
-    r.appendChild(editArea);r.appendChild(btnWrap);
+    r.appendChild(handle);r.appendChild(editArea);
     form.appendChild(r);
   });
   const add=document.createElement('div');add.className='srow';add.onclick=openNewCat;
+  add.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer';
   add.innerHTML=`<div class="sicon" style="background:rgba(0,122,255,0.1);color:var(--blue);font-size:22px;display:flex;align-items:center;justify-content:center">+</div><div class="sname" style="color:var(--blue)">Nueva categoría</div>`;
   form.appendChild(add);
+  initCatDrag(form);
 }
-function moveCat(idx,dir){
-  const ni=idx+dir;if(ni<0||ni>=CATS.length)return;
-  [CATS[idx],CATS[ni]]=[CATS[ni],CATS[idx]];
+function moveCat(fromIdx,toIdx){
+  if(toIdx<0||toIdx>=CATS.length)return;
+  const item=CATS.splice(fromIdx,1)[0];
+  CATS.splice(toIdx,0,item);
   saveC();renderSettingsCats();renderCatChips();
+}
+function initCatDrag(form){
+  let dragIdx=null,dragEl=null;
+  const rows=()=>[...form.querySelectorAll('.srow[data-idx]')];
+
+  function getDragY(e){return e.touches?e.touches[0].clientY:e.clientY}
+
+  function onDragStart(e,idx,el){
+    dragIdx=idx;dragEl=el;el.classList.add('dragging');
+    e.stopPropagation();
+  }
+  function onDragMove(e){
+    if(dragIdx===null)return;
+    e.preventDefault();
+    const y=getDragY(e);
+    rows().forEach(r=>{
+      r.classList.remove('drag-over');
+      const rect=r.getBoundingClientRect();
+      if(y>rect.top&&y<rect.bottom&&parseInt(r.dataset.idx)!==dragIdx){
+        r.classList.add('drag-over');
+      }
+    });
+  }
+  function onDragEnd(e){
+    if(dragIdx===null)return;
+    let toIdx=dragIdx;
+    rows().forEach(r=>{
+      if(r.classList.contains('drag-over'))toIdx=parseInt(r.dataset.idx);
+      r.classList.remove('drag-over','dragging');
+    });
+    if(toIdx!==dragIdx)moveCat(dragIdx,toIdx);
+    else{dragIdx=null;dragEl=null;}
+  }
+
+  rows().forEach((r,i)=>{
+    const h=r.querySelector('.drag-handle');
+    if(!h)return;
+    // Touch
+    h.addEventListener('touchstart',e=>{onDragStart(e,i,r)},{passive:true});
+    // Mouse
+    h.addEventListener('mousedown',e=>{onDragStart(e,i,r)});
+  });
+  document.addEventListener('touchmove',onDragMove,{passive:false});
+  document.addEventListener('touchend',onDragEnd);
+  document.addEventListener('mousemove',onDragMove);
+  document.addEventListener('mouseup',onDragEnd);
 }
 function openNewCat(){ecId='__new__';ecCol=PAL[0];ecIco='📦';document.getElementById('cat-inp-name').value='';document.getElementById('cat-edit-title').textContent='Nueva categoría';document.getElementById('cat-del-btn').style.display='none';updCatPrev();buildCatUI();openM('m-cat')}
 function openCatEdit(id){const cat=gc(id);ecId=id;ecCol=PAL.find(p=>p.color===cat.color)||PAL[0];ecIco=cat.icon;document.getElementById('cat-inp-name').value=cat.name;document.getElementById('cat-edit-title').textContent='Editar categoría';document.getElementById('cat-del-btn').style.display='';updCatPrev();buildCatUI();openM('m-cat')}
@@ -1002,7 +1088,94 @@ function switchTab(name,btn){
   document.getElementById('page-title').textContent=titles[name];
   document.getElementById('mnav').style.display=(name==='inicio'||name==='stats')?'':'none';
   if(name==='stats')renderStatsPage();
+  if(name==='settings')renderSettingsCats();
 }
+
+// ====================== ACTIVACIÓN ======================
+// TEMPORAL: códigos hardcodeados. En Paso 3 se reemplaza por Google Sheet.
+const TEMP_CODES = ['DEMO-2024','TEST-0001','TEST-0002','TEST-0003'];
+
+function getDeviceId(){
+  let id=localStorage.getItem('_did');
+  if(!id){
+    id='D-'+Math.random().toString(36).slice(2,8).toUpperCase()+'-'+Date.now().toString(36).toUpperCase();
+    localStorage.setItem('_did',id);
+  }
+  return id;
+}
+
+function formatCodeInput(val){
+  // Formatear como XXXX-XXXX automáticamente
+  const clean=val.replace(/[^A-Za-z0-9]/g,'').toUpperCase().slice(0,8);
+  if(clean.length>4)return clean.slice(0,4)+'-'+clean.slice(4);
+  return clean;
+}
+
+function onActInput(el){
+  el.value=formatCodeInput(el.value);
+  document.getElementById('act-error').textContent='';
+  document.getElementById('act-success').textContent='';
+  document.getElementById('act-btn').disabled=el.value.length<9;
+}
+
+function submitCode(){
+  const code=document.getElementById('act-input').value.trim().toUpperCase();
+  const btn=document.getElementById('act-btn');
+  const errEl=document.getElementById('act-error');
+  const okEl=document.getElementById('act-success');
+
+  if(code.length<9){errEl.textContent='Ingresa el código completo.';return;}
+
+  btn.disabled=true;
+  btn.innerHTML='<span class="act-loading"></span>Verificando...';
+  errEl.textContent='';okEl.textContent='';
+
+  // Simular latencia de red (en Paso 3 aquí va el fetch al Google Sheet)
+  setTimeout(()=>{
+    validateCode(code,(valid,msg)=>{
+      if(valid){
+        okEl.textContent='✓ Código válido. Entrando...';
+        localStorage.setItem('_act_code',code);
+        localStorage.setItem('_act_device',getDeviceId());
+        setTimeout(()=>enterApp(),900);
+      } else {
+        errEl.textContent=msg||'Código incorrecto o ya en uso.';
+        btn.disabled=false;
+        btn.innerHTML='Activar';
+      }
+    });
+  },800);
+}
+
+function validateCode(code,cb){
+  // TEMPORAL — se reemplaza en Paso 3 por llamada a Google Sheet
+  if(TEMP_CODES.includes(code)){
+    cb(true);
+  } else {
+    cb(false,'Código no válido. Verifica e intenta de nuevo.');
+  }
+}
+
+function enterApp(){
+  document.getElementById('activation-screen').classList.add('hidden');
+}
+
+function checkActivation(){
+  const savedCode=localStorage.getItem('_act_code');
+  const deviceId=getDeviceId();
+  // Mostrar device ID en footer (útil para soporte)
+  const didEl=document.getElementById('act-device-id');
+  if(didEl)didEl.textContent='ID: '+deviceId;
+
+  if(savedCode){
+    // Ya activado en este dispositivo — entrar directo
+    enterApp();
+  }
+  // Si no hay código guardado, la pantalla de activación se queda visible
+}
+
+checkActivation();
+
 init();
 </script>
 </body>
