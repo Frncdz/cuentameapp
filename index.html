@@ -796,7 +796,6 @@ function openModal(){
   openM('m-new');
   document.getElementById('inp-date').value=tds();
   document.getElementById('inp-desc').value='';
-  document.getElementById('inp-amount'||'inp-amt').value=''; // compatibilidad
   document.getElementById('inp-amt').value='';
   renderWalSel();renderCatChips();setType('gasto');setPaid(true);
 }
@@ -807,7 +806,15 @@ function saveEntry(){
   const walletId=document.getElementById('inp-wallet').value||'';
   if(!amount||amount<=0){document.getElementById('inp-amt').focus();return}
   entries.push({id:Date.now().toString(),type:cType,cat:sCat,desc:desc||gc(sCat).name,amount,date,walletId,paid:isPaid});
-  saveE();closeM('m-new');
+  saveE();
+  // Reset formulario
+  document.getElementById('inp-desc').value='';
+  document.getElementById('inp-amt').value='';
+  document.getElementById('inp-date').value=tds();
+  document.getElementById('inp-wallet').value='';
+  sWal='';
+  setType('gasto');setPaid(true);selCat('menu');renderWalSel();
+  closeM('m-new');
   const d=pdl(date);cMonth=d.getMonth();cYear=d.getFullYear();
   updMlbl();render();
 }
