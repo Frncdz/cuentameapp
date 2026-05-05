@@ -221,6 +221,16 @@
   .pay-total-lbl{font-size:14px;color:var(--ts);font-weight:500}
   .pay-total-amt{font-size:20px;font-weight:700;color:var(--tp)}
 
+  /* ===== MODAL CATEGORÍAS ===== */
+  #m-cats-detail .modal{max-height:92vh}
+  .cats-sort-toggle{display:flex;align-items:center;justify-content:space-between;padding:0 20px 14px}
+  .cats-sort-lbl{font-size:14px;color:var(--ts)}
+  .ios-sw{width:44px;height:26px;border-radius:13px;background:#e5e5ea;border:none;position:relative;cursor:pointer;transition:background .25s;flex-shrink:0;padding:0}
+  .ios-sw::after{content:'';position:absolute;width:22px;height:22px;border-radius:50%;background:white;top:2px;left:2px;transition:transform .25s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .ios-sw.on{background:var(--green)}
+  .ios-sw.on::after{transform:translateX(18px)}
+  .cats-list-wrap{padding:0 16px 8px}
+
   /* ===== PANTALLA ACTIVACIÓN ===== */
   #activation-screen{position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#0f0f23 0%,#1a1a3e 50%,#0f2060 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 28px;padding-top:max(32px,env(safe-area-inset-top))}
   #activation-screen.hidden{display:none}
@@ -372,23 +382,28 @@
     </div>
 
     <!-- ===== AJUSTES ===== -->
-    <div id="page-settings" class="pg" style="display:none;flex-direction:column;height:100%;overflow:hidden">
+    <div id="page-settings" class="pg pg-scroll">
+      <div style="height:14px"></div>
 
-      <!-- HEADER CATEGORÍAS — estático -->
-      <div style="flex-shrink:0;padding:14px 16px 6px">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <span style="font-size:13px;font-weight:700;color:var(--ts);text-transform:uppercase;letter-spacing:.5px">Categorías</span>
-          <button onclick="openNewCat()" style="background:rgba(0,122,255,0.1);color:var(--blue);border:none;border-radius:20px;padding:5px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">+ Nueva</button>
+      <!-- Tarjeta Categorías — resumen -->
+      <div style="padding:0 16px;margin-bottom:10px">
+        <div class="sform">
+          <div class="ssec">Categorías</div>
+          <div class="trow" style="border-bottom:none;cursor:pointer" onclick="openM('m-cats-detail')">
+            <div style="min-width:0">
+              <div style="font-size:15px;font-weight:500" id="cats-summary-title">Ver y ordenar</div>
+              <div style="font-size:12px;color:var(--tt);margin-top:2px" id="cats-summary-sub">Toca para editar</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+              <button onclick="event.stopPropagation();openNewCat()" style="background:rgba(0,122,255,0.1);color:var(--blue);border:none;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">+ Nueva</button>
+              <span style="color:var(--tt);font-size:16px">›</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- LISTA CATEGORÍAS — scrollable, dentro de card -->
-      <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:0 16px 8px">
-        <div class="sform" id="sform-cats"></div>
-      </div>
-
-      <!-- FONDO FIJO: Datos + Cuenta -->
-      <div style="flex-shrink:0;padding:8px 16px;padding-bottom:max(12px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px">
+      <!-- Tarjeta Datos -->
+      <div style="padding:0 16px;margin-bottom:10px">
         <div class="sform">
           <div class="ssec">Datos</div>
           <div class="trow" style="border-bottom:none">
@@ -399,12 +414,16 @@
             <button onclick="clearAll()" style="background:var(--red);color:white;border:none;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0">Borrar</button>
           </div>
         </div>
+      </div>
+
+      <!-- Tarjeta Cuenta -->
+      <div style="padding:0 16px;margin-bottom:10px">
         <div class="sform">
           <div class="ssec">Cuenta</div>
           <div class="trow" style="border-bottom:none">
             <div style="min-width:0">
               <div style="font-size:15px;font-weight:500">Cerrar sesión</div>
-              <div style="font-size:12px;color:var(--tt);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="settings-code-lbl">—</div>
+              <div style="font-size:12px;color:var(--tt);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="settings-code-lbl">—</div>
             </div>
             <button onclick="logout()" style="background:rgba(255,59,48,0.1);color:var(--red);border:none;border-radius:20px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;flex-shrink:0">Salir</button>
           </div>
@@ -1012,27 +1031,46 @@ function selCatSel(id){sCat=id}
 function selCat(id){sCat=id;renderCatChips()}
 
 // ======= SETTINGS CATS =======
+let _sortMode=false;
+
+function toggleSortMode(){
+  _sortMode=!_sortMode;
+  const btn=document.getElementById('sort-toggle-btn');
+  if(btn)btn.classList.toggle('on',_sortMode);
+  renderSettingsCats();
+}
+
 function renderSettingsCats(){
+  // Actualizar resumen en la tarjeta de ajustes
+  const t=document.getElementById('cats-summary-title');
+  const s=document.getElementById('cats-summary-sub');
+  if(t)t.textContent='Categorías';
+  if(s)s.textContent=CATS.length+' categoría'+(CATS.length!==1?'s':'')+' · Toca para ver y editar';
+
   const form=document.getElementById('sform-cats');
+  if(!form)return;
   form.innerHTML='';
   CATS.forEach((cat,idx)=>{
     const r=document.createElement('div');r.className='srow';
     r.dataset.idx=idx;
-    r.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--sep);background:var(--card)';
-    const handle=document.createElement('span');handle.className='drag-handle';handle.textContent='⠿';
-    handle.title='Arrastra para reordenar';
+    r.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:'+(idx<CATS.length-1?'1px solid var(--sep)':'none')+';background:var(--card)';
+    // Handle drag — solo visible en modo ordenar
+    const handle=document.createElement('span');
+    handle.className='drag-handle';
+    handle.textContent='⠿';
+    handle.style.display=_sortMode?'':'none';
     const editArea=document.createElement('div');
     editArea.style.cssText='display:flex;align-items:center;gap:10px;flex:1;cursor:pointer;min-width:0';
-    editArea.onclick=()=>openCatEdit(cat.id);
+    editArea.onclick=()=>{ if(!_sortMode)openCatEdit(cat.id); };
     editArea.innerHTML=`<div class="sicon" style="background:${cat.bg}">${cat.icon}</div><div class="sname">${cat.name}</div>`;
-    r.appendChild(handle);r.appendChild(editArea);
+    const chevron=document.createElement('span');
+    chevron.style.cssText='color:var(--tt);font-size:14px;flex-shrink:0';
+    chevron.textContent=_sortMode?'':'›';
+    r.appendChild(handle);r.appendChild(editArea);r.appendChild(chevron);
     form.appendChild(r);
   });
-  // botón "+" movido al header de la tarjeta
-  // Quitar borde del último item
-  const allRows=form.querySelectorAll('.srow');
-  if(allRows.length>0)allRows[allRows.length-1].style.borderBottom='none';
-  initCatDrag(form);
+  if(_sortMode)initCatDrag(form);
+  else if(_dragCleanup){_dragCleanup();_dragCleanup=null;}
 }
 function moveCat(fromIdx,toIdx){
   if(toIdx<0||toIdx>=CATS.length)return;
@@ -1127,8 +1165,6 @@ function switchTab(name,btn){
   document.getElementById('mnav').style.display=(name==='inicio'||name==='stats')?'':'none';
   if(name==='stats')renderStatsPage();
   if(name==='settings'){
-    const ps=document.getElementById('page-settings');
-    ps.style.display='flex';
     renderSettingsCats();
   }
 }
@@ -1235,5 +1271,26 @@ checkActivation();
 
 init();
 </script>
+<!-- ===== MODAL DETALLE CATEGORÍAS ===== -->
+<div class="mover" id="m-cats-detail" onclick="closeOver(event,'m-cats-detail')">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <div class="mtitle">
+      <span>Categorías</span>
+      <button class="mclose" onclick="closeM('m-cats-detail')">✕</button>
+    </div>
+    <!-- Toggle ordenar -->
+    <div class="cats-sort-toggle">
+      <span class="cats-sort-lbl">Ordenar categorías</span>
+      <button class="ios-sw" id="sort-toggle-btn" onclick="toggleSortMode()"></button>
+    </div>
+    <!-- Lista -->
+    <div class="cats-list-wrap">
+      <div class="sform" id="sform-cats"></div>
+    </div>
+    <button class="sbtn" onclick="openNewCat()" style="margin-bottom:0">+ Nueva categoría</button>
+  </div>
+</div>
+
 </body>
 </html>
