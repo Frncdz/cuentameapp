@@ -177,6 +177,9 @@
   .sicon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
   .sname{flex:1;font-size:15px;font-weight:500}
   .schev{color:var(--tt);font-size:14px}
+  .sort-btn{background:none;border:none;color:var(--ts);font-size:16px;cursor:pointer;padding:2px 6px;border-radius:6px;line-height:1}
+  .sort-btn:active{background:var(--sep)}
+  .sort-btn:disabled{opacity:.2;cursor:default}
 
   /* ===== BILLETERAS ===== */
   .wtotal{margin:14px 16px 0;background:linear-gradient(135deg,#007aff,#5ac8fa);border-radius:var(--r);padding:20px;color:white;box-shadow:0 4px 20px rgba(0,122,255,.3)}
@@ -357,7 +360,9 @@
       <button class="active paid-opt" id="tg-paid" onclick="setPaid(true)">✅ Pagado</button>
       <button class="pend-opt" id="tg-pend" onclick="setPaid(false)">⏳ Pendiente</button>
     </div>
-    <div class="qc"><div class="qlbl">Categoría</div><div class="cscroll" id="cats-scroll"></div></div>
+    <div class="fgrp" style="margin-bottom:10px">
+      <div class="frow"><span class="flbl">Categoría</span><select class="fsel" id="cats-select" onchange="selCatSel(this.value)"><option value="" disabled selected>— Elige una —</option></select></div>
+    </div>
     <div class="fgrp">
       <div class="frow"><span class="flbl">Descripción</span><input class="finp" id="inp-desc" placeholder="¿En qué?" type="text" autocomplete="off"></div>
       <div class="frow"><span class="flbl">Monto (S/)</span><input class="finp" id="inp-amt" placeholder="0.00" type="number" step="0.5" inputmode="decimal"></div>
@@ -797,7 +802,7 @@ function openModal(){
   document.getElementById('inp-date').value=tds();
   document.getElementById('inp-desc').value='';
   document.getElementById('inp-amt').value='';
-  renderWalSel();renderCatChips();setType('gasto');setPaid(true);
+  renderWalSel();renderCatChips();document.getElementById('cats-select').value='';sCat='';setType('gasto');setPaid(true);
 }
 function saveEntry(){
   const desc=document.getElementById('inp-desc').value.trim();
@@ -805,6 +810,7 @@ function saveEntry(){
   const date=document.getElementById('inp-date').value||tds();
   const walletId=document.getElementById('inp-wallet').value||'';
   if(!amount||amount<=0){document.getElementById('inp-amt').focus();return}
+  if(!sCat){sCat=CATS[0]?.id||'otro'}
   entries.push({id:Date.now().toString(),type:cType,cat:sCat,desc:desc||gc(sCat).name,amount,date,walletId,paid:isPaid});
   saveE();
   // Reset formulario
@@ -813,7 +819,7 @@ function saveEntry(){
   document.getElementById('inp-date').value=tds();
   document.getElementById('inp-wallet').value='';
   sWal='';
-  setType('gasto');setPaid(true);selCat('menu');renderWalSel();
+  sCat='';setType('gasto');setPaid(true);renderCatChips();renderWalSel();
   closeM('m-new');
   const d=pdl(date);cMonth=d.getMonth();cYear=d.getFullYear();
   updMlbl();render();
@@ -918,22 +924,48 @@ function confirmPay(){
 
 // ======= CATEGORÍAS =======
 function renderCatChips(){
-  document.getElementById('cats-scroll').innerHTML=CATS.map(c=>`<button class="chip ${c.id===sCat?'sel':''}" onclick="selCat('${c.id}')">${c.icon} ${c.name}</button>`).join('');
+  const sel=document.getElementById('cats-select');
+  if(!sel)return;
+  // mantener valor si ya hay uno seleccionado
+  const prev=sel.value;
+  sel.innerHTML='<option value="" disabled>— Elige una —</option>'+
+    CATS.map(c=>`<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
+  sel.value=(prev&&CATS.find(c=>c.id===prev))?prev:'';
 }
+function selCatSel(id){sCat=id}
 function selCat(id){sCat=id;renderCatChips()}
 
 // ======= SETTINGS CATS =======
 function renderSettingsCats(){
   const form=document.getElementById('sform-cats');
   const hdr=form.querySelector('.ssec');form.innerHTML='';form.appendChild(hdr);
-  CATS.forEach(cat=>{
-    const r=document.createElement('div');r.className='srow';r.onclick=()=>openCatEdit(cat.id);
-    r.innerHTML=`<div class="sicon" style="background:${cat.bg}">${cat.icon}</div><div class="sname">${cat.name}</div><span class="schev">›</span>`;
+  CATS.forEach((cat,idx)=>{
+    const r=document.createElement('div');r.className='srow';
+    r.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--sep)';
+    const editArea=document.createElement('div');
+    editArea.style.cssText='display:flex;align-items:center;gap:10px;flex:1;cursor:pointer';
+    editArea.onclick=()=>openCatEdit(cat.id);
+    editArea.innerHTML=`<div class="sicon" style="background:${cat.bg}">${cat.icon}</div><div class="sname">${cat.name}</div>`;
+    const btnWrap=document.createElement('div');
+    btnWrap.style.cssText='display:flex;flex-direction:column;gap:0;flex-shrink:0';
+    const up=document.createElement('button');up.className='sort-btn';up.textContent='↑';up.title='Subir';
+    up.disabled=(idx===0);
+    up.onclick=(e)=>{e.stopPropagation();moveCat(idx,-1)};
+    const dn=document.createElement('button');dn.className='sort-btn';dn.textContent='↓';dn.title='Bajar';
+    dn.disabled=(idx===CATS.length-1);
+    dn.onclick=(e)=>{e.stopPropagation();moveCat(idx,1)};
+    btnWrap.appendChild(up);btnWrap.appendChild(dn);
+    r.appendChild(editArea);r.appendChild(btnWrap);
     form.appendChild(r);
   });
   const add=document.createElement('div');add.className='srow';add.onclick=openNewCat;
   add.innerHTML=`<div class="sicon" style="background:rgba(0,122,255,0.1);color:var(--blue);font-size:22px;display:flex;align-items:center;justify-content:center">+</div><div class="sname" style="color:var(--blue)">Nueva categoría</div>`;
   form.appendChild(add);
+}
+function moveCat(idx,dir){
+  const ni=idx+dir;if(ni<0||ni>=CATS.length)return;
+  [CATS[idx],CATS[ni]]=[CATS[ni],CATS[idx]];
+  saveC();renderSettingsCats();renderCatChips();
 }
 function openNewCat(){ecId='__new__';ecCol=PAL[0];ecIco='📦';document.getElementById('cat-inp-name').value='';document.getElementById('cat-edit-title').textContent='Nueva categoría';document.getElementById('cat-del-btn').style.display='none';updCatPrev();buildCatUI();openM('m-cat')}
 function openCatEdit(id){const cat=gc(id);ecId=id;ecCol=PAL.find(p=>p.color===cat.color)||PAL[0];ecIco=cat.icon;document.getElementById('cat-inp-name').value=cat.name;document.getElementById('cat-edit-title').textContent='Editar categoría';document.getElementById('cat-del-btn').style.display='';updCatPrev();buildCatUI();openM('m-cat')}
