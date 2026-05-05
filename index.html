@@ -45,16 +45,12 @@
   .hero-pill-val.pend{color:#fbbf24}
 
   /* ===== PENDING BANNER ===== */
-  .pend-banner{margin:8px 16px 0;background:rgba(255,149,0,0.08);border:1px solid rgba(255,149,0,0.22);border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:padding .25s,border-radius .25s,margin .25s}
+  .pend-banner{margin:8px 16px 0;background:rgba(255,149,0,0.08);border:1px solid rgba(255,149,0,0.22);border-radius:10px;padding:8px 12px;display:flex;align-items:center;gap:8px;cursor:pointer;}
   .pend-banner:active{opacity:0.8}
   .pend-banner-info{flex:1;display:flex;align-items:center;gap:6px}
   .pend-banner-lbl{font-size:12px;font-weight:600;color:var(--orange)}
-  .pend-banner-amt{font-size:13px;font-weight:700;color:var(--tp);transition:font-size .2s}
-  .pend-banner-sub{font-size:12px;color:var(--ts);transition:opacity .2s,max-width .2s;overflow:hidden;white-space:nowrap;max-width:200px}
-  .pend-banner.collapsed{padding:5px 10px;border-radius:20px;margin:6px 16px 0}
-  .pend-banner.collapsed .pend-banner-amt{font-size:12px}
-  .pend-banner.collapsed .pend-banner-sub{opacity:0;max-width:0}
-  .pend-banner.collapsed .pb-arr{display:none}
+  .pend-banner-amt{font-size:13px;font-weight:700;color:var(--tp)}
+  .pend-banner-sub{font-size:12px;color:var(--ts)}
 
   /* ===== ENTRIES (simplificadas) ===== */
   .sec-hdr{padding:0 20px;margin:14px 0 8px;display:flex;align-items:center;justify-content:space-between}
@@ -264,7 +260,7 @@
       <div id="pend-banner" class="pend-banner" style="display:none" onclick="openPayModal()">
         <span style="font-size:14px;flex-shrink:0">⏳</span>
         <div class="pend-banner-info">
-          <span class="pend-banner-lbl">Pendiente:</span>
+          <span class="pend-banner-lbl">Pago pendiente</span>
           <span class="pend-banner-amt" id="pend-amt">S/ 0.00</span>
           <span class="pend-banner-sub" id="pend-sub"></span>
         </div>
@@ -406,7 +402,7 @@
   <div class="modal">
     <div class="mhandle"></div>
     <div class="mtitle">
-      <span>Pagar pendientes</span>
+      <span>Pago pendiente</span>
       <button class="mclose" onclick="closeM('m-pay')">✕</button>
     </div>
     <!-- select all -->
@@ -1002,16 +998,6 @@ function switchTab(name,btn){
   document.getElementById('mnav').style.display=(name==='inicio'||name==='stats')?'':'none';
   if(name==='stats')renderStatsPage();
 }
-(function(){
-  const ca=document.querySelector('.ca');
-  if(!ca)return;
-  ca.addEventListener('scroll',function(){
-    const b=document.getElementById('pend-banner');
-    if(!b||b.style.display==='none')return;
-    if(ca.scrollTop>60)b.classList.add('collapsed');
-    else if(ca.scrollTop<20)b.classList.remove('collapsed');
-  },{passive:true});
-})();
 init();
 </script>
 </body>
