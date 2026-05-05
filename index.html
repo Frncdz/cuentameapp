@@ -8,201 +8,176 @@
 <title>Mis Gastos</title>
 <style>
   :root {
-    --bg: #f2f2f7;
-    --card: #ffffff;
-    --text-primary: #1c1c1e;
-    --text-secondary: #8e8e93;
-    --text-tertiary: #aeaeb2;
+    --bg: #f2f2f7; --card: #ffffff;
+    --text-primary: #1c1c1e; --text-secondary: #8e8e93; --text-tertiary: #aeaeb2;
     --separator: #e5e5ea;
-    --blue: #007aff;
-    --green: #34c759;
-    --red: #ff3b30;
-    --orange: #ff9500;
+    --blue: #007aff; --green: #34c759; --red: #ff3b30; --orange: #ff9500; --purple: #af52de;
     --shadow-sm: 0 1px 8px rgba(0,0,0,0.06);
-    --radius: 16px;
-    --radius-sm: 12px;
-    --tab-height: 60px;
+    --radius: 16px; --radius-sm: 12px; --tab-height: 60px;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html { height: 100%; overflow: hidden; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg); color: var(--text-primary);
-    height: 100%; overflow: hidden; position: fixed; width: 100%; top: 0; left: 0;
-  }
-  #app {
-    display: flex; flex-direction: column; height: 100%;
-    max-width: 430px; margin: 0 auto; background: var(--bg);
-  }
-  .header {
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    padding: 16px 20px 14px;
-    padding-top: max(16px, env(safe-area-inset-top));
-    border-bottom: 1px solid var(--separator); flex-shrink: 0;
-  }
-  .header-top { display: flex; align-items: center; justify-content: space-between; }
-  .header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
-  .month-nav { display: flex; align-items: center; gap: 10px; }
-  .month-btn {
-    background: var(--separator); border: none; border-radius: 50%;
-    width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; font-size: 16px; color: var(--blue);
-  }
-  .month-btn:active { background: #c7c7cc; }
-  .current-month { font-size: 15px; font-weight: 500; color: var(--text-secondary); min-width: 80px; text-align: center; }
-  .content-area {
-    flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain; padding-bottom: 12px;
-  }
-  .page { display: none; }
-  .page.active { display: block; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { height:100%; overflow:hidden; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--text-primary); height:100%; overflow:hidden; position:fixed; width:100%; top:0; left:0; }
+  #app { display:flex; flex-direction:column; height:100%; max-width:430px; margin:0 auto; background:var(--bg); }
+  .header { background:rgba(255,255,255,0.95); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); padding:16px 20px 14px; padding-top:max(16px,env(safe-area-inset-top)); border-bottom:1px solid var(--separator); flex-shrink:0; }
+  .header-top { display:flex; align-items:center; justify-content:space-between; }
+  .header h1 { font-size:26px; font-weight:700; letter-spacing:-0.5px; }
+  .month-nav { display:flex; align-items:center; gap:10px; }
+  .month-btn { background:var(--separator); border:none; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; color:var(--blue); }
+  .month-btn:active { background:#c7c7cc; }
+  .current-month { font-size:15px; font-weight:500; color:var(--text-secondary); min-width:80px; text-align:center; }
+  .content-area { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior-y:contain; padding-bottom:12px; }
+  .page { display:none; } .page.active { display:block; }
 
   /* Balance */
-  .balance-section { padding: 14px 16px 0; }
-  .balance-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-  .balance-card { background: var(--card); border-radius: var(--radius-sm); padding: 12px 8px; box-shadow: var(--shadow-sm); text-align: center; }
-  .balance-card .label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-tertiary); margin-bottom: 5px; }
-  .balance-card .amount { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
-  .balance-card.ingresos .amount { color: var(--green); }
-  .balance-card.gastos .amount { color: var(--red); }
-  .balance-card.neto .amount { color: var(--blue); }
-  .section-header { padding: 0 20px; margin: 14px 0 8px; }
-  .section-title { font-size: 19px; font-weight: 700; }
+  .balance-section { padding:14px 16px 0; }
+  .balance-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:14px; }
+  .balance-card { background:var(--card); border-radius:var(--radius-sm); padding:12px 8px; box-shadow:var(--shadow-sm); text-align:center; }
+  .balance-card .label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-tertiary); margin-bottom:5px; }
+  .balance-card .amount { font-size:15px; font-weight:700; letter-spacing:-0.3px; }
+  .balance-card.ingresos .amount { color:var(--green); }
+  .balance-card.gastos .amount { color:var(--red); }
+  .balance-card.neto .amount { color:var(--blue); }
+  .section-header { padding:0 20px; margin:14px 0 8px; }
+  .section-title { font-size:19px; font-weight:700; }
 
-  /* Entries — agrupadas por día */
-  .entries-list { padding: 0 16px; display: flex; flex-direction: column; gap: 16px; }
+  /* Entries */
+  .entries-list { padding:0 16px; display:flex; flex-direction:column; gap:16px; }
   .day-group { }
-  .day-header { font-size: 11px; font-weight: 700; color: var(--text-tertiary); padding: 0 4px 6px; text-transform: uppercase; letter-spacing: 0.6px; }
-  .day-cards { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow-sm); overflow: hidden; }
-  .entry-card {
-    display: flex; align-items: center; gap: 10px; padding: 11px 14px;
-    border-bottom: 1px solid var(--separator); cursor: pointer; transition: background 0.1s;
-    animation: slideIn 0.22s ease;
-  }
-  .entry-card:last-child { border-bottom: none; }
-  .entry-card:active { background: var(--bg); }
-  @keyframes slideIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
-  .entry-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
-  .entry-info { flex: 1; min-width: 0; }
-  .entry-name { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .entry-meta { font-size: 12px; color: var(--text-secondary); margin-top: 1px; }
-  .entry-amount { font-size: 15px; font-weight: 700; flex-shrink: 0; }
-  .entry-amount.gasto { color: var(--red); }
-  .entry-amount.ingreso { color: var(--green); }
-  .entry-chevron { color: var(--text-tertiary); font-size: 14px; flex-shrink: 0; margin-left: 2px; }
-  .empty-state { text-align: center; padding: 48px 20px; color: var(--text-tertiary); }
-  .empty-icon { font-size: 44px; margin-bottom: 10px; }
-  .empty-text { font-size: 14px; line-height: 1.5; }
+  .day-header { font-size:11px; font-weight:700; color:var(--text-tertiary); padding:0 4px 6px; text-transform:uppercase; letter-spacing:0.6px; }
+  .day-cards { background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow-sm); overflow:hidden; }
+  .entry-card { display:flex; align-items:center; gap:10px; padding:11px 14px; border-bottom:1px solid var(--separator); cursor:pointer; transition:background 0.1s; animation:slideIn 0.22s ease; }
+  .entry-card:last-child { border-bottom:none; }
+  .entry-card:active { background:var(--bg); }
+  @keyframes slideIn { from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)} }
+  .entry-icon { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; }
+  .entry-info { flex:1; min-width:0; }
+  .entry-name { font-size:15px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .entry-meta { font-size:12px; color:var(--text-secondary); margin-top:1px; }
+  .entry-amount { font-size:15px; font-weight:700; flex-shrink:0; }
+  .entry-amount.gasto { color:var(--red); }
+  .entry-amount.ingreso { color:var(--green); }
+  .entry-chevron { color:var(--text-tertiary); font-size:14px; flex-shrink:0; margin-left:2px; }
+  .empty-state { text-align:center; padding:48px 20px; color:var(--text-tertiary); }
+  .empty-icon { font-size:44px; margin-bottom:10px; }
+  .empty-text { font-size:14px; line-height:1.5; }
 
   /* Tab bar */
-  .tab-bar {
-    flex-shrink: 0; background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid var(--separator);
-    display: flex; align-items: center;
-    height: var(--tab-height); padding-bottom: env(safe-area-inset-bottom);
-  }
-  .tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; background: none; border: none; color: var(--text-tertiary); transition: color 0.15s; height: 100%; padding-bottom: 4px; }
-  .tab.active { color: var(--blue); }
-  .tab-icon { font-size: 20px; line-height: 1; }
-  .tab-label { font-size: 10px; font-weight: 600; letter-spacing: 0.2px; }
-  .fab-wrap { flex: 1; display: flex; align-items: center; justify-content: center; height: 100%; }
-  .fab { width: 52px; height: 52px; border-radius: 26px; background: var(--blue); color: white; border: none; font-size: 28px; line-height: 1; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,122,255,0.38); cursor: pointer; transition: transform 0.12s; margin-bottom: 6px; }
-  .fab:active { transform: scale(0.93); }
+  .tab-bar { flex-shrink:0; background:rgba(255,255,255,0.95); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-top:1px solid var(--separator); display:flex; align-items:center; height:var(--tab-height); padding-bottom:env(safe-area-inset-bottom); }
+  .tab { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; cursor:pointer; background:none; border:none; color:var(--text-tertiary); transition:color 0.15s; height:100%; padding-bottom:4px; }
+  .tab.active { color:var(--blue); }
+  .tab-icon { font-size:19px; line-height:1; }
+  .tab-label { font-size:9px; font-weight:600; letter-spacing:0.2px; }
+  .fab-wrap { flex:1; display:flex; align-items:center; justify-content:center; height:100%; }
+  .fab { width:52px; height:52px; border-radius:26px; background:var(--blue); color:white; border:none; font-size:28px; line-height:1; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 16px rgba(0,122,255,0.38); cursor:pointer; transition:transform 0.12s; margin-bottom:6px; }
+  .fab:active { transform:scale(0.93); }
 
   /* Modales base */
-  .modal-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.38);
-    backdrop-filter: blur(4px); z-index: 500;
-    display: none; align-items: flex-end; justify-content: center;
-  }
-  .modal-overlay.open { display: flex; animation: fadeIn 0.18s ease; }
-  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-  .modal {
-    background: var(--bg); border-radius: 24px 24px 0 0;
-    width: 100%; max-width: 430px;
-    padding-bottom: max(24px, env(safe-area-inset-bottom));
-    animation: slideUp 0.32s cubic-bezier(0.32, 0.72, 0, 1);
-    max-height: 90vh; overflow-y: auto; -webkit-overflow-scrolling: touch;
-  }
-  @keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
-  .modal-handle { width: 36px; height: 4px; background: #d1d1d6; border-radius: 2px; margin: 10px auto 14px; }
-  .modal-title { font-size: 19px; font-weight: 700; padding: 0 20px 14px; display: flex; align-items: center; justify-content: space-between; }
-  .modal-close { background: var(--separator); border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; color: var(--text-secondary); }
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.38); backdrop-filter:blur(4px); z-index:500; display:none; align-items:flex-end; justify-content:center; }
+  .modal-overlay.open { display:flex; animation:fadeIn 0.18s ease; }
+  @keyframes fadeIn { from{opacity:0}to{opacity:1} }
+  .modal { background:var(--bg); border-radius:24px 24px 0 0; width:100%; max-width:430px; padding-bottom:max(24px,env(safe-area-inset-bottom)); animation:slideUp 0.32s cubic-bezier(0.32,0.72,0,1); max-height:90vh; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  @keyframes slideUp { from{transform:translateY(100%)}to{transform:translateY(0)} }
+  .modal-handle { width:36px; height:4px; background:#d1d1d6; border-radius:2px; margin:10px auto 14px; }
+  .modal-title { font-size:19px; font-weight:700; padding:0 20px 14px; display:flex; align-items:center; justify-content:space-between; }
+  .modal-close { background:var(--separator); border:none; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; color:var(--text-secondary); }
 
   /* Formulario */
-  .type-toggle { display: flex; background: var(--separator); border-radius: 10px; padding: 2px; margin: 0 20px 14px; }
-  .type-toggle button { flex: 1; border: none; border-radius: 8px; padding: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; background: transparent; color: var(--text-secondary); font-family: inherit; }
-  .type-toggle button.active { background: white; box-shadow: 0 1px 5px rgba(0,0,0,0.1); }
-  .type-toggle button.active.gasto { color: var(--red); }
-  .type-toggle button.active.ingreso { color: var(--green); }
-  .form-group { background: var(--card); border-radius: var(--radius); margin: 0 16px 10px; overflow: hidden; box-shadow: var(--shadow-sm); }
-  .form-row { display: flex; align-items: center; padding: 13px 16px; border-bottom: 1px solid var(--separator); gap: 10px; }
-  .form-row:last-child { border-bottom: none; }
-  .form-label { font-size: 15px; color: var(--text-primary); width: 90px; flex-shrink: 0; font-weight: 500; }
-  .form-input { flex: 1; border: none; outline: none; font-size: 15px; color: var(--text-primary); background: transparent; text-align: right; font-family: inherit; }
-  .form-input::placeholder { color: var(--text-tertiary); }
-  .quick-categories { padding: 0 16px 10px; }
-  .quick-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; padding-left: 2px; font-weight: 500; }
-  .cats-scroll { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
-  .cats-scroll::-webkit-scrollbar { display: none; }
-  .cat-chip { background: var(--card); border: 2px solid var(--separator); border-radius: 18px; padding: 6px 12px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 5px; color: var(--text-primary); transition: all 0.14s; font-family: inherit; }
-  .cat-chip.selected { border-color: var(--blue); background: rgba(0,122,255,0.08); color: var(--blue); }
-  .variants-section { padding: 0 16px 10px; }
-  .variants-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; padding-left: 2px; font-weight: 500; }
-  .variants-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
-  .variant-btn { background: var(--card); border: 2px solid var(--separator); border-radius: 12px; padding: 9px 4px; font-size: 13px; font-weight: 500; cursor: pointer; text-align: center; color: var(--text-primary); font-family: inherit; transition: all 0.14s; }
-  .variant-btn .v-price { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
-  .variant-btn.selected { border-color: var(--orange); background: rgba(255,149,0,0.08); color: var(--orange); }
-  .variant-btn.selected .v-price { color: var(--orange); }
-  .save-btn { background: var(--blue); color: white; border: none; border-radius: var(--radius); padding: 15px; font-size: 16px; font-weight: 600; width: calc(100% - 32px); margin: 6px 16px 0; cursor: pointer; font-family: inherit; transition: opacity 0.12s, transform 0.1s; }
-  .save-btn:active { opacity: 0.85; transform: scale(0.98); }
+  .type-toggle { display:flex; background:var(--separator); border-radius:10px; padding:2px; margin:0 20px 14px; }
+  .type-toggle button { flex:1; border:none; border-radius:8px; padding:8px; font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; background:transparent; color:var(--text-secondary); font-family:inherit; }
+  .type-toggle button.active { background:white; box-shadow:0 1px 5px rgba(0,0,0,0.1); }
+  .type-toggle button.active.gasto { color:var(--red); }
+  .type-toggle button.active.ingreso { color:var(--green); }
+  .form-group { background:var(--card); border-radius:var(--radius); margin:0 16px 10px; overflow:hidden; box-shadow:var(--shadow-sm); }
+  .form-row { display:flex; align-items:center; padding:13px 16px; border-bottom:1px solid var(--separator); gap:10px; }
+  .form-row:last-child { border-bottom:none; }
+  .form-label { font-size:15px; color:var(--text-primary); width:90px; flex-shrink:0; font-weight:500; }
+  .form-input { flex:1; border:none; outline:none; font-size:15px; color:var(--text-primary); background:transparent; text-align:right; font-family:inherit; }
+  .form-input::placeholder { color:var(--text-tertiary); }
+  .form-select { flex:1; border:none; outline:none; font-size:15px; color:var(--text-primary); background:transparent; text-align:right; font-family:inherit; -webkit-appearance:none; cursor:pointer; direction:rtl; }
+  .quick-categories { padding:0 16px 10px; }
+  .quick-label { font-size:12px; color:var(--text-secondary); margin-bottom:8px; padding-left:2px; font-weight:500; }
+  .cats-scroll { display:flex; gap:7px; overflow-x:auto; padding-bottom:2px; scrollbar-width:none; }
+  .cats-scroll::-webkit-scrollbar { display:none; }
+  .cat-chip { background:var(--card); border:2px solid var(--separator); border-radius:18px; padding:6px 12px; font-size:13px; font-weight:500; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:5px; color:var(--text-primary); transition:all 0.14s; font-family:inherit; }
+  .cat-chip.selected { border-color:var(--blue); background:rgba(0,122,255,0.08); color:var(--blue); }
+  .variants-section { padding:0 16px 10px; }
+  .variants-label { font-size:12px; color:var(--text-secondary); margin-bottom:8px; padding-left:2px; font-weight:500; }
+  .variants-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+  .variant-btn { background:var(--card); border:2px solid var(--separator); border-radius:12px; padding:9px 4px; font-size:13px; font-weight:500; cursor:pointer; text-align:center; color:var(--text-primary); font-family:inherit; transition:all 0.14s; }
+  .variant-btn .v-price { font-size:11px; color:var(--text-secondary); margin-top:2px; }
+  .variant-btn.selected { border-color:var(--orange); background:rgba(255,149,0,0.08); color:var(--orange); }
+  .variant-btn.selected .v-price { color:var(--orange); }
+  .save-btn { background:var(--blue); color:white; border:none; border-radius:var(--radius); padding:15px; font-size:16px; font-weight:600; width:calc(100% - 32px); margin:6px 16px 0; cursor:pointer; font-family:inherit; transition:opacity 0.12s,transform 0.1s; }
+  .save-btn:active { opacity:0.85; transform:scale(0.98); }
+  .danger-btn { background:rgba(255,59,48,0.1); color:var(--red); border:none; border-radius:var(--radius); padding:14px; font-size:15px; font-weight:600; width:calc(100% - 32px); margin:8px 16px 0; cursor:pointer; font-family:inherit; }
+  .danger-btn:active { opacity:0.8; }
 
   /* Detalle */
-  .detail-icon-wrap { display: flex; justify-content: center; padding: 4px 0 14px; }
-  .detail-icon-big { width: 64px; height: 64px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 30px; }
-  .detail-amount-big { text-align: center; font-size: 32px; font-weight: 700; letter-spacing: -1px; padding-bottom: 4px; }
-  .detail-amount-big.gasto { color: var(--red); }
-  .detail-amount-big.ingreso { color: var(--green); }
-  .detail-cat-label { text-align: center; font-size: 14px; color: var(--text-secondary); padding-bottom: 18px; }
-  .detail-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; border-bottom: 1px solid var(--separator); }
-  .detail-row:last-child { border-bottom: none; }
-  .detail-row-label { font-size: 15px; color: var(--text-secondary); }
-  .detail-row-value { font-size: 15px; font-weight: 500; }
-  .detail-delete-btn { background: rgba(255,59,48,0.1); color: var(--red); border: none; border-radius: var(--radius); padding: 14px; font-size: 15px; font-weight: 600; width: calc(100% - 32px); margin: 14px 16px 0; cursor: pointer; font-family: inherit; }
-  .detail-delete-btn:active { opacity: 0.8; }
+  .detail-icon-wrap { display:flex; justify-content:center; padding:4px 0 14px; }
+  .detail-icon-big { width:64px; height:64px; border-radius:18px; display:flex; align-items:center; justify-content:center; font-size:30px; }
+  .detail-amount-big { text-align:center; font-size:32px; font-weight:700; letter-spacing:-1px; padding-bottom:4px; }
+  .detail-amount-big.gasto { color:var(--red); }
+  .detail-amount-big.ingreso { color:var(--green); }
+  .detail-cat-label { text-align:center; font-size:14px; color:var(--text-secondary); padding-bottom:18px; }
+  .detail-row { display:flex; align-items:center; justify-content:space-between; padding:13px 16px; border-bottom:1px solid var(--separator); }
+  .detail-row:last-child { border-bottom:none; }
+  .detail-row-label { font-size:15px; color:var(--text-secondary); }
+  .detail-row-value { font-size:15px; font-weight:500; }
 
-  /* Editar categoría */
-  .emoji-picker { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0; }
-  .emoji-opt { font-size: 22px; cursor: pointer; padding: 5px; border-radius: 8px; transition: background 0.1s; border: none; background: none; }
-  .emoji-opt:active { background: var(--separator); }
-  .cat-color-dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform 0.1s; flex-shrink: 0; }
-  .cat-color-dot.selected { border-color: var(--text-primary); transform: scale(1.2); }
+  /* Emoji / color picker */
+  .emoji-picker { display:flex; flex-wrap:wrap; gap:6px; padding:4px 0; }
+  .emoji-opt { font-size:22px; cursor:pointer; padding:5px; border-radius:8px; transition:background 0.1s; border:none; background:none; }
+  .emoji-opt:active { background:var(--separator); }
+  .color-dot { width:22px; height:22px; border-radius:50%; border:2px solid transparent; cursor:pointer; transition:transform 0.1s; flex-shrink:0; }
+  .color-dot.selected { border-color:var(--text-primary); transform:scale(1.2); }
 
   /* Stats */
-  .stats-card { background: var(--card); border-radius: var(--radius); margin: 0 16px 10px; padding: 14px; box-shadow: var(--shadow-sm); }
-  .stats-title { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
-  .cat-stat-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .cat-stat-row:last-child { margin-bottom: 0; }
-  .cat-stat-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
-  .cat-stat-info { flex: 1; }
-  .cat-stat-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-  .cat-stat-bar-bg { height: 4px; background: var(--separator); border-radius: 2px; overflow: hidden; }
-  .cat-stat-bar { height: 100%; border-radius: 2px; transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
-  .cat-stat-amount { font-size: 13px; font-weight: 700; flex-shrink: 0; color: var(--red); }
+  .stats-card { background:var(--card); border-radius:var(--radius); margin:0 16px 10px; padding:14px; box-shadow:var(--shadow-sm); }
+  .stats-title { font-size:12px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px; }
+  .cat-stat-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .cat-stat-row:last-child { margin-bottom:0; }
+  .cat-stat-icon { width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+  .cat-stat-info { flex:1; }
+  .cat-stat-name { font-size:13px; font-weight:600; margin-bottom:4px; }
+  .cat-stat-bar-bg { height:4px; background:var(--separator); border-radius:2px; overflow:hidden; }
+  .cat-stat-bar { height:100%; border-radius:2px; transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+  .cat-stat-amount { font-size:13px; font-weight:700; flex-shrink:0; color:var(--red); }
 
   /* Settings */
-  .settings-form { background: var(--card); border-radius: var(--radius); margin: 0 16px 10px; overflow: hidden; box-shadow: var(--shadow-sm); }
-  .settings-section-label { padding: 12px 16px; font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--separator); }
-  .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 16px; border-bottom: 1px solid var(--separator); }
-  .toggle-row:last-child { border-bottom: none; }
-  .settings-cat-row { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-bottom: 1px solid var(--separator); cursor: pointer; transition: background 0.1s; }
-  .settings-cat-row:last-child { border-bottom: none; }
-  .settings-cat-row:active { background: var(--bg); }
-  .settings-cat-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-  .settings-cat-name { flex: 1; font-size: 15px; font-weight: 500; }
-  .settings-cat-chevron { color: var(--text-tertiary); font-size: 14px; }
+  .settings-form { background:var(--card); border-radius:var(--radius); margin:0 16px 10px; overflow:hidden; box-shadow:var(--shadow-sm); }
+  .settings-section-label { padding:12px 16px; font-size:12px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--separator); }
+  .toggle-row { display:flex; align-items:center; justify-content:space-between; padding:13px 16px; border-bottom:1px solid var(--separator); }
+  .toggle-row:last-child { border-bottom:none; }
+  .settings-row { display:flex; align-items:center; gap:10px; padding:10px 16px; border-bottom:1px solid var(--separator); cursor:pointer; transition:background 0.1s; }
+  .settings-row:last-child { border-bottom:none; }
+  .settings-row:active { background:var(--bg); }
+  .settings-row-icon { width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+  .settings-row-name { flex:1; font-size:15px; font-weight:500; }
+  .settings-row-chevron { color:var(--text-tertiary); font-size:14px; }
+
+  /* === BILLETERAS === */
+  .wallets-total { margin:14px 16px 0; background:linear-gradient(135deg,#007aff,#5ac8fa); border-radius:var(--radius); padding:20px; color:white; box-shadow:0 4px 20px rgba(0,122,255,0.3); }
+  .wallets-total-label { font-size:12px; font-weight:600; opacity:0.8; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+  .wallets-total-amount { font-size:36px; font-weight:700; letter-spacing:-1px; }
+  .wallets-total-sub { font-size:13px; opacity:0.75; margin-top:4px; }
+
+  .wallet-card { background:var(--card); border-radius:var(--radius); margin:0 16px; padding:0; box-shadow:var(--shadow-sm); overflow:hidden; }
+  .wallet-item { display:flex; align-items:center; gap:12px; padding:13px 16px; border-bottom:1px solid var(--separator); cursor:pointer; transition:background 0.1s; }
+  .wallet-item:last-child { border-bottom:none; }
+  .wallet-item:active { background:var(--bg); }
+  .wallet-icon { width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
+  .wallet-info { flex:1; min-width:0; }
+  .wallet-name { font-size:15px; font-weight:600; }
+  .wallet-type { font-size:12px; color:var(--text-secondary); margin-top:2px; }
+  .wallet-balance { text-align:right; }
+  .wallet-balance-amount { font-size:16px; font-weight:700; }
+  .wallet-balance-amount.pos { color:var(--green); }
+  .wallet-balance-amount.neg { color:var(--red); }
+  .wallet-balance-sub { font-size:11px; color:var(--text-tertiary); margin-top:1px; }
+
+  .wallet-add-row { display:flex; align-items:center; gap:10px; padding:13px 16px; cursor:pointer; }
+  .wallet-add-row:active { background:var(--bg); }
 </style>
 </head>
 <body>
@@ -210,7 +185,7 @@
   <div class="header">
     <div class="header-top">
       <h1 id="page-title">Mis Gastos</h1>
-      <div class="month-nav">
+      <div class="month-nav" id="month-nav-wrap">
         <button class="month-btn" onclick="changeMonth(-1)">‹</button>
         <span class="current-month" id="month-label"></span>
         <button class="month-btn" onclick="changeMonth(1)">›</button>
@@ -219,6 +194,7 @@
   </div>
 
   <div class="content-area">
+
     <!-- INICIO -->
     <div id="page-inicio" class="page active">
       <div class="balance-section">
@@ -232,6 +208,17 @@
       <div class="entries-list" id="entries-list">
         <div class="empty-state"><div class="empty-icon">💸</div><div class="empty-text">Sin movimientos este mes.<br>Toca + para agregar uno.</div></div>
       </div>
+    </div>
+
+    <!-- BILLETERAS -->
+    <div id="page-wallets" class="page">
+      <div class="wallets-total">
+        <div class="wallets-total-label">Total en todas las billeteras</div>
+        <div class="wallets-total-amount" id="wallets-grand-total">S/ 0.00</div>
+        <div class="wallets-total-sub" id="wallets-grand-sub">0 billeteras</div>
+      </div>
+      <div style="height:14px"></div>
+      <div class="wallet-card" id="wallets-list"></div>
     </div>
 
     <!-- ESTADÍSTICAS -->
@@ -259,17 +246,19 @@
         <div class="toggle-row">
           <div>
             <div style="font-size:15px;font-weight:500;">Borrar todos los datos</div>
-            <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px;">Elimina todos los movimientos</div>
+            <div style="font-size:12px;color:var(--text-tertiary);margin-top:2px;">Elimina movimientos y billeteras</div>
           </div>
           <button onclick="clearAll()" style="background:var(--red);color:white;border:none;border-radius:8px;padding:7px 13px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">Borrar</button>
         </div>
       </div>
       <div style="padding:0 20px;font-size:12px;color:var(--text-tertiary);line-height:1.5;">Los datos se guardan localmente en este navegador.</div>
     </div>
+
   </div>
 
   <div class="tab-bar">
     <button class="tab active" onclick="switchTab('inicio',this)"><span class="tab-icon">💳</span><span class="tab-label">Inicio</span></button>
+    <button class="tab" onclick="switchTab('wallets',this)"><span class="tab-icon">👛</span><span class="tab-label">Billeteras</span></button>
     <div class="fab-wrap"><button class="fab" onclick="openModal()">+</button></div>
     <button class="tab" onclick="switchTab('stats',this)"><span class="tab-icon">📊</span><span class="tab-label">Stats</span></button>
     <button class="tab" onclick="switchTab('settings',this)"><span class="tab-icon">⚙️</span><span class="tab-label">Ajustes</span></button>
@@ -301,6 +290,10 @@
       <div class="form-row"><span class="form-label">Descripción</span><input class="form-input" id="input-desc" placeholder="¿En qué?" type="text" autocomplete="off"></div>
       <div class="form-row"><span class="form-label">Monto (S/)</span><input class="form-input" id="input-amount" placeholder="0.00" type="number" step="0.5" inputmode="decimal"></div>
       <div class="form-row"><span class="form-label">Fecha</span><input class="form-input" id="input-date" type="date"></div>
+      <div class="form-row" id="wallet-row">
+        <span class="form-label">Billetera</span>
+        <select class="form-select" id="input-wallet"><option value="">— Sin asignar —</option></select>
+      </div>
     </div>
     <button class="save-btn" onclick="saveEntry()">Guardar</button>
   </div>
@@ -318,9 +311,10 @@
       <div class="detail-row"><span class="detail-row-label">Descripción</span><span class="detail-row-value" id="detail-desc"></span></div>
       <div class="detail-row"><span class="detail-row-label">Categoría</span><span class="detail-row-value" id="detail-cat"></span></div>
       <div class="detail-row"><span class="detail-row-label">Tipo</span><span class="detail-row-value" id="detail-type"></span></div>
+      <div class="detail-row"><span class="detail-row-label">Billetera</span><span class="detail-row-value" id="detail-wallet"></span></div>
       <div class="detail-row"><span class="detail-row-label">Fecha</span><span class="detail-row-value" id="detail-date"></span></div>
     </div>
-    <button class="detail-delete-btn" id="detail-delete-btn">🗑 Eliminar movimiento</button>
+    <button class="danger-btn" id="detail-delete-btn">🗑 Eliminar movimiento</button>
   </div>
 </div>
 
@@ -329,191 +323,226 @@
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title"><span id="cat-edit-title">Editar categoría</span><button class="modal-close" onclick="closeCatEdit()">✕</button></div>
-
     <div style="display:flex;align-items:center;gap:14px;padding:0 20px 14px;">
       <div id="cat-preview-icon" style="width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;"></div>
       <div><div id="cat-preview-name" style="font-size:18px;font-weight:700;"></div><div style="font-size:12px;color:var(--text-tertiary);">Vista previa</div></div>
     </div>
-
     <div class="form-group">
       <div class="form-row"><span class="form-label">Nombre</span><input class="form-input" id="cat-edit-name" type="text" autocomplete="off" oninput="updateCatPreview()"></div>
     </div>
-
-    <div class="quick-categories" style="padding-bottom:4px;">
-      <div class="quick-label">Ícono</div>
-      <div class="emoji-picker" id="emoji-picker"></div>
-    </div>
-
-    <div class="quick-categories">
-      <div class="quick-label">Color</div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;padding:4px 2px;" id="color-picker"></div>
-    </div>
-
-    <button id="cat-delete-btn" onclick="deleteCat()" style="background:rgba(255,59,48,0.1);color:var(--red);border:none;border-radius:var(--radius);padding:14px;font-size:15px;font-weight:600;width:calc(100% - 32px);margin:8px 16px 0;cursor:pointer;font-family:inherit;">🗑 Eliminar categoría</button>
+    <div class="quick-categories" style="padding-bottom:4px;"><div class="quick-label">Ícono</div><div class="emoji-picker" id="emoji-picker"></div></div>
+    <div class="quick-categories"><div class="quick-label">Color</div><div style="display:flex;gap:10px;flex-wrap:wrap;padding:4px 2px;" id="color-picker"></div></div>
+    <button id="cat-delete-btn" onclick="deleteCat()" class="danger-btn">🗑 Eliminar categoría</button>
     <button class="save-btn" style="margin-bottom:0;" onclick="saveCatEdit()">Guardar categoría</button>
   </div>
 </div>
 
+<!-- MODAL EDITAR BILLETERA -->
+<div class="modal-overlay" id="wallet-edit-overlay" onclick="closeWalletEditOutside(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title"><span id="wallet-edit-title">Nueva billetera</span><button class="modal-close" onclick="closeWalletEdit()">✕</button></div>
+
+    <!-- Preview -->
+    <div style="display:flex;align-items:center;gap:14px;padding:0 20px 14px;">
+      <div id="wallet-preview-icon" style="width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;"></div>
+      <div>
+        <div id="wallet-preview-name" style="font-size:18px;font-weight:700;"></div>
+        <div id="wallet-preview-type" style="font-size:12px;color:var(--text-tertiary);"></div>
+      </div>
+    </div>
+
+    <!-- Tipo -->
+    <div class="quick-categories" style="padding-bottom:10px;">
+      <div class="quick-label">Tipo</div>
+      <div style="display:flex;gap:8px;" id="wallet-type-chips"></div>
+    </div>
+
+    <!-- Nombre -->
+    <div class="form-group">
+      <div class="form-row"><span class="form-label">Nombre</span><input class="form-input" id="wallet-edit-name" type="text" autocomplete="off" placeholder="Ej: Yape, BCP..." oninput="updateWalletPreview()"></div>
+      <div class="form-row" id="wallet-balance-row">
+        <span class="form-label">Saldo inicial</span>
+        <input class="form-input" id="wallet-edit-balance" type="number" step="0.5" inputmode="decimal" placeholder="0.00">
+      </div>
+    </div>
+
+    <!-- Ícono -->
+    <div class="quick-categories" style="padding-bottom:4px;"><div class="quick-label">Ícono</div><div class="emoji-picker" id="wallet-emoji-picker"></div></div>
+    <!-- Color -->
+    <div class="quick-categories"><div class="quick-label">Color</div><div style="display:flex;gap:10px;flex-wrap:wrap;padding:4px 2px;" id="wallet-color-picker"></div></div>
+
+    <button id="wallet-delete-btn" onclick="deleteWallet()" class="danger-btn">🗑 Eliminar billetera</button>
+    <button class="save-btn" style="margin-bottom:0;" onclick="saveWalletEdit()">Guardar billetera</button>
+  </div>
+</div>
+
+<!-- MODAL DETALLE BILLETERA -->
+<div class="modal-overlay" id="wallet-detail-overlay" onclick="closeWalletDetailOutside(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title"><span id="wdetail-title">Billetera</span><button class="modal-close" onclick="closeWalletDetail()">✕</button></div>
+    <div style="display:flex;align-items:center;gap:14px;padding:0 20px 16px;">
+      <div id="wdetail-icon" style="width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;"></div>
+      <div>
+        <div id="wdetail-balance" style="font-size:28px;font-weight:700;letter-spacing:-0.5px;"></div>
+        <div id="wdetail-type" style="font-size:13px;color:var(--text-secondary);"></div>
+      </div>
+    </div>
+    <div class="form-group" id="wdetail-stats"></div>
+    <div class="section-header" style="margin-top:14px;"><span class="section-title" style="font-size:16px;">Movimientos</span></div>
+    <div style="padding:0 16px 8px;" id="wdetail-entries"></div>
+    <button class="save-btn" onclick="openWalletEdit(currentWalletDetailId)" style="background:var(--separator);color:var(--text-primary);margin-bottom:0;">✏️ Editar billetera</button>
+  </div>
+</div>
+
 <script>
-// ======================== DATOS ========================
+// ====================== CONSTANTES ======================
 const DEFAULT_CATS = [
-  { id:'menu',            name:'Menú',       icon:'🍱', color:'#ff9500', bg:'rgba(255,149,0,0.12)' },
-  { id:'transporte',      name:'Transporte', icon:'🚌', color:'#007aff', bg:'rgba(0,122,255,0.12)' },
-  { id:'mercado',         name:'Mercado',    icon:'🛒', color:'#34c759', bg:'rgba(52,199,89,0.12)' },
-  { id:'salud',           name:'Salud',      icon:'💊', color:'#ff3b30', bg:'rgba(255,59,48,0.12)' },
-  { id:'ropa',            name:'Ropa',       icon:'👕', color:'#af52de', bg:'rgba(175,82,222,0.12)' },
-  { id:'entretenimiento', name:'Ocio',       icon:'🎬', color:'#5ac8fa', bg:'rgba(90,200,250,0.12)' },
-  { id:'servicios',       name:'Servicios',  icon:'💡', color:'#ffcc00', bg:'rgba(255,204,0,0.12)' },
-  { id:'otro',            name:'Otro',       icon:'📦', color:'#8e8e93', bg:'rgba(142,142,147,0.12)' },
+  {id:'menu',name:'Menú',icon:'🍱',color:'#ff9500',bg:'rgba(255,149,0,0.12)'},
+  {id:'transporte',name:'Transporte',icon:'🚌',color:'#007aff',bg:'rgba(0,122,255,0.12)'},
+  {id:'mercado',name:'Mercado',icon:'🛒',color:'#34c759',bg:'rgba(52,199,89,0.12)'},
+  {id:'salud',name:'Salud',icon:'💊',color:'#ff3b30',bg:'rgba(255,59,48,0.12)'},
+  {id:'ropa',name:'Ropa',icon:'👕',color:'#af52de',bg:'rgba(175,82,222,0.12)'},
+  {id:'entretenimiento',name:'Ocio',icon:'🎬',color:'#5ac8fa',bg:'rgba(90,200,250,0.12)'},
+  {id:'servicios',name:'Servicios',icon:'💡',color:'#ffcc00',bg:'rgba(255,204,0,0.12)'},
+  {id:'otro',name:'Otro',icon:'📦',color:'#8e8e93',bg:'rgba(142,142,147,0.12)'},
 ];
+
+const DEFAULT_WALLETS = [
+  {id:'efectivo',name:'Efectivo',type:'cash',icon:'💵',color:'#34c759',bg:'rgba(52,199,89,0.12)',balance:0},
+  {id:'yape',name:'Yape',type:'digital',icon:'📱',color:'#af52de',bg:'rgba(175,82,222,0.12)',balance:0},
+];
+
+const WALLET_TYPES = [
+  {id:'cash',label:'💵 Efectivo'},
+  {id:'digital',label:'📲 Digital'},
+  {id:'card',label:'💳 Tarjeta'},
+  {id:'bank',label:'🏦 Banco'},
+];
+
 const PALETTE = [
-  { color:'#ff9500', bg:'rgba(255,149,0,0.12)' },   { color:'#007aff', bg:'rgba(0,122,255,0.12)' },
-  { color:'#34c759', bg:'rgba(52,199,89,0.12)' },   { color:'#ff3b30', bg:'rgba(255,59,48,0.12)' },
-  { color:'#af52de', bg:'rgba(175,82,222,0.12)' },  { color:'#5ac8fa', bg:'rgba(90,200,250,0.12)' },
-  { color:'#ffcc00', bg:'rgba(255,204,0,0.12)' },   { color:'#ff2d55', bg:'rgba(255,45,85,0.12)' },
-  { color:'#30b0c7', bg:'rgba(48,176,199,0.12)' },  { color:'#8e8e93', bg:'rgba(142,142,147,0.12)' },
+  {color:'#ff9500',bg:'rgba(255,149,0,0.12)'},{color:'#007aff',bg:'rgba(0,122,255,0.12)'},
+  {color:'#34c759',bg:'rgba(52,199,89,0.12)'},{color:'#ff3b30',bg:'rgba(255,59,48,0.12)'},
+  {color:'#af52de',bg:'rgba(175,82,222,0.12)'},{color:'#5ac8fa',bg:'rgba(90,200,250,0.12)'},
+  {color:'#ffcc00',bg:'rgba(255,204,0,0.12)'},{color:'#ff2d55',bg:'rgba(255,45,85,0.12)'},
+  {color:'#30b0c7',bg:'rgba(48,176,199,0.12)'},{color:'#8e8e93',bg:'rgba(142,142,147,0.12)'},
 ];
-const EMOJIS = ['🍱','🚌','🛒','💊','👕','🎬','💡','📦','🍔','☕','🏋️','🐾','✈️','🎓','🏠','💻','🎮','💈','🌮','🛵','📱','🎁','💰','🏦','🧾','🛁','🌿','🧴','🍜','🍖','🍕','🧃','🐶','🛍️','⚽','🎵'];
 
-// ======================== ESTADO ========================
-let CATS = JSON.parse(localStorage.getItem('cats_v1') || 'null') || DEFAULT_CATS;
+const EMOJIS = ['💵','📱','💳','🏦','👛','💰','🏧','💎','🪙','🎰',
+                '🍱','🚌','🛒','💊','👕','🎬','💡','📦','🍔','☕',
+                '🏋️','🐾','✈️','🎓','🏠','💻','🎮','🌮','🛵','🎁',
+                '🧾','🛁','🌿','🍜','🍖','🍕','🐶','🛍️','⚽','🎵'];
+
+const WALLET_EMOJIS = ['💵','📱','💳','🏦','👛','💰','🏧','💎','🪙',
+                       '🎰','🐷','🟣','🔵','🟢','🔴','⭐','🌟','🚀'];
+
+// ====================== ESTADO ======================
+let CATS    = JSON.parse(localStorage.getItem('cats_v1')    || 'null') || DEFAULT_CATS;
+let WALLETS = JSON.parse(localStorage.getItem('wallets_v1') || 'null') || DEFAULT_WALLETS;
 let entries = JSON.parse(localStorage.getItem('entries_v2') || '[]');
-let currentType = 'gasto';
-let selectedCat = 'menu';
+
+let currentType='gasto', selectedCat='menu', selectedWallet='';
 let currentMonth, currentYear;
-let editingCatId = null, editingCatColor = null, editingCatIcon = null;
+let editingCatId=null, editingCatColor=null, editingCatIcon=null;
+let editingWalletId=null, editingWalletColor=null, editingWalletIcon=null, editingWalletType='cash';
+let currentWalletDetailId=null;
 
-// ======================== FECHA (sin bug de zona horaria) ========================
-function todayStr() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-function yesterdayStr() {
-  const d = new Date(); d.setDate(d.getDate()-1);
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-function parseDateLocal(str) {
-  const [y,m,d] = str.split('-').map(Number);
-  return new Date(y, m-1, d);
-}
-function formatDateLabel(str) {
-  if (str === todayStr()) return 'Hoy';
-  if (str === yesterdayStr()) return 'Ayer';
-  const d = parseDateLocal(str);
-  let l = d.toLocaleDateString('es-PE', { weekday:'long', day:'numeric', month:'short' });
-  return l.charAt(0).toUpperCase() + l.slice(1);
-}
-function formatDateFull(str) {
-  const d = parseDateLocal(str);
-  let l = d.toLocaleDateString('es-PE', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-  return l.charAt(0).toUpperCase() + l.slice(1);
-}
+// ====================== FECHAS ======================
+function todayStr(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function yesterdayStr(){const d=new Date();d.setDate(d.getDate()-1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function parseDateLocal(s){const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);}
+function formatDateLabel(s){if(s===todayStr())return'Hoy';if(s===yesterdayStr())return'Ayer';const d=parseDateLocal(s);let l=d.toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'short'});return l.charAt(0).toUpperCase()+l.slice(1);}
+function formatDateFull(s){const d=parseDateLocal(s);let l=d.toLocaleDateString('es-PE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});return l.charAt(0).toUpperCase()+l.slice(1);}
 
-// ======================== INIT ========================
-function init() {
-  const now = new Date();
-  currentMonth = now.getMonth();
-  currentYear = now.getFullYear();
-  document.getElementById('input-date').value = todayStr();
+// ====================== INIT ======================
+function init(){
+  const now=new Date();
+  currentMonth=now.getMonth(); currentYear=now.getFullYear();
+  document.getElementById('input-date').value=todayStr();
   renderCategoryChips();
   renderSettingsCats();
+  renderWalletSelect();
+  renderWalletsPage();
   render();
   updateMonthLabel();
 }
-function saveCATS() { localStorage.setItem('cats_v1', JSON.stringify(CATS)); }
-function getCat(id) { return CATS.find(c => c.id===id) || CATS[CATS.length-1]; }
+function saveCATS(){ localStorage.setItem('cats_v1',JSON.stringify(CATS)); }
+function saveWALLETS(){ localStorage.setItem('wallets_v1',JSON.stringify(WALLETS)); }
+function getCat(id){ return CATS.find(c=>c.id===id)||CATS[CATS.length-1]; }
+function getWallet(id){ return WALLETS.find(w=>w.id===id)||null; }
 
-// ======================== MES ========================
-function changeMonth(dir) {
-  currentMonth += dir;
-  if (currentMonth < 0) { currentMonth=11; currentYear--; }
-  if (currentMonth > 11) { currentMonth=0; currentYear++; }
+// ====================== MES ======================
+function changeMonth(dir){
+  currentMonth+=dir;
+  if(currentMonth<0){currentMonth=11;currentYear--;}
+  if(currentMonth>11){currentMonth=0;currentYear++;}
   updateMonthLabel(); render();
 }
-function updateMonthLabel() {
-  const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  document.getElementById('month-label').textContent = months[currentMonth];
+function updateMonthLabel(){
+  const months=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  document.getElementById('month-label').textContent=months[currentMonth];
 }
-function getMonthEntries() {
-  return entries.filter(e => {
-    const d = parseDateLocal(e.date);
-    return d.getMonth()===currentMonth && d.getFullYear()===currentYear;
-  });
+function getMonthEntries(){
+  return entries.filter(e=>{const d=parseDateLocal(e.date);return d.getMonth()===currentMonth&&d.getFullYear()===currentYear;});
 }
 
-// ======================== RENDER ========================
-function render() {
-  const me = getMonthEntries();
-  const totalG = me.filter(e=>e.type==='gasto').reduce((s,e)=>s+e.amount,0);
-  const totalI = me.filter(e=>e.type==='ingreso').reduce((s,e)=>s+e.amount,0);
-  const neto = totalI - totalG;
-  document.getElementById('total-gastos').textContent = `S/ ${totalG.toFixed(2)}`;
-  document.getElementById('total-ingresos').textContent = `S/ ${totalI.toFixed(2)}`;
-  const netoEl = document.getElementById('total-neto');
-  netoEl.textContent = `S/ ${Math.abs(neto).toFixed(2)}`;
-  netoEl.style.color = neto>=0 ? 'var(--green)' : 'var(--red)';
+// ====================== RENDER INICIO ======================
+function render(){
+  const me=getMonthEntries();
+  const totalG=me.filter(e=>e.type==='gasto').reduce((s,e)=>s+e.amount,0);
+  const totalI=me.filter(e=>e.type==='ingreso').reduce((s,e)=>s+e.amount,0);
+  const neto=totalI-totalG;
+  document.getElementById('total-gastos').textContent=`S/ ${totalG.toFixed(2)}`;
+  document.getElementById('total-ingresos').textContent=`S/ ${totalI.toFixed(2)}`;
+  const netoEl=document.getElementById('total-neto');
+  netoEl.textContent=`S/ ${Math.abs(neto).toFixed(2)}`;
+  netoEl.style.color=neto>=0?'var(--green)':'var(--red)';
 
-  const list = document.getElementById('entries-list');
-  if (me.length===0) {
-    list.innerHTML = `<div class="empty-state"><div class="empty-icon">💸</div><div class="empty-text">Sin movimientos este mes.<br>Toca + para agregar uno.</div></div>`;
+  const list=document.getElementById('entries-list');
+  if(me.length===0){
+    list.innerHTML=`<div class="empty-state"><div class="empty-icon">💸</div><div class="empty-text">Sin movimientos este mes.<br>Toca + para agregar uno.</div></div>`;
     renderStats(me); return;
   }
-
-  const byDate = {};
-  me.sort((a,b)=>b.date.localeCompare(a.date)).forEach(e => {
-    if (!byDate[e.date]) byDate[e.date]=[];
-    byDate[e.date].push(e);
-  });
-
-  list.innerHTML = '';
-  Object.keys(byDate).sort((a,b)=>b.localeCompare(a)).forEach(date => {
-    const group = document.createElement('div');
-    group.className = 'day-group';
-    const header = document.createElement('div');
-    header.className = 'day-header';
-    header.textContent = formatDateLabel(date);
-    group.appendChild(header);
-    const cardsWrap = document.createElement('div');
-    cardsWrap.className = 'day-cards';
-    byDate[date].forEach(e => {
-      const cat = getCat(e.cat);
-      const card = document.createElement('div');
-      card.className = 'entry-card';
-      card.onclick = () => openDetail(e.id);
-      card.innerHTML = `
+  const byDate={};
+  me.sort((a,b)=>b.date.localeCompare(a.date)).forEach(e=>{if(!byDate[e.date])byDate[e.date]=[];byDate[e.date].push(e);});
+  list.innerHTML='';
+  Object.keys(byDate).sort((a,b)=>b.localeCompare(a)).forEach(date=>{
+    const group=document.createElement('div'); group.className='day-group';
+    const hdr=document.createElement('div'); hdr.className='day-header'; hdr.textContent=formatDateLabel(date);
+    group.appendChild(hdr);
+    const wrap=document.createElement('div'); wrap.className='day-cards';
+    byDate[date].forEach(e=>{
+      const cat=getCat(e.cat);
+      const card=document.createElement('div'); card.className='entry-card'; card.onclick=()=>openDetail(e.id);
+      const w=e.walletId?getWallet(e.walletId):null;
+      card.innerHTML=`
         <div class="entry-icon" style="background:${cat.bg}">${cat.icon}</div>
         <div class="entry-info">
           <div class="entry-name">${e.desc||cat.name}</div>
-          <div class="entry-meta">${cat.name}</div>
+          <div class="entry-meta">${cat.name}${w?' · '+w.icon+' '+w.name:''}</div>
         </div>
         <div class="entry-amount ${e.type}">${e.type==='gasto'?'-':'+'}S/ ${e.amount.toFixed(2)}</div>
-        <span class="entry-chevron">›</span>
-      `;
-      cardsWrap.appendChild(card);
+        <span class="entry-chevron">›</span>`;
+      wrap.appendChild(card);
     });
-    group.appendChild(cardsWrap);
-    list.appendChild(group);
+    group.appendChild(wrap); list.appendChild(group);
   });
   renderStats(me);
 }
 
-// ======================== STATS ========================
-function renderStats(me) {
-  const gastos = me.filter(e=>e.type==='gasto');
-  const statsList = document.getElementById('cat-stats-list');
-  if (gastos.length===0) {
-    statsList.innerHTML = `<div style="text-align:center;color:var(--text-tertiary);padding:16px;font-size:13px;">Sin gastos aún</div>`;
-  } else {
-    const byCat = {};
-    gastos.forEach(e=>{ byCat[e.cat]=(byCat[e.cat]||0)+e.amount; });
-    const maxVal = Math.max(...Object.values(byCat));
-    statsList.innerHTML = Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([catId,total])=>{
-      const cat=getCat(catId); const pct=(total/maxVal*100).toFixed(0);
-      return `<div class="cat-stat-row">
-        <div class="cat-stat-icon" style="background:${cat.bg}">${cat.icon}</div>
-        <div class="cat-stat-info"><div class="cat-stat-name">${cat.name}</div>
-        <div class="cat-stat-bar-bg"><div class="cat-stat-bar" style="width:${pct}%;background:${cat.color}"></div></div></div>
-        <div class="cat-stat-amount">-S/ ${total.toFixed(2)}</div></div>`;
+// ====================== RENDER STATS ======================
+function renderStats(me){
+  const gastos=me.filter(e=>e.type==='gasto');
+  const sl=document.getElementById('cat-stats-list');
+  if(gastos.length===0){sl.innerHTML=`<div style="text-align:center;color:var(--text-tertiary);padding:16px;font-size:13px;">Sin gastos aún</div>`;}
+  else{
+    const byCat={};
+    gastos.forEach(e=>{byCat[e.cat]=(byCat[e.cat]||0)+e.amount;});
+    const maxVal=Math.max(...Object.values(byCat));
+    sl.innerHTML=Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([catId,total])=>{
+      const cat=getCat(catId);const pct=(total/maxVal*100).toFixed(0);
+      return`<div class="cat-stat-row"><div class="cat-stat-icon" style="background:${cat.bg}">${cat.icon}</div><div class="cat-stat-info"><div class="cat-stat-name">${cat.name}</div><div class="cat-stat-bar-bg"><div class="cat-stat-bar" style="width:${pct}%;background:${cat.color}"></div></div></div><div class="cat-stat-amount">-S/ ${total.toFixed(2)}</div></div>`;
     }).join('');
   }
   const totalG=gastos.reduce((s,e)=>s+e.amount,0);
@@ -524,55 +553,243 @@ function renderStats(me) {
   document.getElementById('month-summary').innerHTML=`📅 <b>${months[currentMonth]} ${currentYear}</b><br>📤 Gastos: <b style="color:var(--red)">S/ ${totalG.toFixed(2)}</b><br>📥 Ingresos: <b style="color:var(--green)">S/ ${totalI.toFixed(2)}</b><br>💰 Saldo: <b style="color:${neto>=0?'var(--green)':'var(--red)'}">S/ ${neto.toFixed(2)}</b><br>📆 Días activos: <b>${dias}</b> · Movimientos: <b>${me.length}</b>`;
 }
 
-// ======================== CHIPS CATEGORÍAS ========================
-function renderCategoryChips() {
-  document.getElementById('cats-scroll').innerHTML = CATS.map(c=>`
+// ====================== RENDER BILLETERAS ======================
+function walletBalance(walletId){
+  // saldo inicial + ingresos - gastos de todos los tiempos
+  const w=getWallet(walletId); if(!w) return 0;
+  const movs=entries.filter(e=>e.walletId===walletId);
+  const ingresos=movs.filter(e=>e.type==='ingreso').reduce((s,e)=>s+e.amount,0);
+  const gastos=movs.filter(e=>e.type==='gasto').reduce((s,e)=>s+e.amount,0);
+  return (w.balance||0)+ingresos-gastos;
+}
+
+function renderWalletsPage(){
+  const grandTotal=WALLETS.reduce((s,w)=>s+walletBalance(w.id),0);
+  document.getElementById('wallets-grand-total').textContent=`S/ ${grandTotal.toFixed(2)}`;
+  document.getElementById('wallets-grand-sub').textContent=`${WALLETS.length} billetera${WALLETS.length!==1?'s':''}`;
+
+  const list=document.getElementById('wallets-list');
+  list.innerHTML='';
+  WALLETS.forEach(w=>{
+    const bal=walletBalance(w.id);
+    const movs=entries.filter(e=>e.walletId===w.id);
+    const typeLabel=WALLET_TYPES.find(t=>t.id===w.type)?.label||w.type;
+    const item=document.createElement('div'); item.className='wallet-item';
+    item.onclick=()=>openWalletDetail(w.id);
+    item.innerHTML=`
+      <div class="wallet-icon" style="background:${w.bg}">${w.icon}</div>
+      <div class="wallet-info">
+        <div class="wallet-name">${w.name}</div>
+        <div class="wallet-type">${typeLabel} · ${movs.length} mov.</div>
+      </div>
+      <div class="wallet-balance">
+        <div class="wallet-balance-amount ${bal>=0?'pos':'neg'}">S/ ${bal.toFixed(2)}</div>
+      </div>`;
+    list.appendChild(item);
+  });
+  // Botón añadir
+  const add=document.createElement('div'); add.className='wallet-add-row'; add.onclick=()=>openNewWallet();
+  add.innerHTML=`<div class="wallet-icon" style="background:rgba(0,122,255,0.1);color:var(--blue);font-size:22px;display:flex;align-items:center;justify-content:center;font-weight:300;">+</div><div style="font-size:15px;font-weight:500;color:var(--blue);margin-left:2px;">Nueva billetera</div>`;
+  list.appendChild(add);
+}
+
+function renderWalletSelect(){
+  const sel=document.getElementById('input-wallet');
+  sel.innerHTML='<option value="">— Sin asignar —</option>';
+  WALLETS.forEach(w=>{
+    const opt=document.createElement('option'); opt.value=w.id;
+    opt.textContent=`${w.icon} ${w.name}`; sel.appendChild(opt);
+  });
+  sel.value=selectedWallet;
+}
+
+// ====================== DETALLE BILLETERA ======================
+function openWalletDetail(id){
+  currentWalletDetailId=id;
+  const w=getWallet(id); if(!w) return;
+  const bal=walletBalance(id);
+  const movs=entries.filter(e=>e.walletId===id).sort((a,b)=>b.date.localeCompare(a.date));
+  const ing=movs.filter(e=>e.type==='ingreso').reduce((s,e)=>s+e.amount,0);
+  const gas=movs.filter(e=>e.type==='gasto').reduce((s,e)=>s+e.amount,0);
+  const typeLabel=WALLET_TYPES.find(t=>t.id===w.type)?.label||w.type;
+
+  document.getElementById('wdetail-title').textContent=w.name;
+  document.getElementById('wdetail-icon').textContent=w.icon;
+  document.getElementById('wdetail-icon').style.background=w.bg;
+  document.getElementById('wdetail-balance').textContent=`S/ ${bal.toFixed(2)}`;
+  document.getElementById('wdetail-balance').style.color=bal>=0?'var(--green)':'var(--red)';
+  document.getElementById('wdetail-type').textContent=typeLabel;
+
+  document.getElementById('wdetail-stats').innerHTML=`
+    <div class="detail-row"><span class="detail-row-label">Saldo inicial</span><span class="detail-row-value">S/ ${(w.balance||0).toFixed(2)}</span></div>
+    <div class="detail-row"><span class="detail-row-label">📥 Ingresos</span><span class="detail-row-value" style="color:var(--green)">+S/ ${ing.toFixed(2)}</span></div>
+    <div class="detail-row"><span class="detail-row-label">📤 Gastos</span><span class="detail-row-value" style="color:var(--red)">-S/ ${gas.toFixed(2)}</span></div>
+    <div class="detail-row"><span class="detail-row-label">Movimientos</span><span class="detail-row-value">${movs.length}</span></div>`;
+
+  const entList=document.getElementById('wdetail-entries');
+  if(movs.length===0){
+    entList.innerHTML=`<div style="text-align:center;color:var(--text-tertiary);padding:20px;font-size:13px;">Sin movimientos asignados</div>`;
+  } else {
+    entList.innerHTML='';
+    const wrap=document.createElement('div'); wrap.className='day-cards';
+    movs.slice(0,10).forEach(e=>{
+      const cat=getCat(e.cat);
+      const row=document.createElement('div'); row.className='entry-card';
+      row.onclick=()=>{closeWalletDetail();setTimeout(()=>openDetail(e.id),180);};
+      row.innerHTML=`<div class="entry-icon" style="background:${cat.bg}">${cat.icon}</div>
+        <div class="entry-info"><div class="entry-name">${e.desc||cat.name}</div><div class="entry-meta">${formatDateLabel(e.date)}</div></div>
+        <div class="entry-amount ${e.type}">${e.type==='gasto'?'-':'+'}S/ ${e.amount.toFixed(2)}</div>
+        <span class="entry-chevron">›</span>`;
+      wrap.appendChild(row);
+    });
+    entList.appendChild(wrap);
+    if(movs.length>10) entList.innerHTML+=`<div style="text-align:center;font-size:12px;color:var(--text-tertiary);padding:10px;">+${movs.length-10} más</div>`;
+  }
+
+  document.getElementById('wallet-detail-overlay').classList.add('open');
+}
+function closeWalletDetailOutside(e){if(e.target===document.getElementById('wallet-detail-overlay'))closeWalletDetail();}
+function closeWalletDetail(){document.getElementById('wallet-detail-overlay').classList.remove('open');}
+
+// ====================== MODAL EDITAR BILLETERA ======================
+function openNewWallet(){
+  editingWalletId='__new__';
+  editingWalletType='digital';
+  editingWalletColor=PALETTE[0];
+  editingWalletIcon='📱';
+  document.getElementById('wallet-edit-name').value='';
+  document.getElementById('wallet-edit-balance').value='';
+  document.getElementById('wallet-edit-title').textContent='Nueva billetera';
+  document.getElementById('wallet-delete-btn').style.display='none';
+  document.getElementById('wallet-balance-row').style.display='';
+  buildWalletEditUI();
+  document.getElementById('wallet-edit-overlay').classList.add('open');
+}
+function openWalletEdit(id){
+  closeWalletDetail();
+  const w=getWallet(id); if(!w) return;
+  editingWalletId=id;
+  editingWalletType=w.type||'cash';
+  editingWalletColor=PALETTE.find(p=>p.color===w.color)||PALETTE[0];
+  editingWalletIcon=w.icon;
+  document.getElementById('wallet-edit-name').value=w.name;
+  document.getElementById('wallet-edit-balance').value=w.balance||0;
+  document.getElementById('wallet-edit-title').textContent='Editar billetera';
+  document.getElementById('wallet-delete-btn').style.display='';
+  document.getElementById('wallet-balance-row').style.display='';
+  buildWalletEditUI();
+  setTimeout(()=>document.getElementById('wallet-edit-overlay').classList.add('open'),200);
+}
+function buildWalletEditUI(){
+  updateWalletPreview();
+  // Tipo chips
+  document.getElementById('wallet-type-chips').innerHTML=WALLET_TYPES.map(t=>`
+    <button class="cat-chip ${t.id===editingWalletType?'selected':''}" onclick="selectWalletType('${t.id}')" style="font-size:13px;">${t.label}</button>
+  `).join('');
+  // Emojis
+  document.getElementById('wallet-emoji-picker').innerHTML=WALLET_EMOJIS.concat(EMOJIS.slice(0,20)).map(em=>`
+    <button class="emoji-opt" style="${em===editingWalletIcon?'background:var(--separator)':''}" onclick="selectWalletIcon('${em}')">${em}</button>
+  `).join('');
+  // Colores
+  document.getElementById('wallet-color-picker').innerHTML=PALETTE.map((p,i)=>`
+    <div class="color-dot ${p.color===editingWalletColor.color?'selected':''}" style="background:${p.color}" onclick="selectWalletColor(${i})"></div>
+  `).join('');
+}
+function selectWalletType(t){
+  editingWalletType=t;
+  document.querySelectorAll('#wallet-type-chips .cat-chip').forEach(b=>b.classList.toggle('selected',b.textContent.trim()===WALLET_TYPES.find(x=>x.id===t)?.label));
+  updateWalletPreview();
+}
+function selectWalletIcon(em){
+  editingWalletIcon=em;
+  document.querySelectorAll('#wallet-emoji-picker .emoji-opt').forEach(b=>{b.style.background=b.textContent.trim()===em?'var(--separator)':'';});
+  updateWalletPreview();
+}
+function selectWalletColor(idx){
+  editingWalletColor=PALETTE[idx];
+  document.querySelectorAll('#wallet-color-picker .color-dot').forEach((d,i)=>d.classList.toggle('selected',i===idx));
+  updateWalletPreview();
+}
+function updateWalletPreview(){
+  const name=document.getElementById('wallet-edit-name').value||'Nueva';
+  const typeLabel=WALLET_TYPES.find(t=>t.id===editingWalletType)?.label||'';
+  document.getElementById('wallet-preview-name').textContent=name;
+  document.getElementById('wallet-preview-type').textContent=typeLabel;
+  document.getElementById('wallet-preview-icon').textContent=editingWalletIcon||'👛';
+  document.getElementById('wallet-preview-icon').style.background=editingWalletColor?editingWalletColor.bg:'var(--separator)';
+}
+function saveWalletEdit(){
+  const name=document.getElementById('wallet-edit-name').value.trim();
+  if(!name){document.getElementById('wallet-edit-name').focus();return;}
+  const bal=parseFloat(document.getElementById('wallet-edit-balance').value)||0;
+  if(editingWalletId==='__new__'){
+    WALLETS.push({id:'w_'+Date.now(),name,type:editingWalletType,icon:editingWalletIcon,color:editingWalletColor.color,bg:editingWalletColor.bg,balance:bal});
+  } else {
+    const idx=WALLETS.findIndex(w=>w.id===editingWalletId); if(idx===-1) return;
+    WALLETS[idx]={...WALLETS[idx],name,type:editingWalletType,icon:editingWalletIcon,color:editingWalletColor.color,bg:editingWalletColor.bg,balance:bal};
+  }
+  saveWALLETS(); closeWalletEdit(); renderWalletSelect(); renderWalletsPage(); render();
+}
+function deleteWallet(){
+  if(!confirm(`¿Eliminar esta billetera? Los movimientos asociados quedarán sin billetera.`)) return;
+  WALLETS=WALLETS.filter(w=>w.id!==editingWalletId);
+  saveWALLETS(); closeWalletEdit(); renderWalletSelect(); renderWalletsPage(); render();
+}
+function closeWalletEditOutside(e){if(e.target===document.getElementById('wallet-edit-overlay'))closeWalletEdit();}
+function closeWalletEdit(){document.getElementById('wallet-edit-overlay').classList.remove('open');}
+
+// ====================== CATEGORÍAS ======================
+function renderCategoryChips(){
+  document.getElementById('cats-scroll').innerHTML=CATS.map(c=>`
     <button class="cat-chip ${c.id===selectedCat?'selected':''}" onclick="selectCat('${c.id}')">${c.icon} ${c.name}</button>
   `).join('');
 }
-function selectCat(id) {
+function selectCat(id){
   selectedCat=id; renderCategoryChips();
   document.getElementById('variants-section').style.display=(id==='menu')?'block':'none';
 }
-function selectVariant(desc,price,btnId) {
+function selectVariant(desc,price,btnId){
   document.getElementById('input-desc').value=desc;
   document.getElementById('input-amount').value=price;
   document.querySelectorAll('.variant-btn').forEach(b=>b.classList.remove('selected'));
   document.getElementById(btnId).classList.add('selected');
 }
-function setType(type) {
+function setType(type){
   currentType=type;
   document.getElementById('toggle-gasto').className=type==='gasto'?'active gasto':'';
   document.getElementById('toggle-ingreso').className=type==='ingreso'?'active ingreso':'';
 }
 
-// ======================== MODAL NUEVO ========================
-function openModal() {
+// ====================== MODAL NUEVO MOV ======================
+function openModal(){
   document.getElementById('modal-overlay').classList.add('open');
   document.getElementById('input-date').value=todayStr();
   document.getElementById('input-desc').value='';
   document.getElementById('input-amount').value='';
   document.querySelectorAll('.variant-btn').forEach(b=>b.classList.remove('selected'));
+  renderWalletSelect();
   selectCat('menu'); setType('gasto');
 }
-function closeModalOutside(e) { if(e.target===document.getElementById('modal-overlay')) closeModalBtn(); }
-function closeModalBtn() { document.getElementById('modal-overlay').classList.remove('open'); }
-function saveEntry() {
+function closeModalOutside(e){if(e.target===document.getElementById('modal-overlay'))closeModalBtn();}
+function closeModalBtn(){document.getElementById('modal-overlay').classList.remove('open');}
+function saveEntry(){
   const desc=document.getElementById('input-desc').value.trim();
   const amount=parseFloat(document.getElementById('input-amount').value);
   const date=document.getElementById('input-date').value||todayStr();
-  if (!amount||amount<=0) { document.getElementById('input-amount').focus(); return; }
-  entries.push({ id:Date.now().toString(), type:currentType, cat:selectedCat, desc:desc||getCat(selectedCat).name, amount, date });
+  const walletId=document.getElementById('input-wallet').value||'';
+  if(!amount||amount<=0){document.getElementById('input-amount').focus();return;}
+  entries.push({id:Date.now().toString(),type:currentType,cat:selectedCat,desc:desc||getCat(selectedCat).name,amount,date,walletId});
   localStorage.setItem('entries_v2',JSON.stringify(entries));
   closeModalBtn();
   const d=parseDateLocal(date); currentMonth=d.getMonth(); currentYear=d.getFullYear();
-  updateMonthLabel(); render();
+  updateMonthLabel(); render(); renderWalletsPage();
 }
 
-// ======================== MODAL DETALLE ========================
-function openDetail(id) {
+// ====================== DETALLE MOVIMIENTO ======================
+function openDetail(id){
   const e=entries.find(x=>x.id===id); if(!e) return;
   const cat=getCat(e.cat);
+  const w=e.walletId?getWallet(e.walletId):null;
   document.getElementById('detail-icon').textContent=cat.icon;
   document.getElementById('detail-icon').style.background=cat.bg;
   document.getElementById('detail-amount').textContent=`${e.type==='gasto'?'-':'+'}S/ ${e.amount.toFixed(2)}`;
@@ -581,126 +798,103 @@ function openDetail(id) {
   document.getElementById('detail-desc').textContent=e.desc||cat.name;
   document.getElementById('detail-cat').textContent=`${cat.icon} ${cat.name}`;
   document.getElementById('detail-type').textContent=e.type==='gasto'?'📤 Gasto':'📥 Ingreso';
+  document.getElementById('detail-wallet').textContent=w?`${w.icon} ${w.name}`:'—';
   document.getElementById('detail-date').textContent=formatDateFull(e.date);
   document.getElementById('detail-delete-btn').onclick=()=>{
     if(!confirm('¿Eliminar este movimiento?')) return;
     entries=entries.filter(x=>x.id!==id);
     localStorage.setItem('entries_v2',JSON.stringify(entries));
-    closeDetail(); render();
+    closeDetail(); render(); renderWalletsPage();
   };
   document.getElementById('detail-overlay').classList.add('open');
 }
-function closeDetailOutside(e) { if(e.target===document.getElementById('detail-overlay')) closeDetail(); }
-function closeDetail() { document.getElementById('detail-overlay').classList.remove('open'); }
+function closeDetailOutside(e){if(e.target===document.getElementById('detail-overlay'))closeDetail();}
+function closeDetail(){document.getElementById('detail-overlay').classList.remove('open');}
 
-// ======================== SETTINGS CATEGORÍAS ========================
-function renderSettingsCats() {
+// ====================== SETTINGS CATS ======================
+function renderSettingsCats(){
   const form=document.getElementById('settings-cats-form');
   const header=form.querySelector('.settings-section-label');
-  form.innerHTML='';
-  form.appendChild(header);
+  form.innerHTML=''; form.appendChild(header);
   CATS.forEach(cat=>{
-    const row=document.createElement('div');
-    row.className='settings-cat-row';
-    row.onclick=()=>openCatEdit(cat.id);
-    row.innerHTML=`<div class="settings-cat-icon" style="background:${cat.bg}">${cat.icon}</div><div class="settings-cat-name">${cat.name}</div><span class="settings-cat-chevron">›</span>`;
+    const row=document.createElement('div'); row.className='settings-row'; row.onclick=()=>openCatEdit(cat.id);
+    row.innerHTML=`<div class="settings-row-icon" style="background:${cat.bg}">${cat.icon}</div><div class="settings-row-name">${cat.name}</div><span class="settings-row-chevron">›</span>`;
     form.appendChild(row);
   });
-  // Botón nueva categoría
-  const addRow=document.createElement('div');
-  addRow.className='settings-cat-row';
-  addRow.style.cursor='pointer';
-  addRow.onclick=openNewCat;
-  addRow.innerHTML='<div class="settings-cat-icon" style="background:rgba(0,122,255,0.1);color:var(--blue);font-size:22px;display:flex;align-items:center;justify-content:center;">+</div><div class="settings-cat-name" style="color:var(--blue);">Nueva categoría</div>';
-  form.appendChild(addRow);
+  const add=document.createElement('div'); add.className='settings-row'; add.onclick=openNewCat;
+  add.innerHTML=`<div class="settings-row-icon" style="background:rgba(0,122,255,0.1);color:var(--blue);font-size:22px;display:flex;align-items:center;justify-content:center;">+</div><div class="settings-row-name" style="color:var(--blue);">Nueva categoría</div>`;
+  form.appendChild(add);
 }
 
-// ======================== MODAL EDITAR CATEGORÍA ========================
-function openCatEdit(id) {
+// ====================== MODAL EDITAR CAT ======================
+function openNewCat(){
+  editingCatId='__new__'; editingCatColor=PALETTE[0]; editingCatIcon='📦';
+  document.getElementById('cat-edit-name').value='';
+  document.getElementById('cat-edit-title').textContent='Nueva categoría';
+  document.getElementById('cat-delete-btn').style.display='none';
+  updateCatPreview();
+  document.getElementById('emoji-picker').innerHTML=EMOJIS.map(em=>`<button class="emoji-opt" style="${em===editingCatIcon?'background:var(--separator)':''}" onclick="selectCatIcon('${em}')">${em}</button>`).join('');
+  document.getElementById('color-picker').innerHTML=PALETTE.map((p,i)=>`<div class="color-dot ${i===0?'selected':''}" style="background:${p.color}" onclick="selectCatColor(${i})"></div>`).join('');
+  document.getElementById('cat-edit-overlay').classList.add('open');
+}
+function openCatEdit(id){
   const cat=getCat(id); editingCatId=id;
-  editingCatColor=PALETTE.find(p=>p.color===cat.color)||PALETTE[0];
-  editingCatIcon=cat.icon;
+  editingCatColor=PALETTE.find(p=>p.color===cat.color)||PALETTE[0]; editingCatIcon=cat.icon;
   document.getElementById('cat-edit-name').value=cat.name;
   document.getElementById('cat-edit-title').textContent='Editar categoría';
   document.getElementById('cat-delete-btn').style.display='';
   updateCatPreview();
-  document.getElementById('emoji-picker').innerHTML=EMOJIS.map(em=>`
-    <button class="emoji-opt" style="${em===editingCatIcon?'background:var(--separator)':''}" onclick="selectCatIcon('${em}')">${em}</button>
-  `).join('');
-  document.getElementById('color-picker').innerHTML=PALETTE.map((p,i)=>`
-    <div class="cat-color-dot ${p.color===cat.color?'selected':''}" style="background:${p.color}" onclick="selectCatColor(${i})"></div>
-  `).join('');
+  document.getElementById('emoji-picker').innerHTML=EMOJIS.map(em=>`<button class="emoji-opt" style="${em===editingCatIcon?'background:var(--separator)':''}" onclick="selectCatIcon('${em}')">${em}</button>`).join('');
+  document.getElementById('color-picker').innerHTML=PALETTE.map((p,i)=>`<div class="color-dot ${p.color===cat.color?'selected':''}" style="background:${p.color}" onclick="selectCatColor(${i})"></div>`).join('');
   document.getElementById('cat-edit-overlay').classList.add('open');
 }
-function closeCatEditOutside(e) { if(e.target===document.getElementById('cat-edit-overlay')) closeCatEdit(); }
-function closeCatEdit() { document.getElementById('cat-edit-overlay').classList.remove('open'); }
-function selectCatIcon(emoji) {
-  editingCatIcon=emoji;
-  document.querySelectorAll('.emoji-opt').forEach(b=>{ b.style.background=b.textContent.trim()===emoji?'var(--separator)':''; });
-  updateCatPreview();
-}
-function selectCatColor(idx) {
-  editingCatColor=PALETTE[idx];
-  document.querySelectorAll('.cat-color-dot').forEach((d,i)=>d.classList.toggle('selected',i===idx));
-  updateCatPreview();
-}
-function updateCatPreview() {
+function closeCatEditOutside(e){if(e.target===document.getElementById('cat-edit-overlay'))closeCatEdit();}
+function closeCatEdit(){document.getElementById('cat-edit-overlay').classList.remove('open');}
+function selectCatIcon(em){editingCatIcon=em;document.querySelectorAll('#emoji-picker .emoji-opt').forEach(b=>{b.style.background=b.textContent.trim()===em?'var(--separator)':'';});updateCatPreview();}
+function selectCatColor(idx){editingCatColor=PALETTE[idx];document.querySelectorAll('#color-picker .color-dot').forEach((d,i)=>d.classList.toggle('selected',i===idx));updateCatPreview();}
+function updateCatPreview(){
   const name=document.getElementById('cat-edit-name').value||'?';
   document.getElementById('cat-preview-name').textContent=name;
   document.getElementById('cat-preview-icon').textContent=editingCatIcon||'📦';
   document.getElementById('cat-preview-icon').style.background=editingCatColor?editingCatColor.bg:'var(--separator)';
 }
-function openNewCat() {
-  editingCatId = '__new__';
-  editingCatColor = PALETTE[0];
-  editingCatIcon = '📦';
-  document.getElementById('cat-edit-name').value = '';
-  document.getElementById('cat-edit-title').textContent = 'Nueva categoría';
-  document.getElementById('cat-delete-btn').style.display = 'none';
-  updateCatPreview();
-  document.getElementById('emoji-picker').innerHTML=EMOJIS.map(em=>
-    `<button class="emoji-opt" style="${em===editingCatIcon?'background:var(--separator)':''}" onclick="selectCatIcon('${em}')">${em}</button>`
-  ).join('');
-  document.getElementById('color-picker').innerHTML=PALETTE.map((p,i)=>
-    `<div class="cat-color-dot ${i===0?'selected':''}" style="background:${p.color}" onclick="selectCatColor(${i})"></div>`
-  ).join('');
-  document.getElementById('cat-edit-overlay').classList.add('open');
-}
-
-function deleteCat() {
-  if (CATS.length <= 1) { alert('Debe quedar al menos una categoría.'); return; }
-  const cat = getCat(editingCatId);
-  if (!confirm(`¿Eliminar la categoría "${cat.name}"? Los movimientos con esta categoría quedarán como "Otro".`)) return;
-  CATS = CATS.filter(c => c.id !== editingCatId);
+function deleteCat(){
+  if(CATS.length<=1){alert('Debe quedar al menos una categoría.');return;}
+  const cat=getCat(editingCatId);
+  if(!confirm(`¿Eliminar "${cat.name}"?`)) return;
+  CATS=CATS.filter(c=>c.id!==editingCatId);
   saveCATS(); closeCatEdit(); renderCategoryChips(); renderSettingsCats(); render();
 }
-
-function saveCatEdit() {
+function saveCatEdit(){
   const name=document.getElementById('cat-edit-name').value.trim();
-  if(!name) { document.getElementById('cat-edit-name').focus(); return; }
-  if (editingCatId === '__new__') {
-    const newId = 'cat_' + Date.now();
-    CATS.push({ id:newId, name, icon:editingCatIcon, color:editingCatColor.color, bg:editingCatColor.bg });
+  if(!name){document.getElementById('cat-edit-name').focus();return;}
+  if(editingCatId==='__new__'){
+    CATS.push({id:'cat_'+Date.now(),name,icon:editingCatIcon,color:editingCatColor.color,bg:editingCatColor.bg});
   } else {
     const idx=CATS.findIndex(c=>c.id===editingCatId); if(idx===-1) return;
-    CATS[idx]={...CATS[idx], name, icon:editingCatIcon, color:editingCatColor.color, bg:editingCatColor.bg};
+    CATS[idx]={...CATS[idx],name,icon:editingCatIcon,color:editingCatColor.color,bg:editingCatColor.bg};
   }
   saveCATS(); closeCatEdit(); renderCategoryChips(); renderSettingsCats(); render();
 }
 
-// ======================== OTRAS ========================
-function clearAll() {
-  if(!confirm('¿Borrar todos los datos? No se puede deshacer.')) return;
-  entries=[]; localStorage.setItem('entries_v2',JSON.stringify(entries)); render();
+// ====================== OTRAS ======================
+function clearAll(){
+  if(!confirm('¿Borrar todos los datos?')) return;
+  entries=[]; WALLETS=DEFAULT_WALLETS; CATS=DEFAULT_CATS;
+  localStorage.setItem('entries_v2',JSON.stringify(entries));
+  saveWALLETS(); saveCATS();
+  renderCategoryChips(); renderSettingsCats(); renderWalletSelect(); renderWalletsPage(); render();
 }
-function switchTab(name,btn) {
+function switchTab(name,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   btn.classList.add('active');
   document.querySelector('.content-area').scrollTop=0;
-  const titles={inicio:'Mis Gastos',stats:'Estadísticas',settings:'Ajustes'};
+  const titles={inicio:'Mis Gastos',wallets:'Billeteras',stats:'Estadísticas',settings:'Ajustes'};
   document.getElementById('page-title').textContent=titles[name];
+  // ocultar nav de mes en billeteras y ajustes
+  document.getElementById('month-nav-wrap').style.display=(name==='inicio'||name==='stats')?'':'none';
 }
 
 init();
