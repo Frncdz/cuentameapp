@@ -1092,8 +1092,8 @@ function switchTab(name,btn){
 }
 
 // ====================== ACTIVACIÓN ======================
-// TEMPORAL: códigos hardcodeados. En Paso 3 se reemplaza por Google Sheet.
-const TEMP_CODES = ['DEMO-2024','TEST-0001','TEST-0002','TEST-0003'];
+// ⚠️ REEMPLAZA esta URL con la de tu Google Apps Script desplegado
+const SCRIPT_URL = 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT';
 
 function getDeviceId(){
   let id=localStorage.getItem('_did');
@@ -1105,7 +1105,6 @@ function getDeviceId(){
 }
 
 function formatCodeInput(val){
-  // Formatear como XXXX-XXXX automáticamente
   const clean=val.replace(/[^A-Za-z0-9]/g,'').toUpperCase().slice(0,8);
   if(clean.length>4)return clean.slice(0,4)+'-'+clean.slice(4);
   return clean;
@@ -1130,30 +1129,32 @@ function submitCode(){
   btn.innerHTML='<span class="act-loading"></span>Verificando...';
   errEl.textContent='';okEl.textContent='';
 
-  // Simular latencia de red (en Paso 3 aquí va el fetch al Google Sheet)
-  setTimeout(()=>{
-    validateCode(code,(valid,msg)=>{
-      if(valid){
-        okEl.textContent='✓ Código válido. Entrando...';
-        localStorage.setItem('_act_code',code);
-        localStorage.setItem('_act_device',getDeviceId());
-        setTimeout(()=>enterApp(),900);
-      } else {
-        errEl.textContent=msg||'Código incorrecto o ya en uso.';
-        btn.disabled=false;
-        btn.innerHTML='Activar';
-      }
-    });
-  },800);
+  validateCode(code,(valid,msg)=>{
+    if(valid){
+      okEl.textContent='✓ Código válido. Entrando...';
+      localStorage.setItem('_act_code',code);
+      localStorage.setItem('_act_device',getDeviceId());
+      setTimeout(()=>enterApp(),900);
+    } else {
+      errEl.textContent=msg||'Código incorrecto o ya en uso.';
+      btn.disabled=false;
+      btn.innerHTML='Activar';
+    }
+  });
 }
 
 function validateCode(code,cb){
-  // TEMPORAL — se reemplaza en Paso 3 por llamada a Google Sheet
-  if(TEMP_CODES.includes(code)){
-    cb(true);
-  } else {
-    cb(false,'Código no válido. Verifica e intenta de nuevo.');
-  }
+  const deviceId=getDeviceId();
+  const url=SCRIPT_URL+'?action=validate&code='+encodeURIComponent(code)+'&deviceId='+encodeURIComponent(deviceId);
+  fetch(url)
+    .then(r=>r.json())
+    .then(data=>{
+      if(data.ok) cb(true, data.msg);
+      else cb(false, data.msg||'Código no válido.');
+    })
+    .catch(()=>{
+      cb(false,'Error de conexión. Verifica tu internet e intenta de nuevo.');
+    });
 }
 
 function enterApp(){
