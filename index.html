@@ -101,13 +101,6 @@
   .cats-scroll::-webkit-scrollbar { display:none; }
   .cat-chip { background:var(--card); border:2px solid var(--separator); border-radius:18px; padding:6px 12px; font-size:13px; font-weight:500; cursor:pointer; white-space:nowrap; display:flex; align-items:center; gap:5px; color:var(--text-primary); transition:all 0.14s; font-family:inherit; }
   .cat-chip.selected { border-color:var(--blue); background:rgba(0,122,255,0.08); color:var(--blue); }
-  .variants-section { padding:0 16px 10px; }
-  .variants-label { font-size:12px; color:var(--text-secondary); margin-bottom:8px; padding-left:2px; font-weight:500; }
-  .variants-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
-  .variant-btn { background:var(--card); border:2px solid var(--separator); border-radius:12px; padding:9px 4px; font-size:13px; font-weight:500; cursor:pointer; text-align:center; color:var(--text-primary); font-family:inherit; transition:all 0.14s; }
-  .variant-btn .v-price { font-size:11px; color:var(--text-secondary); margin-top:2px; }
-  .variant-btn.selected { border-color:var(--orange); background:rgba(255,149,0,0.08); color:var(--orange); }
-  .variant-btn.selected .v-price { color:var(--orange); }
   .save-btn { background:var(--blue); color:white; border:none; border-radius:var(--radius); padding:15px; font-size:16px; font-weight:600; width:calc(100% - 32px); margin:6px 16px 0; cursor:pointer; font-family:inherit; transition:opacity 0.12s,transform 0.1s; }
   .save-btn:active { opacity:0.85; transform:scale(0.98); }
   .danger-btn { background:rgba(255,59,48,0.1); color:var(--red); border:none; border-radius:var(--radius); padding:14px; font-size:15px; font-weight:600; width:calc(100% - 32px); margin:8px 16px 0; cursor:pointer; font-family:inherit; }
@@ -131,6 +124,26 @@
   .emoji-opt:active { background:var(--separator); }
   .color-dot { width:22px; height:22px; border-radius:50%; border:2px solid transparent; cursor:pointer; transition:transform 0.1s; flex-shrink:0; }
   .color-dot.selected { border-color:var(--text-primary); transform:scale(1.2); }
+
+
+  /* Pendiente */
+  .pending-banner { margin:14px 16px 0; background:rgba(255,149,0,0.12); border:1.5px solid rgba(255,149,0,0.3); border-radius:var(--radius); padding:14px 16px; display:flex; align-items:center; gap:12px; cursor:pointer; }
+  .pending-banner-icon { font-size:22px; flex-shrink:0; }
+  .pending-banner-info { flex:1; }
+  .pending-banner-label { font-size:12px; font-weight:600; color:var(--orange); text-transform:uppercase; letter-spacing:0.4px; }
+  .pending-banner-amount { font-size:20px; font-weight:700; color:var(--text-primary); letter-spacing:-0.5px; margin-top:1px; }
+  .pending-banner-sub { font-size:12px; color:var(--text-secondary); margin-top:1px; }
+  .pending-badge { background:var(--orange); color:white; font-size:10px; font-weight:700; padding:2px 6px; border-radius:6px; flex-shrink:0; letter-spacing:0.3px; }
+  .paid-badge { background:rgba(52,199,89,0.15); color:var(--green); font-size:10px; font-weight:700; padding:2px 6px; border-radius:6px; flex-shrink:0; letter-spacing:0.3px; }
+  .entry-card.is-pending { opacity:0.85; }
+  .entry-card.is-pending .entry-name { color:var(--text-secondary); }
+
+  /* Toggle pagado/pendiente en modal */
+  .paid-toggle { display:flex; background:var(--separator); border-radius:10px; padding:2px; margin:0 20px 14px; }
+  .paid-toggle button { flex:1; border:none; border-radius:8px; padding:8px; font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; background:transparent; color:var(--text-secondary); font-family:inherit; }
+  .paid-toggle button.active { background:white; box-shadow:0 1px 5px rgba(0,0,0,0.1); }
+  .paid-toggle button.active.paid-opt { color:var(--green); }
+  .paid-toggle button.active.pend-opt { color:var(--orange); }
 
   /* Stats */
   .stats-card { background:var(--card); border-radius:var(--radius); margin:0 16px 10px; padding:14px; box-shadow:var(--shadow-sm); }
@@ -204,6 +217,15 @@
           <div class="balance-card neto"><div class="label">Saldo</div><div class="amount" id="total-neto">S/ 0</div></div>
         </div>
       </div>
+      <div id="pending-banner" class="pending-banner" style="display:none" onclick="switchTab('inicio', document.querySelector('.tab.active'))">
+        <div class="pending-banner-icon">⏳</div>
+        <div class="pending-banner-info">
+          <div class="pending-banner-label">Pendiente por pagar</div>
+          <div class="pending-banner-amount" id="pending-amount">S/ 0.00</div>
+          <div class="pending-banner-sub" id="pending-sub">0 movimientos</div>
+        </div>
+        <span style="font-size:20px;color:var(--orange);">›</span>
+      </div>
       <div class="section-header"><span class="section-title">Movimientos</span></div>
       <div class="entries-list" id="entries-list">
         <div class="empty-state"><div class="empty-icon">💸</div><div class="empty-text">Sin movimientos este mes.<br>Toca + para agregar uno.</div></div>
@@ -274,13 +296,10 @@
       <button class="active gasto" id="toggle-gasto" onclick="setType('gasto')">📤 Gasto</button>
       <button class="" id="toggle-ingreso" onclick="setType('ingreso')">📥 Ingreso</button>
     </div>
-    <div class="variants-section" id="variants-section" style="display:none;">
-      <div class="variants-label">Tipo de menú</div>
-      <div class="variants-grid">
-        <button class="variant-btn" id="var-completo" onclick="selectVariant('Menú completo',8.5,'var-completo')">🍱 Completo<div class="v-price">S/ 8.50</div></button>
-        <button class="variant-btn" id="var-segundo" onclick="selectVariant('Solo segundo',5.5,'var-segundo')">🍖 Segundo<div class="v-price">S/ 5.50</div></button>
-        <button class="variant-btn" id="var-sopa" onclick="selectVariant('Solo sopa',3.5,'var-sopa')">🍜 Sopa<div class="v-price">S/ 3.50</div></button>
-      </div>
+
+    <div class="paid-toggle">
+      <button class="active paid-opt" id="toggle-paid" onclick="setPaid(true)">✅ Pagado</button>
+      <button class="pend-opt" id="toggle-pend" onclick="setPaid(false)">⏳ Pendiente</button>
     </div>
     <div class="quick-categories">
       <div class="quick-label">Categoría</div>
@@ -311,9 +330,11 @@
       <div class="detail-row"><span class="detail-row-label">Descripción</span><span class="detail-row-value" id="detail-desc"></span></div>
       <div class="detail-row"><span class="detail-row-label">Categoría</span><span class="detail-row-value" id="detail-cat"></span></div>
       <div class="detail-row"><span class="detail-row-label">Tipo</span><span class="detail-row-value" id="detail-type"></span></div>
+      <div class="detail-row"><span class="detail-row-label">Estado</span><span class="detail-row-value" id="detail-status"></span></div>
       <div class="detail-row"><span class="detail-row-label">Billetera</span><span class="detail-row-value" id="detail-wallet"></span></div>
       <div class="detail-row"><span class="detail-row-label">Fecha</span><span class="detail-row-value" id="detail-date"></span></div>
     </div>
+    <button id="detail-mark-paid-btn" class="save-btn" style="background:var(--green);margin-bottom:0;" onclick="markPaid()">✅ Marcar como pagado</button>
     <button class="danger-btn" id="detail-delete-btn">🗑 Eliminar movimiento</button>
   </div>
 </div>
@@ -442,7 +463,7 @@ let CATS    = JSON.parse(localStorage.getItem('cats_v1')    || 'null') || DEFAUL
 let WALLETS = JSON.parse(localStorage.getItem('wallets_v1') || 'null') || DEFAULT_WALLETS;
 let entries = JSON.parse(localStorage.getItem('entries_v2') || '[]');
 
-let currentType='gasto', selectedCat='menu', selectedWallet='';
+let currentType='gasto', selectedCat='menu', selectedWallet='', isPaid=true;
 let currentMonth, currentYear;
 let editingCatId=null, editingCatColor=null, editingCatIcon=null;
 let editingWalletId=null, editingWalletColor=null, editingWalletIcon=null, editingWalletType='cash';
@@ -516,6 +537,8 @@ function render(){
       const cat=getCat(e.cat);
       const card=document.createElement('div'); card.className='entry-card'; card.onclick=()=>openDetail(e.id);
       const w=e.walletId?getWallet(e.walletId):null;
+      const entryPaid = e.paid !== false;
+      card.className='entry-card'+((!entryPaid&&e.type==='gasto')?' is-pending':'');
       card.innerHTML=`
         <div class="entry-icon" style="background:${cat.bg}">${cat.icon}</div>
         <div class="entry-info">
@@ -523,12 +546,26 @@ function render(){
           <div class="entry-meta">${cat.name}${w?' · '+w.icon+' '+w.name:''}</div>
         </div>
         <div class="entry-amount ${e.type}">${e.type==='gasto'?'-':'+'}S/ ${e.amount.toFixed(2)}</div>
-        <span class="entry-chevron">›</span>`;
+        ${(!entryPaid&&e.type==='gasto')
+          ? '<span class="pending-badge">DEBE</span>'
+          : '<span class="entry-chevron">›</span>'}`;
       wrap.appendChild(card);
     });
     group.appendChild(wrap); list.appendChild(group);
   });
   renderStats(me);
+  renderPendingBanner(me);
+}
+
+// ====================== PENDING BANNER ======================
+function renderPendingBanner(me){
+  const pendingEntries = me.filter(e=>e.type==='gasto' && e.paid===false);
+  const total = pendingEntries.reduce((s,e)=>s+e.amount,0);
+  const banner = document.getElementById('pending-banner');
+  if(pendingEntries.length===0){ banner.style.display='none'; return; }
+  banner.style.display='flex';
+  document.getElementById('pending-amount').textContent=`S/ ${total.toFixed(2)}`;
+  document.getElementById('pending-sub').textContent=`${pendingEntries.length} movimiento${pendingEntries.length!==1?'s':''} sin pagar`;
 }
 
 // ====================== RENDER STATS ======================
@@ -746,7 +783,6 @@ function renderCategoryChips(){
 }
 function selectCat(id){
   selectedCat=id; renderCategoryChips();
-  document.getElementById('variants-section').style.display=(id==='menu')?'block':'none';
 }
 function selectVariant(desc,price,btnId){
   document.getElementById('input-desc').value=desc;
@@ -761,14 +797,19 @@ function setType(type){
 }
 
 // ====================== MODAL NUEVO MOV ======================
+function setPaid(val){
+  isPaid=val;
+  document.getElementById('toggle-paid').className=val?'active paid-opt':'paid-opt';
+  document.getElementById('toggle-pend').className=!val?'active pend-opt':'pend-opt';
+}
+
 function openModal(){
   document.getElementById('modal-overlay').classList.add('open');
   document.getElementById('input-date').value=todayStr();
   document.getElementById('input-desc').value='';
   document.getElementById('input-amount').value='';
-  document.querySelectorAll('.variant-btn').forEach(b=>b.classList.remove('selected'));
   renderWalletSelect();
-  selectCat('menu'); setType('gasto');
+  selectCat('menu'); setType('gasto'); setPaid(true);
 }
 function closeModalOutside(e){if(e.target===document.getElementById('modal-overlay'))closeModalBtn();}
 function closeModalBtn(){document.getElementById('modal-overlay').classList.remove('open');}
@@ -778,7 +819,7 @@ function saveEntry(){
   const date=document.getElementById('input-date').value||todayStr();
   const walletId=document.getElementById('input-wallet').value||'';
   if(!amount||amount<=0){document.getElementById('input-amount').focus();return;}
-  entries.push({id:Date.now().toString(),type:currentType,cat:selectedCat,desc:desc||getCat(selectedCat).name,amount,date,walletId});
+  entries.push({id:Date.now().toString(),type:currentType,cat:selectedCat,desc:desc||getCat(selectedCat).name,amount,date,walletId,paid:isPaid});
   localStorage.setItem('entries_v2',JSON.stringify(entries));
   closeModalBtn();
   const d=parseDateLocal(date); currentMonth=d.getMonth(); currentYear=d.getFullYear();
@@ -799,6 +840,13 @@ function openDetail(id){
   document.getElementById('detail-cat').textContent=`${cat.icon} ${cat.name}`;
   document.getElementById('detail-type').textContent=e.type==='gasto'?'📤 Gasto':'📥 Ingreso';
   document.getElementById('detail-wallet').textContent=w?`${w.icon} ${w.name}`:'—';
+  const paid = e.paid !== false; // default true para entradas antiguas
+  document.getElementById('detail-status').innerHTML = paid
+    ? '<span class="paid-badge">✅ Pagado</span>'
+    : '<span class="pending-badge">⏳ Pendiente</span>';
+  const markBtn = document.getElementById('detail-mark-paid-btn');
+  markBtn.style.display = (!paid && e.type==='gasto') ? '' : 'none';
+  markBtn.dataset.id = id;
   document.getElementById('detail-date').textContent=formatDateFull(e.date);
   document.getElementById('detail-delete-btn').onclick=()=>{
     if(!confirm('¿Eliminar este movimiento?')) return;
@@ -810,6 +858,13 @@ function openDetail(id){
 }
 function closeDetailOutside(e){if(e.target===document.getElementById('detail-overlay'))closeDetail();}
 function closeDetail(){document.getElementById('detail-overlay').classList.remove('open');}
+function markPaid(){
+  const id=document.getElementById('detail-mark-paid-btn').dataset.id;
+  const e=entries.find(x=>x.id===id); if(!e) return;
+  e.paid=true;
+  localStorage.setItem('entries_v2',JSON.stringify(entries));
+  closeDetail(); render(); renderWalletsPage();
+}
 
 // ====================== SETTINGS CATS ======================
 function renderSettingsCats(){
