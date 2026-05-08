@@ -33,7 +33,16 @@
   .pg.active.pg-scroll{overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-bottom:16px}
 
   /* ===== HERO CARD (inicio) ===== */
-  .hero{margin:14px 16px 0;background:linear-gradient(135deg,#007aff,#5ac8fa);border-radius:var(--r);padding:20px;color:white;box-shadow:0 6px 24px rgba(0,122,255,0.35);position:relative;overflow:hidden}
+  .hero{margin:14px 16px 0;background:linear-gradient(135deg,#007aff,#5ac8fa);border-radius:var(--r);padding:20px;color:white;box-shadow:0 6px 24px rgba(0,122,255,0.35);position:relative;overflow:hidden;flex-shrink:0}
+  /* Hero slide */
+  .hero-slide{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:14px 16px 0;gap:12px}
+  .hero-slide::-webkit-scrollbar{display:none}
+  .hero-card{width:calc(100vw - 32px);min-width:calc(100vw - 32px);max-width:calc(100vw - 32px);scroll-snap-align:start;border-radius:var(--r);padding:20px;color:white;position:relative;overflow:hidden;flex-shrink:0;box-sizing:border-box}
+  /* Pills sobre hero de color — siempre blanco semitransparente */
+  .hero-card .hero-pill{background:rgba(0,0,0,0.18)}
+  .hero-card .hero-pill-label{color:rgba(255,255,255,0.75);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+  .hero-card .hero-pill-val{color:#fff;font-size:15px;font-weight:700}
+  .hero-card .hero-amount{font-size:38px;font-weight:700;letter-spacing:-1.5px;margin-bottom:2px;color:#fff}
   .hero::before{content:'';position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.04);top:-40px;right:-40px}
   .hero::after{content:'';position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.03);bottom:-30px;left:20px}
   .hero-label{font-size:11px;font-weight:600;opacity:0.6;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px}
@@ -314,28 +323,10 @@
   <div class="ca">
     <!-- ===== INICIO ===== -->
     <div id="page-inicio" class="pg active">
-      <!-- Zona estática: hero + banner -->
+      <!-- Hero slide: General + billeteras -->
       <div style="flex-shrink:0">
-        <div class="hero">
-          <div class="hero-label" id="hero-month">Mayo 2025</div>
-          <div class="hero-amount" id="hero-neto">S/ 0.00</div>
-          <div class="hero-sub">Saldo del mes</div>
-          <div id="hero-total-wallets" style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:2px;display:none">💼 Total billeteras: <span id="hero-total-amt">S/ 0.00</span></div>
-          <div class="hero-row">
-            <div class="hero-pill">
-              <div class="hero-pill-label">Ingresos</div>
-              <div class="hero-pill-val ing" id="hero-ing">S/ 0</div>
-            </div>
-            <div class="hero-pill">
-              <div class="hero-pill-label">Gastos</div>
-              <div class="hero-pill-val gas" id="hero-gas">S/ 0</div>
-            </div>
-            <div class="hero-pill" id="hero-pend-pill" style="display:none">
-              <div class="hero-pill-label">Pendiente</div>
-              <div class="hero-pill-val pend" id="hero-pend">S/ 0</div>
-            </div>
-          </div>
-        </div>
+        <div class="hero-slide" id="hero-slide" onscroll="onHeroSlideScroll()"></div>
+        <div class="wdots" id="wdots" style="margin-top:8px"></div>
         <!-- Banner pendiente -->
         <div id="pend-banner" class="pend-banner" style="display:none" onclick="openPayModal()">
           <span style="font-size:14px;flex-shrink:0">⏳</span>
@@ -354,25 +345,6 @@
         <div class="entries-list" id="entries-list">
           <div class="empty-state"><div class="empty-icon">💸</div><div class="empty-text">Sin movimientos este mes.<br>Toca + para agregar uno.</div></div>
         </div>
-      </div>
-    </div>
-
-    <!-- ===== BILLETERAS ===== -->
-    <div id="page-wallets" class="pg" style="display:flex;flex-direction:column;overflow:hidden">
-      <!-- Barra superior: título + botón agregar -->
-      <div class="wpage-header">
-        <div class="wpage-title">Billeteras</div>
-        <button class="wpage-add" onclick="openNewWal()">+ Nueva</button>
-      </div>
-      <!-- Slide de tarjetas -->
-      <div class="wslide-wrap">
-        <div class="wslide" id="wslide" onscroll="onWSlideScroll()"></div>
-        <div class="wdots" id="wdots"></div>
-      </div>
-      <!-- Movimientos de la billetera activa -->
-      <div class="wmovs-section" id="wmovs-section">
-        <div class="wmovs-title">Movimientos</div>
-        <div class="wcard" id="wmovs-list"></div>
       </div>
     </div>
 
@@ -471,6 +443,20 @@
         </div>
       </div>
 
+      <!-- Tarjeta Billeteras en Ajustes -->
+      <div style="padding:0 16px;margin-bottom:10px">
+        <div class="sform">
+          <div class="ssec">Billeteras</div>
+          <div class="trow" style="border-bottom:none;cursor:pointer" onclick="openNewWal()">
+            <div>
+              <div style="font-size:15px;font-weight:500">👛 Nueva billetera</div>
+              <div style="font-size:12px;color:var(--tt);margin-top:2px">Agrega una billetera al slide</div>
+            </div>
+            <span style="color:var(--tt);font-size:16px">›</span>
+          </div>
+        </div>
+      </div>
+
       <!-- Tarjeta Cuenta -->
       <div style="padding:0 16px;margin-bottom:10px">
         <div class="sform">
@@ -490,7 +476,6 @@
 
   <div class="tbar">
     <button class="tab active" onclick="switchTab('inicio',this)"><span class="ticon-wrap"><span class="ticon">💳</span></span><span class="tlbl">Inicio</span></button>
-    <button class="tab" onclick="switchTab('wallets',this)"><span class="ticon-wrap"><span class="ticon">👛</span></span><span class="tlbl">Billeteras</span></button>
     <div class="fab-wrap"><button class="fab" onclick="openModal()">+</button></div>
     <button class="tab" onclick="switchTab('stats',this)"><span class="ticon-wrap"><span class="ticon">📊</span></span><span class="tlbl">Reportes</span></button>
     <button class="tab" onclick="switchTab('settings',this)"><span class="ticon-wrap"><span class="ticon">⚙️</span></span><span class="tlbl">Ajustes</span></button>
@@ -692,6 +677,8 @@ function changeMonth(d){
 function updMlbl(){document.getElementById('mlbl').textContent=MONTHS[cMonth]}
 function gme(){return entries.filter(e=>{const d=pdl(e.date);return d.getMonth()===cMonth&&d.getFullYear()===cYear})}
 
+let activeHeroIdx=0; // 0=General, 1+=billetera
+
 // ======= RENDER INICIO =======
 function render(){
   const me=gme();
@@ -699,22 +686,8 @@ function render(){
   const tI=me.filter(e=>e.type==='ingreso').reduce((s,e)=>s+e.amount,0);
   const tP=me.filter(e=>e.type==='gasto'&&e.paid===false).reduce((s,e)=>s+e.amount,0);
   const neto=tI-tG;
-  // Hero
-  document.getElementById('hero-month').textContent=`${MONTHS[cMonth]} ${cYear}`;
-  document.getElementById('hero-neto').textContent=`S/ ${Math.abs(neto).toFixed(2)}`;
-  document.getElementById('hero-neto').style.color=neto>=0?'#4ade80':'#f87171';
-  document.getElementById('hero-ing').textContent=`S/ ${tI.toFixed(2)}`;
-  document.getElementById('hero-gas').textContent=`S/ ${tG.toFixed(2)}`;
-  // Total de todas las billeteras en el hero
-  const totalWals=WALS.reduce((s,w)=>s+wBal(w.id),0);
-  const heroTotal=document.getElementById('hero-total-wallets');
-  if(heroTotal){
-    if(WALS.length>0){heroTotal.style.display='';document.getElementById('hero-total-amt').textContent=`S/ ${totalWals.toFixed(2)}`;}
-    else heroTotal.style.display='none';
-  }
-  const pp=document.getElementById('hero-pend-pill');
-  if(tP>0){pp.style.display='';document.getElementById('hero-pend').textContent=`S/ ${tP.toFixed(2)}`}
-  else pp.style.display='none';
+  // Hero slide
+  renderHeroSlide(neto,tI,tG,tP);
   // Banner pendiente
   const pendList=me.filter(e=>e.type==='gasto'&&e.paid===false);
   const banner=document.getElementById('pend-banner');
@@ -724,11 +697,22 @@ function render(){
     document.getElementById('pend-amt').textContent=`S/ ${tP.toFixed(2)}`;
     document.getElementById('pend-sub').textContent=`${pendList.length} movimiento${pendList.length!==1?'s':''} · Toca para pagar`;
   }
-  // Lista
+  renderMovsList();
+  renderStatsPage();renderWals();
+}
+
+function renderMovsList(walIdx){
+  if(walIdx===undefined)walIdx=activeHeroIdx;
+  const me=gme();
+  // Filtrar: 0=todos, 1+=billetera específica
+  const filtered = walIdx===0 ? me : me.filter(e=>e.walletId===WALS[walIdx-1]?.id);
   const list=document.getElementById('entries-list');
-  if(me.length===0){list.innerHTML=`<div class="empty-state"><div class="empty-icon">💸</div><div class="empty-text">Sin movimientos este mes.<br>Toca + para agregar uno.</div></div>`;renderStatsPage();return}
+  if(filtered.length===0){
+    list.innerHTML=`<div class="empty-state"><div class="empty-icon">💸</div><div class="empty-text">${walIdx===0?'Sin movimientos este mes.<br>Toca + para agregar uno.':'Sin movimientos en esta billetera.'}</div></div>`;
+    return;
+  }
   const byDate={};
-  me.sort((a,b)=>b.date.localeCompare(a.date)).forEach(e=>{if(!byDate[e.date])byDate[e.date]=[];byDate[e.date].push(e)});
+  filtered.sort((a,b)=>b.date.localeCompare(a.date)).forEach(e=>{if(!byDate[e.date])byDate[e.date]=[];byDate[e.date].push(e)});
   list.innerHTML='';
   Object.keys(byDate).sort((a,b)=>b.localeCompare(a)).forEach(date=>{
     const g=document.createElement('div');g.className='day-grp';
@@ -748,7 +732,67 @@ function render(){
     });
     g.appendChild(w);list.appendChild(g);
   });
-  renderStatsPage();renderWals();
+}
+
+// ======= HERO SLIDE =======
+const HPAL=['linear-gradient(135deg,#059669,#10b981)','linear-gradient(135deg,#f59e0b,#fbbf24)','linear-gradient(135deg,#8b5cf6,#a78bfa)','linear-gradient(135deg,#ef4444,#f87171)','linear-gradient(135deg,#0891b2,#22d3ee)'];
+const WTYPES_L=[{id:'efectivo',label:'Efectivo'},{id:'banco',label:'Banco'},{id:'yape',label:'Yape/Plin'},{id:'credito',label:'Crédito'},{id:'otro',label:'Otro'}];
+
+function renderHeroSlide(neto,tI,tG,tP){
+  const slide=document.getElementById('hero-slide');
+  const dots=document.getElementById('wdots');
+  if(!slide)return;
+  slide.innerHTML='';dots.innerHTML='';
+  const totalWals=WALS.reduce((s,w)=>s+wBal(w.id),0);
+
+  // Tarjeta General
+  const gen=document.createElement('div');
+  gen.className='hero-card';
+  gen.style.cssText='background:linear-gradient(135deg,#007aff,#5ac8fa);box-shadow:0 6px 24px rgba(0,122,255,0.35)';
+  gen.innerHTML=`<div class="hero-label">${MONTHS[cMonth]} ${cYear}</div>
+    <div class="hero-amount" style="color:#fff">${neto<0?'−':''}S/ ${Math.abs(neto).toFixed(2)}</div>
+    <div class="hero-sub">Saldo del mes</div>
+    ${WALS.length>0?`<div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:2px">💼 Total billeteras: S/ ${totalWals.toFixed(2)}</div>`:''}
+    <div class="hero-row">
+      <div class="hero-pill"><div class="hero-pill-label">Ingresos</div><div class="hero-pill-val ing">S/ ${tI.toFixed(2)}</div></div>
+      <div class="hero-pill"><div class="hero-pill-label">Gastos</div><div class="hero-pill-val gas">S/ ${tG.toFixed(2)}</div></div>
+      ${tP>0?`<div class="hero-pill"><div class="hero-pill-label">Pendiente</div><div class="hero-pill-val pend">S/ ${tP.toFixed(2)}</div></div>`:''}
+    </div>`;
+  slide.appendChild(gen);
+
+  // Tarjetas de billeteras
+  WALS.forEach((w,i)=>{
+    const bal=wBal(w.id);
+    const mc=entries.filter(e=>e.walletId===w.id).length;
+    const tl=WTYPES_L.find(t=>t.id===w.type)?.label||w.type||'';
+    const card=document.createElement('div');
+    card.className='hero-card';
+    card.style.cssText=`background:${HPAL[i%HPAL.length]};box-shadow:0 6px 24px rgba(0,0,0,0.2)`;
+    card.innerHTML=`<div style="position:absolute;top:12px;right:12px"><button onclick="event.stopPropagation();openWD('${w.id}')" style="background:rgba(255,255,255,0.2);border:none;color:white;border-radius:12px;padding:4px 10px;font-size:12px;cursor:pointer;font-family:inherit">✏️ Editar</button></div>
+      <div class="hero-label">${w.icon||'💼'} ${w.name}</div>
+      <div class="hero-amount" style="color:#fff">S/ ${bal.toFixed(2)}</div>
+      <div class="hero-sub">${tl}</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:6px">${mc} movimiento${mc!==1?'s':''}</div>`;
+    slide.appendChild(card);
+  });
+
+  // Dots
+  const total=1+WALS.length;
+  if(total<=1){dots.style.display='none';}
+  else{
+    dots.style.display='flex';
+    for(let i=0;i<total;i++){const d=document.createElement('div');d.className='wdot'+(i===0?' active':'');dots.appendChild(d);}
+  }
+}
+
+function onHeroSlideScroll(){
+  const slide=document.getElementById('hero-slide');if(!slide)return;
+  const total=1+WALS.length;if(total<=1)return;
+  const idx=Math.round(slide.scrollLeft/(slide.scrollWidth/total));
+  if(idx===activeHeroIdx)return;
+  activeHeroIdx=idx;
+  document.querySelectorAll('#wdots .wdot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  renderMovsList(idx);
 }
 
 // ======= STATS PAGE =======
@@ -1302,7 +1346,7 @@ function switchTab(name,btn){
   document.getElementById('page-'+name).classList.add('active');
   btn.classList.add('active');
   const activePg=document.getElementById('page-'+name);if(activePg)activePg.scrollTop=0;
-  const titles={inicio:'CuentameApp',wallets:'Billeteras',stats:'Reportes',settings:'Ajustes'};
+  const titles={inicio:'CuentameApp',stats:'Reportes',settings:'Ajustes'};
   if(titles[name])document.getElementById('page-title').textContent=titles[name];
   else document.getElementById('page-title').textContent='';
   document.getElementById('mnav').style.display=(name==='inicio'||name==='stats')?'':'none';
