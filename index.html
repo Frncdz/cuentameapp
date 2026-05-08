@@ -35,9 +35,9 @@
   /* ===== HERO CARD (inicio) ===== */
   .hero{margin:14px 16px 0;background:linear-gradient(135deg,#007aff,#5ac8fa);border-radius:var(--r);padding:20px;color:white;box-shadow:0 6px 24px rgba(0,122,255,0.35);position:relative;overflow:hidden;flex-shrink:0}
   /* Hero slide */
-  .hero-slide{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:14px 16px 0;gap:12px}
+  .hero-slide{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0;gap:0}
   .hero-slide::-webkit-scrollbar{display:none}
-  .hero-card{width:calc(100vw - 32px);min-width:calc(100vw - 32px);max-width:calc(100vw - 32px);scroll-snap-align:start;border-radius:var(--r);padding:20px;color:white;position:relative;overflow:hidden;flex-shrink:0;box-sizing:border-box}
+  .hero-card{width:100vw;min-width:100vw;max-width:100vw;scroll-snap-align:start;border-radius:0 0 22px 22px;padding:20px 20px 24px;color:white;position:relative;overflow:hidden;flex-shrink:0;box-sizing:border-box}
   /* Pills sobre hero de color — siempre blanco semitransparente */
   .hero-card .hero-pill{background:rgba(0,0,0,0.18)}
   .hero-card .hero-pill-label{color:rgba(255,255,255,0.75);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
@@ -326,7 +326,7 @@
       <!-- Hero slide: General + billeteras -->
       <div style="flex-shrink:0">
         <div class="hero-slide" id="hero-slide" onscroll="onHeroSlideScroll()"></div>
-        <div class="wdots" id="wdots" style="margin-top:8px"></div>
+        <div class="wdots" id="wdots" style="margin-top:10px"></div>
         <!-- Banner pendiente -->
         <div id="pend-banner" class="pend-banner" style="display:none" onclick="openPayModal()">
           <span style="font-size:14px;flex-shrink:0">⏳</span>
